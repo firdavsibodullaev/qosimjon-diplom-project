@@ -4,13 +4,17 @@
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-import axios from 'axios';
 import {createApp} from "vue";
-import Index from "@/components/Index.vue";
+import Index from "@/App.vue";
+import vueRouter from "@/libs/router";
+import store from "@/store";
+import api from "@/libs/api";
 
-window.axios = axios;
+const router = vueRouter;
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
-createApp(Index).mount('#app');
+createApp(Index)
+    .use(router)
+    .use(store)
+    .use(api)
+    .mount('#app');
 
