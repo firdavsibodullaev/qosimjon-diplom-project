@@ -1,11 +1,11 @@
 <template>
-    <GuestLayout>
+    <AuthLayout>
         <div class="bg-gray-200 h-[100vh] w-[100vw] flex justify-center items-center">
             <div
-                class="w-[40rem] bg-white p-16 rounded-2xl shadow-current flex flex-col items-center content-center justify-center">
-                <p class="w-full text-4xl text-center mb-2"><strong>{{ $env.appName }}</strong></p>
-                <p class="w-full text-sm text-center mb-6">Вход в систему</p>
-                <Spinner :spinning="spinning">
+                class="w-[40rem] bg-white p-16 rounded-2xl shadow-current flex flex-col items-center content-center justify-center border-t-ant-primary border-4">
+                <p class="w-full text-4xl text-center mb-1"><strong>{{ $env.appName }}</strong></p>
+                <p class="w-full text-sm text-center mb-6 text-gray-600">Вход в систему</p>
+                <Spinner>
                     <a-form
                         class="w-full"
                         :model="formState"
@@ -20,7 +20,7 @@
                             name="username"
                             :rules="[{ required: true, message: 'Введите Логин!' }]"
                         >
-                            <a-input v-model:value="formState.username"/>
+                            <a-input placeholder="Введите логин" v-model:value="formState.username"/>
                         </a-form-item>
 
                         <a-form-item
@@ -28,29 +28,28 @@
                             name="password"
                             :rules="[{ required: true, message: 'Введите пароль!' }]"
                         >
-                            <a-input-password v-model:value="formState.password"/>
+                            <a-input-password placeholder="Введите пароль" v-model:value="formState.password"/>
                         </a-form-item>
 
                         <a-form-item class="flex w-full justify-center">
-                            <a-button class="bg-[#1677ff]" type="primary" html-type="submit">Вход</a-button>
+                            <a-button class="bg-ant-primary" type="primary" html-type="submit">Вход</a-button>
                         </a-form-item>
                     </a-form>
                 </Spinner>
             </div>
         </div>
-    </GuestLayout>
+    </AuthLayout>
 </template>
 <script>
 import {reactive} from "vue";
 import toastr from "toastr";
-import GuestLayout from "@/pages/GuestLayout.vue";
+import AuthLayout from "@/pages/AuthLayout.vue";
 import Spinner from "@/components/Spinner.vue";
 
 export default {
-    components: {Spinner, GuestLayout},
+    components: {Spinner, AuthLayout},
     data() {
         return {
-            spinning: false,
             formState: reactive({
                 username: '',
                 password: ''
@@ -59,18 +58,17 @@ export default {
     },
     methods: {
         onFinish(credentials) {
-            this.spinning = true;
+            this.$store.commit('spinner/toggleSpinning');
             this.$api.auth(
                 credentials,
                 ({data}) => {
                     this.$store.commit('auth/setToken', data.token);
                     this.$store.commit('auth/setUser', data.user);
 
-                    this.spinning = false;
+                    this.$store.commit('spinner/toggleSpinning');
                     this.$router.push({name: 'index'});
                 },
                 (error) => {
-                    console.log(error);
                     switch (error.status) {
                         case 401:
                             toastr.error(error.data.message);
@@ -79,7 +77,7 @@ export default {
                             Object.keys(error.data.errors).forEach(key => toastr.error(error.data.errors[key][0]))
                             break;
                     }
-                    this.spinning = false;
+                    this.$store.commit('spinner/toggleSpinning');
                 }
             );
         },

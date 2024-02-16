@@ -1,5 +1,5 @@
 <template>
-    <Spinner :spinning="spinning">
+    <Spinner>
         <a-layout style="height: 100vh">
             <a-layout-sider v-model:collapsed="$store.getters['sidebar/getCollapsed']" :trigger="null" collapsible>
                 <div class="logo"/>
@@ -70,8 +70,6 @@
                 <a-layout-content
                     :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
                 >
-
-                    {{ console.log(selectedKeys) }}
                     <slot/>
                 </a-layout-content>
             </a-layout>
@@ -87,7 +85,6 @@ export default {
     components: {Spinner},
     data() {
         return {
-            spinning: false,
             selectedKeys: ref(['1']),
             collapsed: false,
             openKeys: ['sub1']
@@ -95,12 +92,12 @@ export default {
     },
     methods: {
         logout() {
-            this.spinning = true;
+            this.$store.commit('spinner/toggleSpinning');
             this.$api.logout((response) => {
                 this.$store.commit('auth/setToken', null);
                 this.$store.commit('auth/setUser', null);
 
-                this.spinning = false;
+                this.$store.commit('spinner/toggleSpinning');
 
                 this.$router.push({name: "login"});
             });
