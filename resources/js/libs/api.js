@@ -3,7 +3,7 @@ import getenv from "@/libs/getenv";
 import store from "@/store";
 
 const api = axios.create({
-    baseURL: `${getenv.apiBaseUrl}/api/v1`,
+    baseURL: `${getenv.vars.apiBaseUrl}/api/v1`,
     withCredentials: false,
 });
 
@@ -13,9 +13,9 @@ const getApiHeaders = () => {
         Accept: 'application/json',
         'Content-Type': 'application/json'
     }
-    let token = store.state.auth.token;
+    let token = store.getters['auth/getToken'];
 
-    if (token) {
+    if (store.getters['auth/getUser']) {
         headers.Authorization = `Bearer ${token}`;
     }
 

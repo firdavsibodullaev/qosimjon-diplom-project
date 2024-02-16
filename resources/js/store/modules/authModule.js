@@ -9,7 +9,9 @@ export const authModule = {
     }),
     getters: {
         getUser(state) {
-            return state.user;
+            let user = state.user;
+
+            return user ? JSON.parse(user) : user;
         },
         getToken(state, getters) {
             return state.token;
@@ -20,8 +22,8 @@ export const authModule = {
     },
     mutations: {
         setUser(state, user) {
-            user ? localStorage.setItem("user", user) : localStorage.removeItem("user");
-            state.user = user;
+            state.user = JSON.stringify(user);
+            user ? localStorage.setItem("user", state.user) : localStorage.removeItem("user");
         },
         setToken(state, token) {
             token ? Cookies.set("token", token) : Cookies.remove("token");

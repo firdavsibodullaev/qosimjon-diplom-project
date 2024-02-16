@@ -5,16 +5,29 @@
  */
 
 import {createApp} from "vue";
-import Index from "@/App.vue";
+import App from "@/App.vue";
 import vueRouter from "@/libs/router";
 import store from "@/store";
 import api from "@/libs/api";
+import Antd from "ant-design-vue";
+import * as Icons from "@ant-design/icons-vue";
+import getenv from "@/libs/getenv";
+
+
+const vueApp = createApp(App);
+
+
+Object.keys(Icons).forEach(component => {
+    vueApp.component(component, Icons[component]);
+});
 
 const router = vueRouter;
 
-createApp(Index)
-    .use(router)
+
+vueApp.use(router)
     .use(store)
     .use(api)
+    .use(getenv)
+    .use(Antd)
     .mount('#app');
 

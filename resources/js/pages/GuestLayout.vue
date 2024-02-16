@@ -1,7 +1,5 @@
 <template>
     <div>
-        <RouterView/>
+        <slot></slot>
     </div>
 </template>
-<script>
-</script>
