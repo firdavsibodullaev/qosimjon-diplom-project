@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\FactoryFloor;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +14,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call(FactorySeeder::class);
 
-        \App\Models\User::factory()->create([
-            'name' => 'Admin Admin',
+        User::factory()->create([
+            'last_name' => 'Adminov',
+            'first_name' => 'Admin',
             'username' => 'admin',
+            'factory_floor_id' => FactoryFloor::query()->inRandomOrder()->value('id')
         ]);
     }
 }
