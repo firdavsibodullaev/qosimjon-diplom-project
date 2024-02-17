@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\FactoryFloor;
+use App\Enums\Role\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -14,13 +14,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(FactorySeeder::class);
+        $this->call(RoleSeeder::class);
 
-        User::factory()->create([
-            'last_name' => 'Adminov',
-            'first_name' => 'Admin',
-            'username' => 'admin',
-            'factory_floor_id' => FactoryFloor::query()->inRandomOrder()->value('id')
-        ]);
+        User::factory()
+            ->create([
+                'last_name' => 'Adminov',
+                'first_name' => 'Admin',
+                'username' => 'admin'
+            ])
+            ->assignRole(Role::ADMIN->name);
+
+        if (!app()->isProduction()) {
+            $this->call(FactorySeeder::class);
+        }
     }
 }
