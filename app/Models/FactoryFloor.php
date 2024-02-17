@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read Collection<User> $users
+ * @property-read Factory $factoryRelation
  */
 class FactoryFloor extends Model
 {
@@ -32,7 +33,7 @@ class FactoryFloor extends Model
         return $this->hasMany(User::class);
     }
 
-    public function factory(): BelongsTo
+    public function factoryRelation(): BelongsTo
     {
         return $this->belongsTo(Factory::class);
     }

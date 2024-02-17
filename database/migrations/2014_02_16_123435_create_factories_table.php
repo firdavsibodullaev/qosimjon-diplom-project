@@ -13,6 +13,8 @@ return new class extends Migration {
         Schema::create('factories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->smallInteger('number', false, true);
+            $table->string('type', 20);
             $table->timestamps();
             $table->softDeletes();
         });

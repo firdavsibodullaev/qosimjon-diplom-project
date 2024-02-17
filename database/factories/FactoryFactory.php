@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Factory\FactoryType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,9 @@ class FactoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->word()
+            'name' => $this->faker->unique()->word(),
+            'number' => $this->faker->unique()->numberBetween(1, 10),
+            'type' => $this->faker->randomElement(FactoryType::cases())
         ];
     }
 }
