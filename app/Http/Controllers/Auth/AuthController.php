@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api\Auth;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Firdavsi\Responses\Http\SuccessEmptyResponse;
+use Firdavsi\Responses\Http\SuccessResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -34,20 +35,23 @@ class AuthController extends Controller
 
         $token = $user->createToken("User");
 
-        return response([
-            "token" => $token->plainTextToken,
-            "user" => UserResource::make($user)
-        ]);
+        return new SuccessResponse(
+            response: response([
+                "token" => $token->plainTextToken,
+                "user" => UserResource::make($user->load('roles'))
+            ]),
+            message: 'Tizimga kirdingiz'
+        );
     }
 
-    public function logout(Request $request): Response
+    public function logout(Request $request): SuccessEmptyResponse
     {
         /** @var User $user */
         $user = $request->user();
         $user->currentAccessToken()->delete();
 
-        return response([
-            "message" => "Logged out"
-        ]);
+        return new SuccessEmptyResponse(
+            message: 'Tizimdan chiqdingiz'
+        );
     }
 }

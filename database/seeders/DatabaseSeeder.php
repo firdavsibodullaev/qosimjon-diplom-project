@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
                 'first_name' => 'Admin',
                 'username' => 'admin'
             ])
-            ->assignRole(Role::ADMIN->name);
+            ->assignRole(Role::ADMIN->value);
 
         if (!app()->isProduction()) {
             $this->call(FactorySeeder::class);

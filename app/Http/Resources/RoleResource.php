@@ -2,14 +2,11 @@
 
 namespace App\Http\Resources;
 
-use App\Models\User;
+use App\Enums\Role\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/**
- * @property-read User $resource
- */
-class UserResource extends JsonResource
+class RoleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,11 +15,10 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $role = $this->resource->name;
         return [
-            'id' => $this->resource->id,
-            'name' => $this->resource->name,
-            'username' => $this->resource->username,
-            'roles' => RoleResource::collection($this->whenLoaded('roles'))
+            'key' => $role,
+            'text' => Role::tryFrom($role)->translate()
         ];
     }
 }

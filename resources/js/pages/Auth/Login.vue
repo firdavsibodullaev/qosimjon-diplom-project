@@ -4,7 +4,7 @@
             <div
                 class="w-[40rem] bg-white p-16 rounded-2xl shadow-current flex flex-col items-center content-center justify-center border-t-ant-primary border-4">
                 <p class="w-full text-4xl text-center mb-1"><strong>{{ $env.appName }}</strong></p>
-                <p class="w-full text-sm text-center mb-6 text-gray-600">Вход в систему</p>
+                <p class="w-full text-sm text-center mb-6 text-gray-600">Tizimga kirish</p>
                 <Spinner>
                     <a-form
                         class="w-full"
@@ -16,23 +16,23 @@
                         layout="vertical"
                     >
                         <a-form-item
-                            label="Логин"
+                            label="Login"
                             name="username"
-                            :rules="[{ required: true, message: 'Введите Логин!' }]"
+                            :rules="[{ required: true, message: 'Loginni kiriting!' }]"
                         >
-                            <a-input placeholder="Введите логин" v-model:value="formState.username"/>
+                            <a-input placeholder="Login..." v-model:value="formState.username"/>
                         </a-form-item>
 
                         <a-form-item
-                            label="Пароль"
+                            label="Parol"
                             name="password"
-                            :rules="[{ required: true, message: 'Введите пароль!' }]"
+                            :rules="[{ required: true, message: 'Parolni kiriting!' }]"
                         >
-                            <a-input-password placeholder="Введите пароль" v-model:value="formState.password"/>
+                            <a-input-password placeholder="Parol..." v-model:value="formState.password"/>
                         </a-form-item>
 
                         <a-form-item class="flex w-full justify-center">
-                            <a-button class="bg-ant-primary" type="primary" html-type="submit">Вход</a-button>
+                            <a-button class="bg-ant-primary" type="primary" html-type="submit">Kirish</a-button>
                         </a-form-item>
                     </a-form>
                 </Spinner>
@@ -62,11 +62,12 @@ export default {
             this.$api.auth(
                 credentials,
                 ({data}) => {
-                    this.$store.commit('auth/setToken', data.token);
-                    this.$store.commit('auth/setUser', data.user);
+                    this.$store.commit('auth/setToken', data.data.token);
+                    this.$store.commit('auth/setUser', data.data.user);
 
                     this.$store.commit('spinner/toggleSpinning');
                     this.$router.push({name: 'index'});
+                    toastr.success(data.message);
                 },
                 (error) => {
                     switch (error.status) {
@@ -86,7 +87,7 @@ export default {
         }
     },
     beforeMount() {
-        document.title = `${this.$env.appName} | Авторизация`;
+        document.title = `${this.$env.appName} | Kirish`;
     }
 }
 </script>

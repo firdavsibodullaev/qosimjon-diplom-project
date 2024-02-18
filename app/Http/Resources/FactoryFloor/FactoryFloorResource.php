@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\FactoryFloor;
 
-use App\Models\User;
+use App\Models\FactoryFloor;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @property-read User $resource
+ * @property-read FactoryFloor $resource
  */
-class UserResource extends JsonResource
+class FactoryFloorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,9 +20,7 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'name' => $this->resource->name,
-            'username' => $this->resource->username,
-            'roles' => RoleResource::collection($this->whenLoaded('roles'))
+            'name' => $this->resource->name
         ];
     }
 }

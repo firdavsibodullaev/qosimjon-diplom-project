@@ -2,11 +2,15 @@
 
 namespace App\Enums\Role;
 
-enum Role
+use App\Traits\InteractsWithRoles;
+
+enum Role: string
 {
-    case ADMIN;
-    case TESTER;
-    case WORKER;
+    use InteractsWithRoles;
+
+    case ADMIN = 'admin';
+    case TESTER = 'tester';
+    case WORKER = 'worker';
 
     public function translate(): string
     {
@@ -20,9 +24,9 @@ enum Role
     public static function translates(): array
     {
         return [
-            self::ADMIN->name => 'Admin',
-            self::TESTER->name => 'Tekshiruvchi',
-            self::WORKER->name => 'Ishchi',
+            self::ADMIN->value => 'Admin',
+            self::TESTER->value => 'Tekshiruvchi',
+            self::WORKER->value => 'Ishchi',
         ];
     }
 
@@ -30,15 +34,15 @@ enum Role
     {
         return [
             [
-                'name' => self::ADMIN->name,
+                'name' => self::ADMIN->value,
                 'guard_name' => 'web'
             ],
             [
-                'name' => self::TESTER->name,
+                'name' => self::TESTER->value,
                 'guard_name' => 'web'
             ],
             [
-                'name' => self::WORKER->name,
+                'name' => self::WORKER->value,
                 'guard_name' => 'web'
             ],
         ];

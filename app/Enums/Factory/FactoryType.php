@@ -2,8 +2,8 @@
 
 namespace App\Enums\Factory;
 
-enum FactoryType
+enum FactoryType: string
 {
-    case TESTER;
-    case GIVING_FOR_TEST;
+    case TESTER = 'tester';
+    case GIVING_FOR_TEST = 'giving_for_test';
 }

@@ -1,0 +1,15 @@
+openapi: 3.0.0
+
+paths:
+  /api/v1/admin/factory:
+    get:
+      tags:
+        - Factories
+      summary: 'Список заводов'
+      operationId: 2ebee25b7ff4cfb68dc8b240bd8fac0e
+      responses:
+        '200':
+          description: "Korxonalar ro'yhati"
+          content:
+            application/json:
+              schema: {  }

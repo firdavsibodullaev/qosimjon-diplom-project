@@ -1,17 +1,16 @@
 <template>
     <Layout>
-        Hello
+        <div></div>
     </Layout>
 </template>
-
 <script>
+
 import Layout from "@/pages/Layout.vue";
 
 export default {
     components: {Layout},
-    methods: {},
     beforeMount() {
-        document.title = `${this.$env.appName} | Bosh sahifa`;
+        document.title = `${this.$env.appName} | Zavodlar`;
     }
 }
 </script>

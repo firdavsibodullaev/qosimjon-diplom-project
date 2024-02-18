@@ -3,44 +3,7 @@
         <a-layout style="height: 100vh">
             <a-layout-sider v-model:collapsed="$store.getters['sidebar/getCollapsed']" :trigger="null" collapsible>
                 <div class="logo"/>
-                <a-menu v-model:selectedKeys="selectedKeys"
-                        theme="dark"
-                        v-model:openKeys="openKeys"
-                        mode="inline">
-                    <a-menu-item key="1">
-                        <pie-chart-outlined/>
-                        <span>Option 1</span>
-                    </a-menu-item>
-                    <a-menu-item key="2">
-                        <desktop-outlined/>
-                        <span>Option 2</span>
-                    </a-menu-item>
-                    <a-sub-menu key="sub1">
-                        <template #title>
-                        <span>
-                          <user-outlined/>
-                          <span>User</span>
-                        </span>
-                        </template>
-                        <a-menu-item key="3">Tom</a-menu-item>
-                        <a-menu-item key="4">Bill</a-menu-item>
-                        <a-menu-item key="5">Alex</a-menu-item>
-                    </a-sub-menu>
-                    <a-sub-menu key="sub2">
-                        <template #title>
-                    <span>
-                      <team-outlined/>
-                      <span>Team</span>
-                    </span>
-                        </template>
-                        <a-menu-item key="6">Team 1</a-menu-item>
-                        <a-menu-item key="8">Team 2</a-menu-item>
-                    </a-sub-menu>
-                    <a-menu-item key="9">
-                        <file-outlined/>
-                        <span>File</span>
-                    </a-menu-item>
-                </a-menu>
+                <Sidebar/>
             </a-layout-sider>
             <a-layout>
                 <a-layout-header style="background: #fff; padding: 0" class="flex justify-between items-center">
@@ -61,7 +24,7 @@
                             <template #overlay>
                                 <a-menu>
                                     <a-menu-divider/>
-                                    <a-menu-item @click="logout">Выход из системы</a-menu-item>
+                                    <a-menu-item @click="logout">Tizimdan chiqish</a-menu-item>
                                 </a-menu>
                             </template>
                         </a-dropdown>
@@ -79,27 +42,32 @@
 <script>
 import {ref} from 'vue';
 import Spinner from "@/components/Spinner.vue";
+import toastr from "toastr";
+import Sidebar from "@/pages/Sidebar.vue";
 
 export default {
     name: 'Layout',
-    components: {Spinner},
+    components: {Sidebar, Spinner},
     data() {
         return {
-            selectedKeys: ref(['1']),
             collapsed: false,
-            openKeys: ['sub1']
         };
     },
     methods: {
         logout() {
             this.$store.commit('spinner/toggleSpinning');
+
             this.$api.logout((response) => {
-                this.$store.commit('auth/setToken', null);
-                this.$store.commit('auth/setUser', null);
 
                 this.$store.commit('spinner/toggleSpinning');
+                if (response.status === 200) {
+                    this.$store.commit('auth/setToken', null);
+                    this.$store.commit('auth/setUser', null);
 
-                this.$router.push({name: "login"});
+                    this.$router.push({name: "login"});
+
+                    toastr.success(response.data.message)
+                }
             });
         }
     }

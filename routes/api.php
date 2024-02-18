@@ -1,6 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\Auth\AuthController;
+use App\Enums\Role\Role;
+use App\Http\Controllers\Admin\FactoryController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,4 +22,12 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('login', [AuthController::class, 'login'])->name('login');
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });
+
+    Route::prefix('admin')->name('admin.')
+        ->middleware(['auth:sanctum', Role::admin()])
+        ->group(function () {
+            Route::apiResource('factory', FactoryController::class);
+
+            Route::get('role', RoleController::class)->name('role.index');
+        });
 });
