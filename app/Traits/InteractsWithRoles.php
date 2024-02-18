@@ -4,8 +4,8 @@ namespace App\Traits;
 
 trait InteractsWithRoles
 {
-    public static function admin(string $guard = 'web'): string
+    public static function admin(): string
     {
-        return sprintf("role:%s,%s", self::ADMIN->name, $guard);
+        return sprintf("role:%s", self::ADMIN->value);
     }
 }

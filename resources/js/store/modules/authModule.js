@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import api from "@/libs/api";
 
 export const authModule = {
     namespaced: true,
@@ -18,11 +19,14 @@ export const authModule = {
         },
         getExpiresAt(state) {
             return state.expiresAt;
+        },
+        isAuthenticated(state) {
+            return !!state.user && !!state.token;
         }
     },
     mutations: {
         setUser(state, user) {
-            state.user = JSON.stringify(user);
+            state.user = user ? JSON.stringify(user) : user;
             user ? localStorage.setItem("user", state.user) : localStorage.removeItem("user");
         },
         setToken(state, token) {
@@ -34,5 +38,16 @@ export const authModule = {
             state.expiresAt = expiresAt;
         }
     },
-    actions: {}
+    actions: {
+        clearAll(context) {
+            if (context.getters['getToken']) {
+                context.commit('setUser', {user: 'user'});
+                api.apis.logout({});
+            }
+
+            context.commit('setUser', null);
+            context.commit('setToken', null);
+            context.commit('setExpiresAt', null);
+        }
+    }
 }
