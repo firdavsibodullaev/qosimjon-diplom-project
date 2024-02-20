@@ -208,6 +208,7 @@ export default {
     watch: {
         isReloadPage(newValue) {
             if (newValue) {
+                this.loading = true;
                 this.getFactories({page: this.pagination.current});
                 this.$store.commit('factory/setIsReload', false);
             }

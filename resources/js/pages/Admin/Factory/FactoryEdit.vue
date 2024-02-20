@@ -90,18 +90,18 @@ export default {
             this.$store.dispatch('drawer/clearDrawer');
         },
         onFinish(payload) {
-            this.$store.commit('spinner/toggleSpinning', 'main');
+            this.$store.commit('spinner/toggleSpinning', 'drawer');
             this.$api.updateFactory(
                 this.id,
                 payload,
                 ({data}) => {
                     toastr.success(data.message);
-                    this.$store.commit('spinner/toggleSpinning', 'main');
+                    this.$store.commit('spinner/toggleSpinning', 'drawer');
                     this.$store.commit('factory/setIsReload', true);
                     this.onClose();
                 },
                 error => {
-                    this.$store.commit('spinner/toggleSpinning', 'main');
+                    this.$store.commit('spinner/toggleSpinning', 'drawer');
                     console.log(error);
                 }
             )
