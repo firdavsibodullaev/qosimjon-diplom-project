@@ -1,9 +1,14 @@
 <template>
     <Spinner>
-        <a-layout style="height: 100vh">
-            <a-layout-sider v-model:collapsed="$store.getters['sidebar/getCollapsed']" :trigger="null" collapsible>
-                <div class="logo"/>
-                <Sidebar/>
+        <a-layout style="min-height: 100vh">
+            <a-layout-sider v-model:collapsed="$store.getters['sidebar/getCollapsed']"
+                            class="overflow-y-auto"
+                            :trigger="null"
+                            collapsible>
+                <div class="fixed w-[200px]">
+                    <div class="logo"/>
+                    <Sidebar/>
+                </div>
             </a-layout-sider>
             <a-layout>
                 <a-layout-header style="background: #fff; padding: 0" class="flex justify-between items-center">
@@ -40,7 +45,6 @@
     </Spinner>
 </template>
 <script>
-import {ref} from 'vue';
 import Spinner from "@/components/Spinner.vue";
 import toastr from "toastr";
 import Sidebar from "@/pages/Sidebar.vue";

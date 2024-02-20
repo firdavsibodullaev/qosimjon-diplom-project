@@ -29,7 +29,7 @@ class FactoryController extends Controller
     )]
     public function index(): SuccessResponse
     {
-        $factories = $this->factoryService->get();
+        $factories = $this->factoryService->paginate();
 
         return new SuccessResponse(
             response: FactoryResource::collection($factories),

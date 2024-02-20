@@ -40,8 +40,8 @@ export default {
     },
     computed: {
         routes() {
-            return this.filterSidebarRoutes(this.$router.getRoutes()
-                .filter(route => route.meta.main))
+            return this.filterSidebarRoutes(
+                this.$router.getRoutes().filter(route => route.meta.main))
                 .map(route => this.prepareForMenu(route));
         }
     },

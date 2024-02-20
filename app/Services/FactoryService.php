@@ -4,13 +4,13 @@ namespace App\Services;
 
 use App\DTOs\Factory\FactoryPayloadDTO;
 use App\Models\Factory;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class FactoryService
 {
-    public function get(): Collection
+    public function paginate(): LengthAwarePaginator
     {
-        return Factory::query()->get();
+        return Factory::query()->orderBy('number')->paginate(20);
     }
 
     public function create(FactoryPayloadDTO $payload): Factory

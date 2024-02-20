@@ -27,7 +27,7 @@ class AuthController extends Controller
         ]);
 
         if (!Auth::attempt($credentials)) {
-            throw new AuthenticationException("Неправильные данные");
+            throw new AuthenticationException("Xato ma'lumot kiritdingiz");
         }
 
         /** @var User $user */

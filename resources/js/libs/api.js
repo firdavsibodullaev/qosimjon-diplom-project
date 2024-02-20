@@ -3,6 +3,7 @@ import getenv from "@/libs/getenv";
 import store from "@/store";
 import toastr from "toastr";
 import router from "@/libs/router";
+import makeQuery from "@/utils/makeQuery";
 
 const api = axios.create({
     baseURL: `${getenv.vars.apiBaseUrl}/api/v1`,
@@ -37,22 +38,45 @@ const axiosPost = async (url, body, onSuccess, onError) => {
         crossDomain: true,
         headers: getApiHeaders()
     }).then(response => onSuccess(response))
+        .catch(error => {
+            errorHandler(error, onError);
+        })
+};
+
+const axiosPut = async (url, body, onSuccess, onError) => {
+    await api.put(url, body, {
+        crossDomain: true,
+        headers: getApiHeaders()
+    }).then(response => onSuccess(response))
+        .catch(error => {
+            errorHandler(error, onError);
+        })
+};
+
+const axiosDelete = async (url, onSuccess, onError) => {
+    await api.delete(url, {
+        crossDomain: true,
+        headers: getApiHeaders()
+    }).then(response => onSuccess(response))
         .catch(error => errorHandler(error, onError))
 };
 
 const errorHandler = (error, onError) => {
-    let status = error.response.status;
+    let status = error?.response?.status;
     if (status === 500) {
         toastr.error('Whoops! Server Hatoligi ro\'y berdi')
     }
 
     if (status === 401) {
-        store.dispatch('auth/clearAll');
-        router.push({name: 'login'})
-        return;
+        if (error.config.url !== 'auth/login') {
+            store.dispatch('auth/clearAll');
+            router.push({name: 'login'})
+            return;
+
+        }
     }
 
-    return typeof onError === 'function' && onError(error.response);
+    return typeof onError === 'function' && onError(error);
 }
 
 
@@ -66,8 +90,17 @@ const apis = {
     },
 
     // Заводы
-    getFactory(onSuccess, onError = null) {
-        return axiosGet('admin/factory', onSuccess, onError);
+    getFactory(filters, onSuccess, onError = null) {
+        return axiosGet(`admin/factory?${makeQuery(filters)}`, onSuccess, onError);
+    },
+    createFactory(data, onSuccess, onError = null) {
+        return axiosPost(`admin/factory`, data, onSuccess, onError);
+    },
+    updateFactory(id, data, onSuccess, onError = null) {
+        return axiosPut(`admin/factory/${id}`, data, onSuccess, onError);
+    },
+    deleteFactory(id, onSuccess, onError = null) {
+        return axiosDelete(`admin/factory/${id}`, onSuccess, onError);
     }
 };
 
