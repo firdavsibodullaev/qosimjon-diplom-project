@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Admin\Factory;
+namespace App\Http\Requests\FactoryFloor;
 
-use App\DTOs\Factory\FactoryFloorPayloadDTO;
-use App\Enums\Factory\FactoryType;
+use App\DTOs\FactoryFloor\FactoryFloorPayloadDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rule;
 
 class StoreRequest extends FormRequest
 {
@@ -27,21 +26,15 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-            'number' => 'required|int|digits_between:1,4',
-            'type' => [
+            'factory_id' => [
                 'required',
-                'string',
-                new Enum(FactoryType::class)
-            ],
+                Rule::exists('factories', 'id')->where('deleted_at')
+            ]
         ];
     }
 
     public function toDto(): FactoryFloorPayloadDTO
     {
-        return new FactoryFloorPayloadDTO(
-            name: $this->get('name'),
-            number: $this->get('number'),
-            type: FactoryType::tryFrom($this->get('type'))
-        );
+        return new FactoryFloorPayloadDTO(...$this->validated());
     }
 }

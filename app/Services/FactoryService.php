@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\DTOs\Factory\FactoryPayloadDTO;
+use App\DTOs\Factory\FactoryFloorPayloadDTO;
 use App\Models\Factory;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -13,7 +13,7 @@ class FactoryService
         return Factory::query()->orderBy('number')->paginate(20);
     }
 
-    public function create(FactoryPayloadDTO $payload): Factory
+    public function create(FactoryFloorPayloadDTO $payload): Factory
     {
         $factory = new Factory([
             'name' => $payload->name,
@@ -25,7 +25,7 @@ class FactoryService
         return $factory;
     }
 
-    public function update(Factory $factory, FactoryPayloadDTO $payload): Factory
+    public function update(Factory $factory, FactoryFloorPayloadDTO $payload): Factory
     {
         $factory->fill([
             'name' => $payload->name,

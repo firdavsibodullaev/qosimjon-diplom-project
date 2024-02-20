@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\FactoryFloor;
 
+use App\Http\Resources\Factory\FactoryResource;
+use App\Http\Resources\UserResource;
 use App\Models\FactoryFloor;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -20,7 +22,9 @@ class FactoryFloorResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'name' => $this->resource->name
+            'name' => $this->resource->name,
+            'factory' => FactoryResource::make($this->whenLoaded('factoryRelation')),
+            'users' => UserResource::collection($this->whenLoaded('users'))
         ];
     }
 }
