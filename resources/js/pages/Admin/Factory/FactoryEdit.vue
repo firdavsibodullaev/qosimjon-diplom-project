@@ -69,7 +69,7 @@ export default {
                 }],
                 type: [{
                     required: true,
-                    message: 'Zavod turini kiriting'
+                    message: 'Zavod turini tanlang'
                 }],
             }
         };
@@ -95,13 +95,13 @@ export default {
                     this.onClose();
                 },
                 error => {
+                    this.$store.commit('spinner/toggleSpinning');
                     console.log(error);
                 }
             )
             ;
         },
         onFinishFailed(errors) {
-            this.$store.commit('spinner/toggleSpinning');
             console.log(errors);
         },
     },

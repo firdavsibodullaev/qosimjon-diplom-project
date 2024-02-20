@@ -81,10 +81,10 @@ export default {
                 },
                 error => {
                     console.log(error);
+                    this.$store.commit('spinner/toggleSpinning');
                 });
         },
         onFinishFailed(errors) {
-            this.$store.commit('spinner/toggleSpinning');
             console.log(errors);
         },
     },

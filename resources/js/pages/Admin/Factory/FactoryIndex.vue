@@ -14,6 +14,7 @@
             <template #bodyCell="{column, text, record}">
                 <template v-if="column.dataIndex === 'actions'">
                     <a-button type="primary"
+                              :id="`record-${record.record.id}`"
                               @click="this.openWithComponent(record.record)"
                               class="mr-2 bg-ant-primary">Tahrirlash
                     </a-button>
@@ -89,12 +90,12 @@ export default {
         };
     },
     methods: {
-        getFactories(filters) {
+        async getFactories(filters) {
             let types = {
                 "giving_for_test": "Arizachi",
                 "tester": "Tekshiruvchi"
             };
-            this.$api.getFactory(
+            await this.$api.getFactory(
                 {page: filters.page},
                 ({data}) => {
                     if (!data.data.length) {
@@ -133,7 +134,7 @@ export default {
                 id,
                 ({data}) => {
                     toastr.success(data.message);
-                    this.getFactories();
+                    this.getFactories({page: this.pagination.current});
                 },
                 (error) => {
                     this.loading = false;
@@ -144,17 +145,22 @@ export default {
             this.$store.commit('drawer/setOpen', true);
         },
         openWithComponent(record = null) {
-            if (record) {
-                this.componentKey = `edit-${record.number}-${record.id}`;
-                this.component = markRaw(FactoryEdit);
-                this.$store.commit('drawer/setComponentProps', record);
-                this.$store.commit('drawer/setDrawerTitle', 'Zavodni tahrirlash');
-            } else {
-                this.componentKey = `create`;
-                this.component = markRaw(FactoryCreate);
-                this.$store.commit('drawer/setDrawerTitle', 'Yangi zavod qo\'shish');
-            }
+            record
+                ? this.loadEditComponent(record)
+                : this.loadCreateComponent();
             this.openDrawer();
+        },
+        loadCreateComponent() {
+            this.componentKey = `create`;
+            this.component = markRaw(FactoryCreate);
+            this.$store.commit('drawer/setDrawerTitle', 'Yangi zavod qo\'shish');
+        },
+        loadEditComponent(record) {
+            this.componentKey = `edit-${record.number}-${record.id}`;
+            this.component = markRaw(FactoryEdit);
+            this.$store.commit('drawer/setComponentProps', record);
+            this.$store.commit('drawer/setDrawerTitle', 'Zavodni tahrirlash');
+            document.getElementById(`record-${record.id}`).closest('tr').classList.add('bg-gray-100');
         },
         handleTableChange(page, filters, sorter) {
             this.loading = true;
@@ -164,22 +170,29 @@ export default {
     computed: {
         isReloadPage() {
             return this.$store.getters['factory/getIsReload'];
+        },
+        drawerStatus() {
+            return this.$store.getters['drawer/getOpen'];
         }
     },
     beforeMount() {
         document.title = `${this.$env.appName} | Zavodlar`;
-        this.getFactories({page: this.pagination.current});
-
-        let data = this.$store.getters['drawer/getComponentProps'];
-        if (data) {
-            this.openWithComponent(data);
-        }
+        this.getFactories({page: this.pagination.current}).then(() => {
+            let data = this.$store.getters['drawer/getComponentProps'];
+            data && this.openWithComponent(data);
+        });
     },
     watch: {
         isReloadPage(newValue) {
             if (newValue) {
                 this.getFactories({page: this.pagination.current});
                 this.$store.commit('factory/setIsReload', false);
+            }
+        },
+        drawerStatus(newValue) {
+            if (!newValue) {
+                document.querySelectorAll('tr.bg-gray-100')
+                    .forEach((dom) => dom.classList.remove('bg-gray-100'));
             }
         }
     }

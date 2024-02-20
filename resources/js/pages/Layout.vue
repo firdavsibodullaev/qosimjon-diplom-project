@@ -1,14 +1,12 @@
 <template>
     <Spinner>
-        <a-layout style="min-height: 100vh">
+        <a-layout class="min-h-screen">
             <a-layout-sider v-model:collapsed="$store.getters['sidebar/getCollapsed']"
                             class="overflow-y-auto"
                             :trigger="null"
                             collapsible>
-                <div class="fixed w-[200px]">
-                    <div class="logo"/>
-                    <Sidebar/>
-                </div>
+                <div class="logo"/>
+                <Sidebar/>
             </a-layout-sider>
             <a-layout>
                 <a-layout-header style="background: #fff; padding: 0" class="flex justify-between items-center">
