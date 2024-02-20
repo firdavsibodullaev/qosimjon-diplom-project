@@ -5,7 +5,7 @@
                 class="w-[40rem] bg-white p-16 rounded-2xl shadow-current flex flex-col items-center content-center justify-center border-t-ant-primary border-4">
                 <p class="w-full text-4xl text-center mb-1"><strong>{{ $env.appName }}</strong></p>
                 <p class="w-full text-sm text-center mb-6 text-gray-600">Tizimga kirish</p>
-                <Spinner>
+                <Spinner type="main">
                     <a-form
                         class="w-full"
                         :model="formState"
@@ -58,14 +58,14 @@ export default {
     },
     methods: {
         onFinish(credentials) {
-            this.$store.commit('spinner/toggleSpinning');
+            this.$store.commit('spinner/toggleSpinning', 'main');
             this.$api.auth(
                 credentials,
                 ({data}) => {
                     this.$store.commit('auth/setToken', data.data.token);
                     this.$store.commit('auth/setUser', data.data.user);
 
-                    this.$store.commit('spinner/toggleSpinning');
+                    this.$store.commit('spinner/toggleSpinning', 'main');
                     this.$router.push({name: 'index'});
                     toastr.success(data.message);
                 },
@@ -78,7 +78,7 @@ export default {
                             Object.keys(error.data.errors).forEach(key => toastr.error(error.data.errors[key][0]))
                             break;
                     }
-                    this.$store.commit('spinner/toggleSpinning');
+                    this.$store.commit('spinner/toggleSpinning', 'main');
                 }
             );
         },

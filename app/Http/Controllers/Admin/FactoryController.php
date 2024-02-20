@@ -24,7 +24,7 @@ class FactoryController extends Controller
         summary: 'Список заводов',
         tags: ['Factories'],
         responses: [
-            new Response(response: 200, description: 'Korxonalar ro\'yhati',content: new JsonContent())
+            new Response(response: 200, description: 'Korxonalar ro\'yhati', content: new JsonContent())
         ]
     )]
     public function index(): SuccessResponse
@@ -40,7 +40,7 @@ class FactoryController extends Controller
     public function show(Factory $factory): SuccessResponse
     {
         return new SuccessResponse(
-            response: FactoryResource::make($factory),
+            response: FactoryResource::make($factory->load('factoryFloors')),
             message: 'Korxona ma\'lumotlari'
         );
     }

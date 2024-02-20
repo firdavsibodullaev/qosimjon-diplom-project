@@ -1,5 +1,5 @@
 <template>
-    <Spinner>
+    <Spinner type="main">
         <a-layout class="min-h-screen">
             <a-layout-sider v-model:collapsed="$store.getters['sidebar/getCollapsed']"
                             class="overflow-y-auto"
@@ -57,11 +57,11 @@ export default {
     },
     methods: {
         logout() {
-            this.$store.commit('spinner/toggleSpinning');
+            this.$store.commit('spinner/toggleSpinning', 'main');
 
             this.$api.logout((response) => {
 
-                this.$store.commit('spinner/toggleSpinning');
+                this.$store.commit('spinner/toggleSpinning', 'main');
                 if (response.status === 200) {
                     this.$store.commit('auth/setToken', null);
                     this.$store.commit('auth/setUser', null);

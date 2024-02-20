@@ -90,8 +90,11 @@ const apis = {
     },
 
     // Заводы
-    getFactory(filters, onSuccess, onError = null) {
+    getFactories(filters, onSuccess, onError = null) {
         return axiosGet(`admin/factory?${makeQuery(filters)}`, onSuccess, onError);
+    },
+    getFactory(id, onSuccess, onError = null) {
+        return axiosGet(`admin/factory/${id}`, onSuccess, onError);
     },
     createFactory(data, onSuccess, onError = null) {
         return axiosPost(`admin/factory`, data, onSuccess, onError);

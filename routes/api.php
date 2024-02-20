@@ -2,6 +2,7 @@
 
 use App\Enums\Role\Role;
 use App\Http\Controllers\Admin\FactoryController;
+use App\Http\Controllers\Admin\FactoryFloorController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
         ->middleware(['auth:sanctum', Role::admin()])
         ->group(function () {
             Route::apiResource('factory', FactoryController::class);
+            Route::apiResource('factory-floor', FactoryFloorController::class);
 
             Route::get('role', RoleController::class)->name('role.index');
         });

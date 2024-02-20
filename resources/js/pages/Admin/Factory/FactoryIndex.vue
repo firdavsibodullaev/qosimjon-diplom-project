@@ -1,7 +1,7 @@
 <template>
     <Layout>
         <a-button class="bg-ant-primary mb-4"
-                  type="primary" @click="openWithComponent(null)">Yangi qo'shish
+                  type="primary" @click="openWithComponent('create',null)">Yangi qo'shish
         </a-button>
         <a-table
             :loading="loading"
@@ -14,9 +14,13 @@
             <template #bodyCell="{column, text, record}">
                 <template v-if="column.dataIndex === 'actions'">
                     <a-button type="primary"
+                              @click="this.openWithComponent('show',record.record)"
+                              class="mr-2 bg-ant-primary">Batafsil
+                    </a-button>
+                    <a-button type="primary"
                               :id="`record-${record.record.id}`"
-                              @click="this.openWithComponent(record.record)"
-                              class="mr-2 bg-ant-primary">Tahrirlash
+                              @click="this.openWithComponent('edit',record.record)"
+                              class="mr-2 bg-yellow-400 text-black hover:!bg-yellow-300 hover:!text-black">Tahrirlash
                     </a-button>
                     <a-popconfirm
                         v-if="data.length"
@@ -45,6 +49,8 @@ import Drawer from "@/components/Drawer.vue";
 import FactoryEdit from "@/pages/Admin/Factory/FactoryEdit.vue";
 import FactoryCreate from "@/pages/Admin/Factory/FactoryCreate.vue";
 import {markRaw} from "vue";
+import FactoryShow from "@/pages/Admin/Factory/FactoryShow.vue";
+import factoryType from "@/pages/Admin/Factory/factoryType";
 
 export default {
     name: 'FactoryIndex',
@@ -91,11 +97,8 @@ export default {
     },
     methods: {
         async getFactories(filters) {
-            let types = {
-                "giving_for_test": "Arizachi",
-                "tester": "Tekshiruvchi"
-            };
-            await this.$api.getFactory(
+
+            await this.$api.getFactories(
                 {page: filters.page},
                 ({data}) => {
                     if (!data.data.length) {
@@ -115,7 +118,7 @@ export default {
                             id: item.id,
                             name: item.name,
                             number: item.number,
-                            type: types[item.type],
+                            type: factoryType[item.type],
                             actions: ''
                         };
                     });
@@ -144,10 +147,23 @@ export default {
         openDrawer() {
             this.$store.commit('drawer/setOpen', true);
         },
-        openWithComponent(record = null) {
-            record
-                ? this.loadEditComponent(record)
-                : this.loadCreateComponent();
+        openWithComponent(type, record = null) {
+            switch (type) {
+                case "create":
+                    this.loadCreateComponent();
+                    break;
+                case "edit":
+                    record.componentType = "edit";
+                    this.loadEditComponent(record);
+                    break;
+                case "show":
+                    record.componentType = "show";
+                    this.loadShowComponent(record);
+                    break;
+                default:
+                    console.error("Выбрали неправильный тип");
+                    return;
+            }
             this.openDrawer();
         },
         loadCreateComponent() {
@@ -160,6 +176,13 @@ export default {
             this.component = markRaw(FactoryEdit);
             this.$store.commit('drawer/setComponentProps', record);
             this.$store.commit('drawer/setDrawerTitle', 'Zavodni tahrirlash');
+            document.getElementById(`record-${record.id}`).closest('tr').classList.add('bg-gray-100');
+        },
+        loadShowComponent(record) {
+            this.componentKey = `show-${record.number}-${record.id}`;
+            this.component = markRaw(FactoryShow);
+            this.$store.commit('drawer/setComponentProps', {componentType: record.componentType, id: record.id});
+            this.$store.commit('drawer/setDrawerTitle', 'Batafsil');
             document.getElementById(`record-${record.id}`).closest('tr').classList.add('bg-gray-100');
         },
         handleTableChange(page, filters, sorter) {
@@ -179,7 +202,7 @@ export default {
         document.title = `${this.$env.appName} | Zavodlar`;
         this.getFactories({page: this.pagination.current}).then(() => {
             let data = this.$store.getters['drawer/getComponentProps'];
-            data && this.openWithComponent(data);
+            data && this.openWithComponent(data.componentType, data);
         });
     },
     watch: {

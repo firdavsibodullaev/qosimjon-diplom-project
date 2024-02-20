@@ -1,16 +1,26 @@
 export const spinnerModule = {
     namespaced: true,
     state: () => ({
-        spinning: false
+        spinner: {
+            main: {
+                spinning: false,
+            },
+            drawer: {
+                spinning: false
+            },
+        }
     }),
     getters: {
-        getSpinning(state) {
-            return state.spinning;
+        getMainSpinning(state) {
+            return state.spinner.main.spinning;
+        },
+        getDrawerSpinning(state) {
+            return state.spinner.drawer.spinning;
         }
     },
     mutations: {
-        toggleSpinning(state) {
-            return state.spinning = !state.spinning;
+        toggleSpinning(state, spinner = 'main') {
+            return state.spinner[spinner].spinning = !state.spinner[spinner].spinning;
         }
     }
 };

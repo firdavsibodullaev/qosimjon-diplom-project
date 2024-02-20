@@ -18,8 +18,9 @@
         <a-col>
             <a-form-item label="Zavod turi" name="type">
                 <a-select v-model:value="form.type" placeholder="Zavod turi...">
-                    <a-select-option value="giving_for_test">Arizachi</a-select-option>
-                    <a-select-option value="tester">Tekshiruvchi</a-select-option>
+                    <a-select-option v-for="(type, index) in types"
+                                     :key="`factory-type-${index}`"
+                                     :value="index">{{ type }}</a-select-option>
                 </a-select>
             </a-form-item>
         </a-col>
@@ -33,6 +34,7 @@
 <script>
 
 import toastr from "toastr";
+import factoryType from "@/pages/Admin/Factory/factoryType";
 
 export default {
     name: 'FactoryEdit',
@@ -52,7 +54,6 @@ export default {
     },
     data() {
         return {
-            isActive: this.$store.getters['drawer/getOpen'],
             form: {
                 name: this.name,
                 number: this.number,
@@ -71,7 +72,8 @@ export default {
                     required: true,
                     message: 'Zavod turini tanlang'
                 }],
-            }
+            },
+            types: factoryType
         };
     },
     computed: {
@@ -80,22 +82,26 @@ export default {
         }
     },
     methods: {
+        init() {
+            this.form = {name: this.name, number: this.number, type: this.type};
+            this.$store.commit('spinner/toggleSpinning', 'drawer');
+        },
         onClose() {
             this.$store.dispatch('drawer/clearDrawer');
         },
         onFinish(payload) {
-            this.$store.commit('spinner/toggleSpinning');
+            this.$store.commit('spinner/toggleSpinning', 'main');
             this.$api.updateFactory(
                 this.id,
                 payload,
                 ({data}) => {
                     toastr.success(data.message);
-                    this.$store.commit('spinner/toggleSpinning');
+                    this.$store.commit('spinner/toggleSpinning', 'main');
                     this.$store.commit('factory/setIsReload', true);
                     this.onClose();
                 },
                 error => {
-                    this.$store.commit('spinner/toggleSpinning');
+                    this.$store.commit('spinner/toggleSpinning', 'main');
                     console.log(error);
                 }
             )
@@ -107,9 +113,7 @@ export default {
     },
     watch: {
         closeDrawer(newValue) {
-
-            this.form = newValue ? {name: this.name, number: this.number, type: this.type}
-                : {name: null, number: null, type: null};
+            this.form = {name: null, number: null, type: null};
         }
     }
 }
