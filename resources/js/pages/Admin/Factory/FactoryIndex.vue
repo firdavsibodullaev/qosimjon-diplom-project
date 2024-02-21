@@ -1,5 +1,6 @@
 <template>
     <Layout>
+        <p class="text-4xl mb-8"><strong>Zavodlar</strong></p>
         <a-button class="bg-ant-primary mb-4"
                   type="primary" @click="openWithComponent('create',null)">Yangi qo'shish
         </a-button>
@@ -8,7 +9,7 @@
             :columns="columns"
             :data-source="data"
             :pagination="pagination"
-            :scroll="{ y: 600 }"
+            :scroll="{ y: 530 }"
             @change="handleTableChange"
         >
             <template #bodyCell="{column, text, record}">
@@ -63,7 +64,7 @@ export default {
                 current: this.$route.query.page ?? 1,
                 pageSize: 0,
             },
-            sorter: this.$route.query.sorter ?? 'number',
+            sorter: this.$route.query.sorter ?? 'id',
             columns: [
                 {
                     title: '№',
