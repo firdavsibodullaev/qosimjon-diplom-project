@@ -27,7 +27,7 @@ class AuthController extends Controller
         ]);
 
         if (!Auth::attempt($credentials)) {
-            throw new AuthenticationException("Xato ma'lumot kiritdingiz");
+            throw new AuthenticationException(__('auth.failed'));
         }
 
         /** @var User $user */

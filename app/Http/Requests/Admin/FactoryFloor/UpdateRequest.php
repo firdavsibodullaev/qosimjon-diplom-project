@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\FactoryFloor;
+namespace App\Http\Requests\Admin\FactoryFloor;
 
 use App\DTOs\FactoryFloor\FactoryFloorPayloadDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,6 +26,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
+            'number' => 'required|int|digits_between:1,5',
             'factory_id' => [
                 'required',
                 Rule::exists('factories', 'id')->where('deleted_at')

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FactoryFloor\StoreRequest;
+use App\Http\Requests\Admin\FactoryFloor\StoreRequest;
 use App\Http\Resources\FactoryFloor\FactoryFloorResource;
 use App\Models\FactoryFloor;
 use App\Services\FactoryFloorService;

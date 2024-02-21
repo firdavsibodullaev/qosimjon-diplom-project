@@ -51,6 +51,7 @@ import FactoryCreate from "@/pages/Admin/Factory/FactoryCreate.vue";
 import {markRaw} from "vue";
 import FactoryShow from "@/pages/Admin/Factory/FactoryShow.vue";
 import factoryType from "@/pages/Admin/Factory/factoryType";
+import makeSorterField from "@/utils/makeSorterField";
 
 export default {
     name: 'FactoryIndex',
@@ -62,6 +63,7 @@ export default {
                 current: this.$route.query.page ?? 1,
                 pageSize: 0,
             },
+            sorter: this.$route.query.sorter ?? 'number',
             columns: [
                 {
                     title: '№',
@@ -69,19 +71,26 @@ export default {
                     width: 20
                 },
                 {
+                    title: 'ID',
+                    dataIndex: 'id',
+                    width: 20,
+                    sorter: true
+                },
+                {
                     title: 'Nomi',
                     dataIndex: 'name',
-                    width: 150
+                    width: 200
                 },
                 {
                     title: 'Raqami',
                     dataIndex: 'number',
-                    width: 150
+                    width: 50,
+                    sorter: true
                 },
                 {
                     title: 'Turi',
                     dataIndex: 'type',
-                    width: 150
+                    width: 50
                 },
                 {
                     title: '',
@@ -97,12 +106,11 @@ export default {
     },
     methods: {
         async getFactories(filters) {
-
             await this.$api.getFactories(
-                {page: filters.page},
+                {page: filters.page, sorter: filters.sorter},
                 ({data}) => {
                     if (!data.data.length) {
-                        this.getFactories({page: data.meta.last_page});
+                        this.getFactories({page: data.meta.last_page, sorter: filters.sorter});
                         return;
                     }
 
@@ -123,7 +131,10 @@ export default {
                         };
                     });
                     this.loading = false;
-                    this.$router.push({name: 'factory', query: {page: this.pagination.current}});
+                    this.$router.push({
+                        name: 'factory',
+                        query: {page: this.pagination.current, sorter: filters.sorter ?? 'number'}
+                    });
                 },
                 (response) => {
                     console.log(response);
@@ -187,7 +198,8 @@ export default {
         },
         handleTableChange(page, filters, sorter) {
             this.loading = true;
-            this.getFactories({page: page.current, filters, sorter});
+            console.log(sorter);
+            this.getFactories({page: page.current, filters, sorter: makeSorterField(sorter.field, sorter.order)});
         }
     },
     computed: {
@@ -200,7 +212,7 @@ export default {
     },
     beforeMount() {
         document.title = `${this.$env.appName} | Zavodlar`;
-        this.getFactories({page: this.pagination.current}).then(() => {
+        this.getFactories({page: this.pagination.current, sorter: this.sorter}).then(() => {
             let data = this.$store.getters['drawer/getComponentProps'];
             data && this.openWithComponent(data.componentType, data);
         });
@@ -209,7 +221,7 @@ export default {
         isReloadPage(newValue) {
             if (newValue) {
                 this.loading = true;
-                this.getFactories({page: this.pagination.current});
+                this.getFactories({page: this.pagination.current, sorter: this.sorter});
                 this.$store.commit('factory/setIsReload', false);
             }
         },

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property-read int $id
  * @property string $name
+ * @property int $number
  * @property int $factory_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -25,6 +26,7 @@ class FactoryFloor extends Model
 
     protected $fillable = [
         'name',
+        'number',
         'factory_id'
     ];
 

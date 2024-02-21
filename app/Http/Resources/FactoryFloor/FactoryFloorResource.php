@@ -23,6 +23,7 @@ class FactoryFloorResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'name' => $this->resource->name,
+            'number' => $this->resource->number,
             'factory' => FactoryResource::make($this->whenLoaded('factoryRelation')),
             'users' => UserResource::collection($this->whenLoaded('users'))
         ];

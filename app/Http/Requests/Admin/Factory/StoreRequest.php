@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Admin\Factory;
 
-use App\DTOs\Factory\FactoryFloorPayloadDTO;
+use App\DTOs\Factory\FactoryPayloadDTO;
 use App\Enums\Factory\FactoryType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,7 +27,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-            'number' => 'required|int|digits_between:1,4',
+            'number' => 'required|int|digits_between:1,5',
             'type' => [
                 'required',
                 'string',
@@ -36,9 +36,18 @@ class StoreRequest extends FormRequest
         ];
     }
 
-    public function toDto(): FactoryFloorPayloadDTO
+    public function attributes(): array
     {
-        return new FactoryFloorPayloadDTO(
+        return [
+            'name' => 'Zavod nomi',
+            'type' => 'Zavod turi',
+            'number' => 'Zavod raqami',
+        ];
+    }
+
+    public function toDto(): FactoryPayloadDTO
+    {
+        return new FactoryPayloadDTO(
             name: $this->get('name'),
             number: $this->get('number'),
             type: FactoryType::tryFrom($this->get('type'))

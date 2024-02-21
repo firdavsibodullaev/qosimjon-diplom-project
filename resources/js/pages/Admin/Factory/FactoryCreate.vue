@@ -20,7 +20,8 @@
                 <a-select v-model:value="form.type" placeholder="Zavod turi...">
                     <a-select-option v-for="(type, index) in types"
                                      :key="`factory-type-${index}`"
-                                     :value="index">{{ type }}</a-select-option>
+                                     :value="index">{{ type }}
+                    </a-select-option>
                 </a-select>
             </a-form-item>
         </a-col>
@@ -35,6 +36,7 @@
 
 import toastr from "toastr";
 import factoryType from "@/pages/Admin/Factory/factoryType";
+import showValidationErrors from "@/utils/showValidationErrors";
 
 export default {
     name: 'FactoryCreate',
@@ -46,18 +48,9 @@ export default {
                 type: this.type
             },
             rules: {
-                name: [{
-                    required: true,
-                    message: 'Zavod nomini kiriting'
-                }],
-                number: [{
-                    required: true,
-                    message: 'Zavod raqamini kiriting'
-                }],
-                type: [{
-                    required: true,
-                    message: 'Zavod turini kiriting'
-                }],
+                name: [{required: true, message: 'Zavod nomini kiriting'}],
+                number: [{required: true, message: 'Zavod raqamini kiriting'}],
+                type: [{required: true, message: 'Zavod turini kiriting'}],
             },
             types: factoryType
         };
@@ -84,9 +77,11 @@ export default {
                     this.$store.commit('factory/setIsReload', true);
                     this.onClose();
                 },
-                error => {
-                    console.log(error);
+                ({response}) => {
                     this.$store.commit('spinner/toggleSpinning', 'main');
+                    if (response.status === 422) {
+                        showValidationErrors(response.data.errors);
+                    }
                 });
         },
         onFinishFailed(errors) {

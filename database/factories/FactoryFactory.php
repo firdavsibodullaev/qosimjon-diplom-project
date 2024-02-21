@@ -19,7 +19,7 @@ class FactoryFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->word(),
-            'number' => $this->faker->unique()->numberBetween(1, 10),
+            'number' => $this->faker->unique()->numberBetween(1, 9999),
             'type' => $this->faker->randomElement(FactoryType::cases())
         ];
     }

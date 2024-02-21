@@ -48,6 +48,11 @@ export default {
                     title: 'Nomi',
                     dataIndex: 'name',
                     width: 150
+                },
+                {
+                    title: 'Raqami',
+                    dataIndex: 'number',
+                    width: 150
                 }
             ],
             data: null,
@@ -60,7 +65,7 @@ export default {
         },
         floors() {
             return this.data.floors.map((floor, index) => {
-                return {orderNumber: index + 1, name: floor.name};
+                return {orderNumber: index + 1, name: floor.name, number: floor.number};
             });
         }
     },

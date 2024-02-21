@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('factory_floors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer(column: 'number', unsigned: true);
             $table->foreignId('factory_id')->constrained();
             $table->timestamps();
             $table->softDeletes();

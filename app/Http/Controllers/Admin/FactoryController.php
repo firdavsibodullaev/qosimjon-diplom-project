@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Factory\FilterRequest;
 use App\Http\Requests\Admin\Factory\StoreRequest;
+use App\Http\Requests\Admin\Factory\UpdateRequest;
 use App\Http\Resources\Factory\FactoryResource;
 use App\Models\Factory;
 use App\Services\FactoryService;
@@ -27,9 +29,9 @@ class FactoryController extends Controller
             new Response(response: 200, description: 'Korxonalar ro\'yhati', content: new JsonContent())
         ]
     )]
-    public function index(): SuccessResponse
+    public function index(FilterRequest $request): SuccessResponse
     {
-        $factories = $this->factoryService->paginate();
+        $factories = $this->factoryService->paginate($request->toDto());
 
         return new SuccessResponse(
             response: FactoryResource::collection($factories),
@@ -56,7 +58,7 @@ class FactoryController extends Controller
         );
     }
 
-    public function update(StoreRequest $request, Factory $factory): SuccessResponse
+    public function update(UpdateRequest $request, Factory $factory): SuccessResponse
     {
         $factory = $this->factoryService->update($factory, $request->toDto());
 

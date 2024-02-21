@@ -20,7 +20,8 @@
                 <a-select v-model:value="form.type" placeholder="Zavod turi...">
                     <a-select-option v-for="(type, index) in types"
                                      :key="`factory-type-${index}`"
-                                     :value="index">{{ type }}</a-select-option>
+                                     :value="index">{{ type }}
+                    </a-select-option>
                 </a-select>
             </a-form-item>
         </a-col>
@@ -35,6 +36,7 @@
 
 import toastr from "toastr";
 import factoryType from "@/pages/Admin/Factory/factoryType";
+import showValidationErrors from "@/utils/showValidationErrors";
 
 export default {
     name: 'FactoryEdit',
@@ -100,9 +102,11 @@ export default {
                     this.$store.commit('factory/setIsReload', true);
                     this.onClose();
                 },
-                error => {
+                ({response}) => {
                     this.$store.commit('spinner/toggleSpinning', 'drawer');
-                    console.log(error);
+                    if (response.status === 422) {
+                        showValidationErrors(response.data.errors);
+                    }
                 }
             )
             ;
