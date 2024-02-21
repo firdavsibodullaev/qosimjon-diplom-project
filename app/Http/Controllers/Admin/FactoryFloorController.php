@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\FactoryFloor\FilterRequest;
 use App\Http\Requests\Admin\FactoryFloor\StoreRequest;
 use App\Http\Resources\FactoryFloor\FactoryFloorResource;
 use App\Models\FactoryFloor;
@@ -16,9 +17,9 @@ class FactoryFloorController extends Controller
     {
     }
 
-    public function index(): SuccessResponse
+    public function index(FilterRequest $request): SuccessResponse
     {
-        $floors = $this->factoryFloorService->paginate();
+        $floors = $this->factoryFloorService->paginate($request->toDto());
 
         return new SuccessResponse(
             response: FactoryFloorResource::collection($floors),

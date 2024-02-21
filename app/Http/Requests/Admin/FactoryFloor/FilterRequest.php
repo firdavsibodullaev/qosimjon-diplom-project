@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Admin\Factory;
+namespace App\Http\Requests\Admin\FactoryFloor;
 
-use App\DTOs\Factory\FilterDTO;
+use App\DTOs\FactoryFloor\FilterDTO;
 use App\Http\Requests\FilterValidator;
 use Illuminate\Validation\Rule;
 
@@ -16,8 +16,7 @@ class FilterRequest extends FilterValidator
                 'nullable',
                 'string',
                 Rule::in(['id', '-id', 'number', '-number'])
-            ],
-            'list' => 'nullable|boolean'
+            ]
         ];
     }
 

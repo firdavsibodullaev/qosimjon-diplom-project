@@ -131,6 +131,8 @@ export default {
                         };
                     });
                     this.loading = false;
+
+                    this.sorter = filters.sorter;
                     this.$router.push({
                         name: 'factory',
                         query: {page: this.pagination.current, sorter: filters.sorter ?? 'number'}
@@ -148,7 +150,7 @@ export default {
                 id,
                 ({data}) => {
                     toastr.success(data.message);
-                    this.getFactories({page: this.pagination.current});
+                    this.getFactories({page: this.pagination.current, sorter: this.sorter});
                 },
                 (error) => {
                     this.loading = false;

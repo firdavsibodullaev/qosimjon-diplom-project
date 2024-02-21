@@ -3,21 +3,23 @@
 namespace App\Services;
 
 use App\DTOs\FactoryFloor\FactoryFloorPayloadDTO;
+use App\DTOs\FactoryFloor\FilterDTO;
 use App\Models\FactoryFloor;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class FactoryFloorService
 {
-    public function paginate(): LengthAwarePaginator
+    public function paginate(FilterDTO $filter = new FilterDTO()): LengthAwarePaginator
     {
-        return FactoryFloor::query()->orderBy('id')->paginate(20);
+        return FactoryFloor::filter($filter)->orderBy('id')->with('factoryRelation')->paginate(20);
     }
 
     public function create(FactoryFloorPayloadDTO $payload): FactoryFloor
     {
         $factory_floor = new FactoryFloor([
             'name' => $payload->name,
-            'factory_id' => $payload->factory_id
+            'factory_id' => $payload->factory_id,
+            'number' => $payload->number
         ]);
         $factory_floor->save();
 
@@ -28,7 +30,8 @@ class FactoryFloorService
     {
         $factory_floor->fill([
             'name' => $payload->name,
-            'factory_id' => $payload->factory_id
+            'factory_id' => $payload->factory_id,
+            'number' => $payload->number
         ]);
         $factory_floor->save();
 

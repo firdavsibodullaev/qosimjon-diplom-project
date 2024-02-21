@@ -34,6 +34,15 @@ class UpdateRequest extends FormRequest
         ];
     }
 
+    public function attributes(): array
+    {
+        return [
+            'name' => 'Sex nomi',
+            'factory_id' => 'Zavod',
+            'number' => 'Sex raqami',
+        ];
+    }
+
     public function toDto(): FactoryFloorPayloadDTO
     {
         return new FactoryFloorPayloadDTO(...$this->validated());

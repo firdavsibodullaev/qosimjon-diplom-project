@@ -7,12 +7,19 @@ use App\DTOs\Factory\FactoryPayloadDTO;
 use App\DTOs\Factory\FilterDTO;
 use App\Models\Factory;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class FactoryService
 {
-    public function paginate(FilterDTO $filter = new FilterDTO()): LengthAwarePaginator
+    public function paginate(FilterDTO $filter = new FilterDTO()): Collection|LengthAwarePaginator
     {
-        return Factory::filter($filter)->paginate(20);
+        return Factory::filter($filter)
+            ->when(
+                value: $filter->list,
+                callback: fn(Builder $builder) => $builder->get(),
+                default: fn(Builder $builder) => $builder->paginate(20)
+            );
     }
 
     public function create(FactoryPayloadDTO $payload): Factory

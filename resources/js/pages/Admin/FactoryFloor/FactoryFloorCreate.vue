@@ -2,25 +2,27 @@
     <a-form :model="form"
             :rules="rules"
             autocomplete="off"
-            @finish="onFinish"
-            @finishFailed="onFinishFailed"
+            @finish="onFloorFinish"
+            @finishFailed="onFloorFinishFailed"
             layout="vertical">
         <a-col>
-            <a-form-item label="Zavod nomi" name="name">
-                <a-input v-model:value="form.name" placeholder="Zavod nomi..."/>
+            <a-form-item label="Sex nomi" name="name">
+                <a-input v-model:value="form.name" placeholder="Sex nomi..."/>
             </a-form-item>
         </a-col>
         <a-col>
-            <a-form-item label="Zavod raqami" name="number">
-                <a-input v-model:value="form.number" placeholder="Zavod raqami..."/>
+            <a-form-item label="Sex raqami" name="number">
+                <a-input v-model:value="form.number" placeholder="Sex raqami..."/>
             </a-form-item>
         </a-col>
         <a-col>
-            <a-form-item label="Zavod turi" name="type">
-                <a-select v-model:value="form.type" placeholder="Zavod turi...">
-                    <a-select-option v-for="(type, index) in types"
-                                     :key="`factory-type-${index}`"
-                                     :value="index">{{ type }}
+            <a-form-item label="Zavod" name="factory_id">
+                <a-select v-model:value="form.factory_id"
+                          :filter-option="filterOption"
+                          show-search placeholder="Zavod...">
+                    <a-select-option v-for="(factory, index) in factories"
+                                     :key="`factory-id-${index}-${factory.id}`"
+                                     :value="factory.id">{{ factory.name }}
                     </a-select-option>
                 </a-select>
             </a-form-item>
@@ -35,24 +37,23 @@
 <script>
 
 import toastr from "toastr";
-import factoryType from "@/pages/Admin/Factory/factoryType";
 import showValidationErrors from "@/utils/showValidationErrors";
 
 export default {
-    name: 'FactoryCreate',
+    name: 'FactoryFloorCreate',
     data() {
         return {
             form: {
                 name: null,
                 number: null,
-                type: null
+                factory_id: null
             },
             rules: {
-                name: [{required: true, message: 'Zavod nomini kiriting'}],
-                number: [{required: true, message: 'Zavod raqamini kiriting'}],
-                type: [{required: true, message: 'Zavod turini kiriting'}],
+                name: [{required: true, message: 'Sex nomini kiriting'}],
+                number: [{required: true, message: 'Sex raqamini kiriting'}],
+                factory_id: [{required: true, message: 'Zavodni tanlang'}],
             },
-            types: factoryType
+            factories: [],
         };
     },
     computed: {
@@ -62,14 +63,17 @@ export default {
     },
     methods: {
         init() {
-            this.$store.commit('spinner/toggleSpinning', 'drawer');
+            this.$store.dispatch('factory/getOrFetchList')
+                .then(() => this.factories = this.$store.getters['factory/getList'])
+                .then(() => this.$store.commit('spinner/toggleSpinning', 'drawer'))
+
         },
         onClose() {
             this.$store.dispatch('drawer/clearDrawer');
         },
-        onFinish(payload) {
+        onFloorFinish(payload) {
             this.$store.commit('spinner/toggleSpinning', 'main');
-            this.$api.createFactory(
+            this.$api.createFactoryFloor(
                 payload,
                 ({data}) => {
                     toastr.success(data.message);
@@ -84,14 +88,18 @@ export default {
                     }
                 });
         },
-        onFinishFailed(errors) {
+        onFloorFinishFailed(errors) {
             console.log(errors);
         },
+        filterOption(input, option) {
+            let regex = new RegExp(input);
+            return option.children()[0].children.toLowerCase().match(regex);
+        }
     },
     watch: {
         closeDrawer(newValue) {
             if (!newValue) {
-                this.form = {name: null, number: null, type: null};
+                this.form = {name: null, number: null, factory_id: null};
             }
         }
     }
