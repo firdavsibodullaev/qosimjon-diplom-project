@@ -20,6 +20,8 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
+            'last_name' => $this->resource->last_name,
+            'first_name' => $this->resource->first_name,
             'name' => $this->resource->name,
             'username' => $this->resource->username,
             'roles' => RoleResource::collection($this->whenLoaded('roles'))

@@ -38,6 +38,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->patterns([
             'factory' => '[0-9]+',
             'user' => '[0-9]+',
+            'factory_floor' => '[0-9]+'
         ]);
     }
 

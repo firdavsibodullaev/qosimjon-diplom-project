@@ -27,10 +27,10 @@ class FactoryFloorController extends Controller
         );
     }
 
-    public function show(FactoryFloor $factoryFloor): SuccessResponse
+    public function show(FactoryFloor $factory_floor): SuccessResponse
     {
         return new SuccessResponse(
-            response: FactoryFloorResource::make($factoryFloor->load(['factoryRelation', 'users'])),
+            response: FactoryFloorResource::make($factory_floor->load(['factoryRelation', 'users'])),
             message: 'Sex haqida batafsil'
         );
     }
@@ -46,9 +46,9 @@ class FactoryFloorController extends Controller
         );
     }
 
-    public function update(StoreRequest $request, FactoryFloor $factoryFloor): SuccessResponse
+    public function update(StoreRequest $request, FactoryFloor $factory_floor): SuccessResponse
     {
-        $factory = $this->factoryFloorService->update($factoryFloor, $request->toDto());
+        $factory = $this->factoryFloorService->update($factory_floor, $request->toDto());
 
         return new SuccessResponse(
             response: FactoryFloorResource::make($factory),
@@ -56,9 +56,9 @@ class FactoryFloorController extends Controller
         );
     }
 
-    public function destroy(FactoryFloor $factoryFloor): SuccessEmptyResponse
+    public function destroy(FactoryFloor $factory_floor): SuccessEmptyResponse
     {
-        $this->factoryFloorService->delete($factoryFloor);
+        $this->factoryFloorService->delete($factory_floor);
 
         return new SuccessEmptyResponse(
             message: 'Sex o\'chirildi'
