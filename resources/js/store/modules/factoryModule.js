@@ -22,7 +22,7 @@ export const factoryModule = {
                 return null;
             }
 
-            return JSON.parse(list);
+            return JSON.parse(list).data;
         }
     },
     mutations: {
@@ -31,8 +31,8 @@ export const factoryModule = {
         },
         setList(state, data = null) {
             if (data) {
-                data.expiresAt = (new Date).getTime() + 60 * 60 * 1000;
-                state.list = JSON.stringify(data);
+                let expiresAt = (new Date).getTime() + 60 * 60 * 1000;
+                state.list = JSON.stringify({expiresAt, data});
                 localStorage.setItem("factories-list", state.list);
             } else {
                 localStorage.removeItem("factories-list");
