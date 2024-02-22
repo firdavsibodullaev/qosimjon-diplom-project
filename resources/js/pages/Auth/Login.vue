@@ -3,11 +3,11 @@
         <div class="bg-gray-200 h-[100vh] w-[100vw] flex justify-center items-center">
             <div
                 class="w-[40rem] bg-white p-16 rounded-2xl shadow-current flex flex-col items-center content-center justify-center border-t-ant-primary border-4">
-                <p class="w-full text-4xl text-center mb-1"><strong>{{ $env.appName }}</strong></p>
+                <p class="w-full text-xl text-center mb-1"><strong>{{ $env.appName }}</strong></p>
                 <p class="w-full text-lg text-center mb-6 text-gray-600">Tizimga kirish</p>
                 <Spinner type="main">
                     <a-form
-                        class="w-full"
+                        class="w-[300px]"
                         :model="formState"
                         :rules="rules"
                         name="basic"
@@ -20,14 +20,19 @@
                             label="Login"
                             name="username"
                         >
-                            <a-input placeholder="Login..." v-model:value="formState.username"/>
+                            <a-input
+                                autocomplete="new"
+                                placeholder="Login..."
+                                v-model:value="formState.username"/>
                         </a-form-item>
 
                         <a-form-item
                             label="Parol"
                             name="password"
                         >
-                            <a-input-password placeholder="Parol..." v-model:value="formState.password"/>
+                            <a-input-password
+                                autocomplete="new-password"
+                                placeholder="Parol..." v-model:value="formState.password"/>
                         </a-form-item>
 
                         <a-form-item class="flex w-full justify-center">

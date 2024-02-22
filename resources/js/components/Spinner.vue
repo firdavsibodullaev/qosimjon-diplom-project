@@ -15,7 +15,7 @@ export default {
     },
     data() {
         return {
-            delayTime: 10
+            delayTime: 0
         };
     },
     methods: {
