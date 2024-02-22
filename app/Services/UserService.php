@@ -23,7 +23,7 @@ class UserService
         return DB::transaction(function () use ($payload) {
             $user = new User([
                 'last_name' => $payload->last_name,
-                'first_name' => $payload->last_name,
+                'first_name' => $payload->first_name,
                 'username' => $payload->username,
                 'factory_floor_id' => $payload->factory_floor_id,
                 'password' => bcrypt($payload->password)
@@ -42,7 +42,7 @@ class UserService
         return DB::transaction(function () use ($user, $payload) {
             $user->fill([
                 'last_name' => $payload->last_name,
-                'first_name' => $payload->last_name,
+                'first_name' => $payload->first_name,
                 'username' => $payload->username,
                 'factory_floor_id' => $payload->factory_floor_id,
                 'password' => $payload->password ? bcrypt($payload->password) : $user->password
