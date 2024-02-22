@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\User\FilterRequest;
 use App\Http\Requests\Admin\User\StoreRequest;
 use App\Http\Requests\Admin\User\UpdateRequest;
 use App\Http\Resources\UserResource;
@@ -20,9 +21,9 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): SuccessResponse
+    public function index(FilterRequest $request): SuccessResponse
     {
-        $users = $this->userService->paginate();
+        $users = $this->userService->paginate($request->toDto());
 
         return new SuccessResponse(
             response: UserResource::collection($users),

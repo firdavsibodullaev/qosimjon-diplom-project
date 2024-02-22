@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\User\FilterDTO;
 use App\DTOs\User\UserPayloadDTO;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -9,12 +10,12 @@ use Illuminate\Support\Facades\DB;
 
 class UserService
 {
-    public function paginate(): LengthAwarePaginator
+    public function paginate(FilterDTO $filter): LengthAwarePaginator
     {
-        return User::query()
+        return User::filter($filter)
             ->with('factoryFloor.factoryRelation', 'roles')
             ->orderBy('id')
-            ->paginate(20);
+            ->paginate($filter->total);
     }
 
     public function create(UserPayloadDTO $payload): User

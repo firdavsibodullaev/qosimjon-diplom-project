@@ -60,7 +60,7 @@ export default {
             pagination: {
                 total: 0,
                 current: this.$route.query.page ?? 1,
-                pageSize: 0,
+                pageSize: this.$route.query.total ?? 0,
             },
             sorter: this.$route.query.sorter ?? 'id',
             columns: [
@@ -105,10 +105,10 @@ export default {
     methods: {
         async getUsers(filters) {
             await this.$api.getUsers(
-                {page: filters.page, sorter: filters.sorter},
+                {page: filters.page, total: filters.total, sorter: filters.sorter},
                 ({data: res}) => {
                     if (!res.data.length) {
-                        this.getUsers({page: res.meta.last_page, sorter: filters.sorter});
+                        this.getUsers({page: res.meta.last_page, total: filters.total, sorter: filters.sorter});
                         return;
                     }
 
@@ -133,7 +133,11 @@ export default {
                     this.sorter = filters.sorter;
                     this.$router.push({
                         name: 'user',
-                        query: {page: this.pagination.current, sorter: filters.sorter ?? 'id'}
+                        query: {
+                            total: this.pagination.pageSize,
+                            page: this.pagination.current,
+                            sorter: filters.sorter ?? 'id'
+                        }
                     });
                 },
                 (response) => {
@@ -148,7 +152,11 @@ export default {
                 id,
                 ({data}) => {
                     toastr.success(data.message);
-                    this.getUsers({page: this.pagination.current, sorter: this.sorter});
+                    this.getUsers({
+                        page: this.pagination.current,
+                        sorter: this.sorter,
+                        total: this.pagination.pageSize
+                    });
                 },
                 (error) => {
                     this.loading = false;
@@ -198,7 +206,12 @@ export default {
         },
         handleTableChange(page, filters, sorter) {
             this.loading = true;
-            this.getUsers({page: page.current, filters, sorter: makeSorterField(sorter.field, sorter.order)});
+            this.getUsers({
+                page: page.current,
+                total: page.pageSize,
+                filters,
+                sorter: makeSorterField(sorter.field, sorter.order)
+            });
         }
     },
     computed: {
@@ -211,7 +224,11 @@ export default {
     },
     beforeMount() {
         document.title = `${this.$env.appName} | Zavodlar`;
-        this.getUsers({page: this.pagination.current, sorter: this.sorter}).then(() => {
+        this.getUsers({
+            page: this.pagination.current,
+            sorter: this.sorter,
+            total: this.pagination.pageSize
+        }).then(() => {
             let data = this.$store.getters['drawer/getComponentProps'];
             data && this.openWithComponent(data.componentType, data);
         });
