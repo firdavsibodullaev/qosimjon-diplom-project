@@ -1,7 +1,7 @@
 <template>
     <a-drawer
         :title="$store.getters['drawer/getDrawerTitle']"
-        :width="720"
+        :width="width"
         :open="$store.getters['drawer/getOpen']"
         :body-style="{ paddingBottom: '80px' }"
         :footer-style="{ textAlign: 'right' }"
@@ -29,6 +29,10 @@ export default {
         },
         componentKey: {
             type: String,
+        },
+        width: {
+            type: Number,
+            default: 720
         }
     },
     computed: {

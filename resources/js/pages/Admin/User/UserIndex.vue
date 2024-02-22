@@ -1,5 +1,5 @@
 <template>
-    <Layout page-title="Sexlar">
+    <Layout page-title="Foydalanuvchilar">
         <a-button class="bg-ant-primary mb-4"
                   type="primary" @click="openWithComponent('create',null)">Yangi qo'shish
         </a-button>
@@ -38,22 +38,22 @@
                 </template>
             </template>
         </a-table>
-        <Drawer key="Drawer" :componentKey="componentKey" :component="component"/>
+        <Drawer key="Drawer" :width="850" :componentKey="componentKey" :component="component"/>
     </Layout>
 </template>
-<script>
 
+<script>
 import Layout from "@/pages/Layout.vue";
-import toastr from "toastr";
-import {markRaw} from "vue";
-import FactoryFloorCreate from "@/pages/Admin/FactoryFloor/FactoryFloorCreate.vue";
 import Drawer from "@/components/Drawer.vue";
-import FactoryFloorEdit from "@/pages/Admin/FactoryFloor/FactoryFloorEdit.vue";
-import FactoryFloorShow from "@/pages/Admin/FactoryFloor/FactoryFloorShow.vue";
+import {markRaw} from "vue";
+import UserCreate from "@/pages/Admin/User/UserCreate.vue";
+import toastr from "toastr";
 import makeSorterField from "@/utils/makeSorterField";
+import UserEdit from "@/pages/Admin/User/UserEdit.vue";
+import UserShow from "@/pages/Admin/User/UserShow.vue";
 
 export default {
-    name: "FactoryFloorIndex",
+    name: "UserIndex",
     components: {Drawer, Layout},
     data() {
         return {
@@ -76,20 +76,19 @@ export default {
                     sorter: true
                 },
                 {
-                    title: 'Nomi',
+                    title: 'F.I.Sh.',
                     dataIndex: 'name',
                     width: 200
-                },
-                {
-                    title: 'Raqami',
-                    dataIndex: 'number',
-                    width: 50,
-                    sorter: true
                 },
                 {
                     title: 'Zavod',
                     dataIndex: 'factory',
                     width: 50
+                },
+                {
+                    title: 'Sex',
+                    dataIndex: 'floor',
+                    width: 50,
                 },
                 {
                     title: '',
@@ -99,48 +98,41 @@ export default {
             ],
             componentKey: null,
             loading: true,
-            component: markRaw(FactoryFloorCreate),
+            component: markRaw(UserCreate),
             data: [],
         };
     },
-    computed: {
-        isReloadPage() {
-            return this.$store.getters['factory/getIsReload'];
-        },
-        drawerStatus() {
-            return this.$store.getters['drawer/getOpen'];
-        }
-    },
     methods: {
-        async getFactoryFloors(filters) {
-            await this.$api.getFactoryFloors(
+        async getUsers(filters) {
+            await this.$api.getUsers(
                 {page: filters.page, sorter: filters.sorter},
-                ({data}) => {
-                    if (!data.data.length) {
-                        this.getFactoryFloors({page: data.meta.last_page, sorter: filters.sorter});
+                ({data: res}) => {
+                    if (!res.data.length) {
+                        this.getUsers({page: res.meta.last_page, sorter: filters.sorter});
                         return;
                     }
 
                     this.pagination = {
-                        total: data.meta.total,
-                        current: data.meta.current_page,
-                        pageSize: data.meta.per_page,
+                        total: res.meta.total,
+                        current: res.meta.current_page,
+                        pageSize: res.meta.per_page,
                     }
-
-                    this.data = data.data.map((item, index) => {
+                    this.data = res.data.map((item, index) => {
                         return {
                             record: item,
                             orderNumber: index + 1,
                             id: item.id,
                             name: item.name,
-                            number: item.number,
-                            factory: `${item.factory.name} (${item.factory.number})`,
+                            factory: item.floor ? `${item.floor.factory.name} (${item.floor.factory.number})` : '',
+                            floor: item.floor ? `${item.floor.name} (${item.floor.number})` : '',
                             actions: ''
                         };
                     });
                     this.loading = false;
+
+                    this.sorter = filters.sorter;
                     this.$router.push({
-                        name: 'floor',
+                        name: 'user',
                         query: {page: this.pagination.current, sorter: filters.sorter ?? 'id'}
                     });
                 },
@@ -152,11 +144,11 @@ export default {
         },
         onDelete(id) {
             this.loading = true;
-            this.$api.deleteFactoryFloor(
+            this.$api.deleteUser(
                 id,
                 ({data}) => {
                     toastr.success(data.message);
-                    this.getFactoryFloors({page: this.pagination.current, sorter: this.sorter});
+                    this.getUsers({page: this.pagination.current, sorter: this.sorter});
                 },
                 (error) => {
                     this.loading = false;
@@ -187,41 +179,48 @@ export default {
         },
         loadCreateComponent() {
             this.componentKey = `create`;
-            this.component = markRaw(FactoryFloorCreate);
-            this.$store.commit('drawer/setDrawerTitle', 'Yangi sex qo\'shish');
+            this.component = markRaw(UserCreate);
+            this.$store.commit('drawer/setDrawerTitle', 'Yangi zavod qo\'shish');
         },
         loadEditComponent(record) {
             this.componentKey = `edit-${record.number}-${record.id}`;
-            this.component = markRaw(FactoryFloorEdit);
+            this.component = markRaw(UserEdit);
             this.$store.commit('drawer/setComponentProps', record);
-            this.$store.commit('drawer/setDrawerTitle', 'Sexni tahrirlash');
+            this.$store.commit('drawer/setDrawerTitle', 'Zavodni tahrirlash');
             document.getElementById(`record-${record.id}`).closest('tr').classList.add('bg-gray-100');
         },
         loadShowComponent(record) {
             this.componentKey = `show-${record.number}-${record.id}`;
-            this.component = markRaw(FactoryFloorShow);
+            this.component = markRaw(UserShow);
             this.$store.commit('drawer/setComponentProps', {componentType: record.componentType, id: record.id});
             this.$store.commit('drawer/setDrawerTitle', 'Batafsil');
             document.getElementById(`record-${record.id}`).closest('tr').classList.add('bg-gray-100');
         },
         handleTableChange(page, filters, sorter) {
             this.loading = true;
-            this.getFactoryFloors({page: page.current, filters, sorter: makeSorterField(sorter.field, sorter.order)});
+            this.getUsers({page: page.current, filters, sorter: makeSorterField(sorter.field, sorter.order)});
+        }
+    },
+    computed: {
+        isReloadPage() {
+            return this.$store.getters['factory/getIsReload'];
+        },
+        drawerStatus() {
+            return this.$store.getters['drawer/getOpen'];
         }
     },
     beforeMount() {
-        document.title = `${this.$env.appName} | Sexlar`;
-        this.getFactoryFloors({page: this.pagination.current, sorter: this.sorter})
-            .then(() => {
-                let data = this.$store.getters['drawer/getComponentProps'];
-                data && this.openWithComponent(data.componentType, data);
-            });
+        document.title = `${this.$env.appName} | Zavodlar`;
+        this.getUsers({page: this.pagination.current, sorter: this.sorter}).then(() => {
+            let data = this.$store.getters['drawer/getComponentProps'];
+            data && this.openWithComponent(data.componentType, data);
+        });
     },
     watch: {
         isReloadPage(newValue) {
             if (newValue) {
                 this.loading = true;
-                this.getFactoryFloors({page: this.pagination.current, sorter: this.sorter});
+                this.getUsers({page: this.pagination.current, sorter: this.sorter});
                 this.$store.commit('factory/setIsReload', false);
             }
         },
@@ -234,3 +233,7 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+</style>

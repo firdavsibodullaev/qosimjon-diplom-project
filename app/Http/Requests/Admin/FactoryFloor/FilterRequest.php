@@ -16,7 +16,9 @@ class FilterRequest extends FilterValidator
                 'nullable',
                 'string',
                 Rule::in(['id', '-id', 'number', '-number'])
-            ]
+            ],
+            'factory_id' => ['nullable', Rule::exists('factories', 'id')->where('deleted_at')],
+            'list' => 'nullable|boolean'
         ];
     }
 

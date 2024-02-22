@@ -1,6 +1,5 @@
 <template>
-    <Layout>
-        <p class="text-4xl mb-8"><strong>Zavodlar</strong></p>
+    <Layout page-title="Zavodlar">
         <a-button class="bg-ant-primary mb-4"
                   type="primary" @click="openWithComponent('create',null)">Yangi qo'shish
         </a-button>
@@ -15,7 +14,7 @@
             <template #bodyCell="{column, text, record}">
                 <template v-if="column.dataIndex === 'actions'">
                     <a-button type="primary"
-                              @click="this.openWithComponent('show',record.record)"
+                              @click="this.openWithComponent('show', record.record)"
                               class="mr-2 bg-ant-primary">Batafsil
                     </a-button>
                     <a-button type="primary"
@@ -109,18 +108,18 @@ export default {
         async getFactories(filters) {
             await this.$api.getFactories(
                 {page: filters.page, sorter: filters.sorter},
-                ({data}) => {
-                    if (!data.data.length) {
-                        this.getFactories({page: data.meta.last_page, sorter: filters.sorter});
+                ({data: res}) => {
+                    if (!res.data.length && this.pagination.current !== 1) {
+                        this.getFactories({page: res.meta.last_page, sorter: filters.sorter});
                         return;
                     }
 
                     this.pagination = {
-                        total: data.meta.total,
-                        current: data.meta.current_page,
-                        pageSize: data.meta.per_page,
+                        total: res.meta.total,
+                        current: res.meta.current_page,
+                        pageSize: res.meta.per_page,
                     }
-                    this.data = data.data.map((item, index) => {
+                    this.data = res.data.map((item, index) => {
                         return {
                             record: item,
                             orderNumber: index + 1,
@@ -201,7 +200,6 @@ export default {
         },
         handleTableChange(page, filters, sorter) {
             this.loading = true;
-            console.log(sorter);
             this.getFactories({page: page.current, filters, sorter: makeSorterField(sorter.field, sorter.order)});
         }
     },

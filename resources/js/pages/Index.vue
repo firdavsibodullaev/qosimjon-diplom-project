@@ -1,7 +1,5 @@
 <template>
-    <Layout>
-        Hello
-    </Layout>
+    <Layout page-title="Bosh sahifa"></Layout>
 </template>
 
 <script>

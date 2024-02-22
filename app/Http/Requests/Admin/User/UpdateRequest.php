@@ -34,7 +34,9 @@ class UpdateRequest extends FormRequest
                 'required',
                 'string',
                 'max:20',
-                Rule::unique('users', 'username')->where('deleted_at')
+                Rule::unique('users', 'username')
+                    ->where('deleted_at')
+                    ->ignore($this->route('user'))
             ],
             'password' => [
                 'nullable',
@@ -47,6 +49,18 @@ class UpdateRequest extends FormRequest
                 Rule::exists('factory_floors', 'id')->where('deleted_at')
             ],
             'role' => ['required', 'string', new Enum(Role::class)]
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'last_name' => 'Familiyasi',
+            'first_name' => 'Ismi',
+            'username' => 'Logini',
+            'password' => 'Paroli',
+            'factory_floor_id' => 'Sexi',
+            'role' => 'Roli',
         ];
     }
 

@@ -22,7 +22,7 @@
                           show-search placeholder="Zavod...">
                     <a-select-option v-for="(factory, index) in factories"
                                      :key="`factory-id-${index}-${factory.id}`"
-                                     :value="factory.id">{{ factory.name }}
+                                     :value="factory.id">{{ factory.name }} ({{ factory.number }})
                     </a-select-option>
                 </a-select>
             </a-form-item>

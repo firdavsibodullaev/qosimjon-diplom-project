@@ -10,13 +10,14 @@
             </a-layout-sider>
             <a-layout>
                 <a-layout-header style="background: #fff; padding: 0" class="flex justify-between items-center">
-                    <div>
+                    <div class="flex items-center content-center">
                         <MenuUnfoldOutlined
                             v-if="$store.getters['sidebar/getCollapsed']"
                             class="trigger"
                             @click="() => $store.commit('sidebar/setCollapsed')"
                         />
                         <MenuFoldOutlined v-else class="trigger" @click="() => $store.commit('sidebar/setCollapsed')"/>
+                            <p class="text-xl"><strong>{{ $env.appName }}</strong></p>
                     </div>
                     <div class="mr-5">
                         <a-dropdown :trigger="['click']">
@@ -33,9 +34,8 @@
                         </a-dropdown>
                     </div>
                 </a-layout-header>
-                <a-layout-content
-                    :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
-                >
+                <a-layout-content class="my-[24px] mx-[16px] p-[24px] bg-white min-h-[280px]">
+                    <p class="text-xl mb-8"><strong>{{ pageTitle }}</strong></p>
                     <slot/>
                 </a-layout-content>
             </a-layout>
@@ -54,6 +54,12 @@ export default {
         return {
             collapsed: false,
         };
+    },
+    props:{
+        pageTitle: {
+            type: String,
+            required: true
+        }
     },
     methods: {
         logout() {

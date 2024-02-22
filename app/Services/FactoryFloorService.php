@@ -6,12 +6,20 @@ use App\DTOs\FactoryFloor\FactoryFloorPayloadDTO;
 use App\DTOs\FactoryFloor\FilterDTO;
 use App\Models\FactoryFloor;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class FactoryFloorService
 {
-    public function paginate(FilterDTO $filter = new FilterDTO()): LengthAwarePaginator
+    public function paginate(FilterDTO $filter = new FilterDTO()): Collection|LengthAwarePaginator
     {
-        return FactoryFloor::filter($filter)->orderBy('id')->with('factoryRelation')->paginate(20);
+        return FactoryFloor::filter($filter)
+            ->with('factoryRelation')
+            ->when(
+                value: $filter->list,
+                callback: fn(Builder $builder) => $builder->get(),
+                default: fn(Builder $builder) => $builder->paginate(20)
+            );
     }
 
     public function create(FactoryFloorPayloadDTO $payload): FactoryFloor

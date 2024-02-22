@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\FactoryFloor\FactoryFloorResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -24,7 +25,8 @@ class UserResource extends JsonResource
             'first_name' => $this->resource->first_name,
             'name' => $this->resource->name,
             'username' => $this->resource->username,
-            'roles' => RoleResource::collection($this->whenLoaded('roles'))
+            'roles' => RoleResource::collection($this->whenLoaded('roles')),
+            'floor' => FactoryFloorResource::make($this->whenLoaded('factoryFloor'))
         ];
     }
 }

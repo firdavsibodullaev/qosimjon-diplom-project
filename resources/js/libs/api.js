@@ -121,6 +121,23 @@ const apis = {
     },
     deleteFactoryFloor(id, onSuccess, onError = null) {
         return axiosDelete(`admin/factory-floor/${id}`, onSuccess, onError);
+    },
+
+    // Цехи
+    getUsers(filters, onSuccess, onError = null) {
+        return axiosGet(`admin/user?${makeQuery(filters)}`, onSuccess, onError);
+    },
+    getUser(id, onSuccess, onError = null) {
+        return axiosGet(`admin/user/${id}`, onSuccess, onError);
+    },
+    createUser(data, onSuccess, onError = null) {
+        return axiosPost(`admin/user`, data, onSuccess, onError);
+    },
+    updateUser(id, data, onSuccess, onError = null) {
+        return axiosPut(`admin/user/${id}`, data, onSuccess, onError);
+    },
+    deleteUser(id, onSuccess, onError = null) {
+        return axiosDelete(`admin/user/${id}`, onSuccess, onError);
     }
 };
 

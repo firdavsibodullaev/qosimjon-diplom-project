@@ -7,6 +7,7 @@ import Page403 from "@/pages/Error/Page403.vue";
 import Page404 from "@/pages/Error/Page404.vue";
 import FactoryIndex from "@/pages/Admin/Factory/FactoryIndex.vue";
 import FactoryFloorIndex from "@/pages/Admin/FactoryFloor/FactoryFloorIndex.vue";
+import UserIndex from "@/pages/Admin/User/UserIndex.vue";
 
 const routes = [
     {
@@ -60,6 +61,17 @@ const routes = [
                     sidebar: true,
                     role: ['admin'],
                     text: 'Sexlar'
+                }
+            },
+            {
+                name: 'user',
+                path: 'user',
+                component: UserIndex,
+                meta: {
+                    middleware: ['auth'],
+                    sidebar: true,
+                    role: ['admin'],
+                    text: 'Foydalanuvchilar'
                 }
             }
         ]

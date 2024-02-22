@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\DTOs\FactoryFloor\FilterDTO;
+use App\Filters\FactoryFloor\FilterByFactoryId;
 use App\Filters\FactoryFloor\Sorter;
 use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
@@ -36,7 +37,8 @@ class FactoryFloor extends Model
     ];
 
     protected array $filters = [
-        Sorter::class => null
+        Sorter::class => null,
+        FilterByFactoryId::class => 'factory_id'
     ];
 
     public function users(): HasMany

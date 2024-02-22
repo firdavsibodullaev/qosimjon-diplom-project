@@ -1,34 +1,31 @@
 <template>
     <div class="mt-4" v-if="data">
         <div class="grid grid-cols-2 gap-6 mb-4">
-            <div class="text-lg"><strong>Nomi:</strong></div>
+            <div class="text-lg"><strong>F.I.Sh.:</strong></div>
             <div class="text-lg">{{ data.name }}</div>
         </div>
         <div class="grid grid-cols-2 gap-6 mb-4">
-            <div class="text-lg"><strong>Raqami:</strong></div>
-            <div class="text-lg">{{ data.number }}</div>
+            <div class="text-lg"><strong>Zavod:</strong></div>
+            <div class="text-lg">{{ factory ?? '-' }}</div>
         </div>
         <div class="grid grid-cols-2 gap-6 mb-4">
-            <div class="text-lg"><strong>Zavod:</strong></div>
-            <div class="text-lg">{{ data.factory.name }} ({{ data.factory.number }})</div>
+            <div class="text-lg"><strong>Sex:</strong></div>
+            <div class="text-lg">{{ floor ?? '-' }}</div>
+        </div>
+        <div class="grid grid-cols-2 gap-6 mb-4">
+            <div class="text-lg"><strong>Rol:</strong></div>
+            <div class="text-lg">{{ role ?? '-' }}</div>
         </div>
         <hr>
-        <div class="mt-10">
-            <p class="text-xl"><strong>Ishchilar</strong></p>
-            <a-table
-                :columns="columns"
-                :pagination="false"
-                :data-source="users"
-                :scroll="{ y: 430 }"
-            />
-        </div>
     </div>
     <div v-else class="min-h-screen"></div>
 </template>
 <script>
 
+import roles from "@/pages/Admin/User/roles";
+
 export default {
-    name: 'FactoryFloorShow',
+    name: 'UserShow',
     props: {
         id: {
             type: Number
@@ -36,40 +33,33 @@ export default {
     },
     data() {
         return {
-            columns: [
-                {
-                    title: '№',
-                    dataIndex: 'orderNumber',
-                    width: 20
-                },
-                {
-                    title: 'F.I.Sh.',
-                    dataIndex: 'name',
-                    width: 150
-                }
-            ],
-            data: null
+            data: null,
+            roles
         };
     },
     computed: {
         closeDrawer() {
             return this.$store.getters['drawer/getOpen'];
         },
-        users() {
-            return this.data.users.map((user, index) => {
-                return {orderNumber: index + 1, name: user.name};
-            });
+        role() {
+            return this.data.roles.length ? roles[this.data.roles[0].key] : null;
+        },
+        factory() {
+          return this.data.floor ? `${this.data.floor.factory.name} (${this.data.floor.factory.number})` : null;
+        },
+        floor() {
+            return this.data.floor ? `${this.data.floor.name} (${this.data.floor.number})` : null;
         }
     },
     methods: {
         onClose() {
             this.$store.dispatch('drawer/clearDrawer');
         },
-        getFactoryFloor() {
-            this.$api.getFactoryFloor(
+        getUser() {
+            this.$api.getUser(
                 this.id,
-                ({data}) => {
-                    this.data = data.data;
+                ({data: res}) => {
+                    this.data = res.data;
                     this.$store.commit('spinner/toggleSpinning', 'drawer');
                 },
                 (error) => {
@@ -86,7 +76,7 @@ export default {
                 return;
             }
 
-            this.getFactoryFloor();
+            this.getUser();
         }
     },
     watch: {

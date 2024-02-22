@@ -37,7 +37,7 @@ class StoreRequest extends FormRequest
                 Rule::unique('users', 'username')->where('deleted_at')
             ],
             'password' => [
-                'reuqired',
+                'required',
                 'string',
                 Password::default()
             ],

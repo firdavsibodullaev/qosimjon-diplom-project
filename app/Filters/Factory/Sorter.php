@@ -18,7 +18,7 @@ class Sorter extends BaseFilter
                 column: str($filters->sorter)->replace('-', ''),
                 direction: !str($filters->sorter)->match('/^\-/')->toString() ? 'asc' : 'desc'
             ),
-            default: fn(Builder $builder) => $builder->orderBy('number')
+            default: fn(Builder $builder) => $builder->orderBy('id')
         );
     }
 }

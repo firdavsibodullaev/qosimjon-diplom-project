@@ -3,7 +3,7 @@
 namespace App\Filters\FactoryFloor;
 
 use App\DTOs\BaseFilterDTO;
-use App\DTOs\Factory\FilterDTO;
+use App\DTOs\FactoryFloor\FilterDTO;
 use App\Filters\BaseFilter;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -18,7 +18,7 @@ class Sorter extends BaseFilter
                 column: str($filters->sorter)->replace('-', ''),
                 direction: !str($filters->sorter)->match('/^\-/')->toString() ? 'asc' : 'desc'
             ),
-            default: fn(Builder $builder) => $builder->orderBy('number')
+            default: fn(Builder $builder) => $builder->orderBy('id')
         );
     }
 }

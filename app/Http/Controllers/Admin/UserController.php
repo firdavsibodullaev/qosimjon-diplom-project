@@ -50,7 +50,7 @@ class UserController extends Controller
     public function show(User $user): SuccessResponse
     {
         return new SuccessResponse(
-            response: UserResource::make($user),
+            response: UserResource::make($user->load('factoryFloor.factoryRelation', 'roles')),
             message: 'Foydalanuvchi haqida batafsil'
         );
     }
