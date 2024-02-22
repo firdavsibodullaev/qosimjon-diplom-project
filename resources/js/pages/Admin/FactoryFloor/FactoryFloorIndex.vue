@@ -210,6 +210,7 @@ export default {
         }
     },
     beforeMount() {
+        this.$store.commit('sidebar/setLoading', true);
         document.title = `${this.$env.appName} | Sexlar`;
         this.getFactoryFloors({page: this.pagination.current, sorter: this.sorter})
             .then(() => {
@@ -230,6 +231,9 @@ export default {
                 document.querySelectorAll('tr.bg-gray-100')
                     .forEach((dom) => dom.classList.remove('bg-gray-100'));
             }
+        },
+        loading(newValue) {
+            this.$store.commit('sidebar/setLoading', newValue);
         }
     }
 }

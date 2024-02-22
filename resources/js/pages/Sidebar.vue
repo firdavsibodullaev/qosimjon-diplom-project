@@ -43,6 +43,9 @@ export default {
             return this.filterSidebarRoutes(
                 this.$router.getRoutes().filter(route => route.meta.main))
                 .map(route => this.prepareForMenu(route));
+        },
+        loading() {
+            return this.$store.getters['sidebar/getLoading'];
         }
     },
     methods: {
@@ -88,7 +91,8 @@ export default {
             let result = {
                 key: `menu-key-${route.name}`,
                 label: route.meta.text,
-                title: route.name
+                title: route.name,
+                disabled: this.loading
             }
 
             if (route.children && route.children.length > 0) {
