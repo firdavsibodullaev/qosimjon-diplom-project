@@ -11,5 +11,6 @@ class FilterDTO extends BaseFilterDTO
         public int    $total = 20
     )
     {
+        parent::__construct($this->sorter);
     }
 }

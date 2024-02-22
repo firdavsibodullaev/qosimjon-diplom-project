@@ -12,5 +12,6 @@ class FilterDTO extends BaseFilterDTO
         public bool   $list = false
     )
     {
+        parent::__construct($this->sorter);
     }
 }

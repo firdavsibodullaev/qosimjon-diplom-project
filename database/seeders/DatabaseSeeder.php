@@ -25,7 +25,11 @@ class DatabaseSeeder extends Seeder
             ->assignRole(Role::ADMIN->value);
 
         if (!app()->isProduction()) {
-            $this->call(FactorySeeder::class);
+            $this->call([
+                FactorySeeder::class,
+                AttributeSeeder::class,
+                DeviceSeeder::class
+            ]);
         }
     }
 }

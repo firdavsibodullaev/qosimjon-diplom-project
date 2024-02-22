@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Filters\FactoryFloor;
+namespace App\Filters;
 
 use App\DTOs\BaseFilterDTO;
-use App\DTOs\FactoryFloor\FilterDTO;
-use App\Filters\BaseFilter;
 use Illuminate\Database\Eloquent\Builder;
 
 class Sorter extends BaseFilter
 {
     public function filter(Builder $builder, BaseFilterDTO $filters): void
     {
-        /** @var FilterDTO $filters */
         $builder->when(
             value: $filters->sorter,
             callback: fn(Builder $builder) => $builder->orderBy(

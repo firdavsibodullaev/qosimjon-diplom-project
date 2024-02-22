@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-use App\DTOs\FactoryFloor\FilterDTO;
 use App\Filters\FactoryFloor\FilterByFactoryId;
-use App\Filters\FactoryFloor\Sorter;
+use App\Filters\Sorter;
 use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +22,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $updated_at
  * @property-read Collection<User> $users
  * @property-read Factory $factoryRelation
- * @method static Builder filter(FilterDTO $filter)
  */
 class FactoryFloor extends Model
 {
