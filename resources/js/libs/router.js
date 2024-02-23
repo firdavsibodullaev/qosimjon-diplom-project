@@ -124,7 +124,7 @@ vueRouter.beforeEach((to, from, next) => {
         }
     }
 
-    if (!hasPermission(to.meta.role)) {
+    if (!hasPermission(to.meta?.role)) {
         return next({name: '403'})
     }
 
