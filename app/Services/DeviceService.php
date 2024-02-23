@@ -45,7 +45,10 @@ class DeviceService
         /** @var DeviceAttributesDTO $attribute */
         foreach ($attributes as $attribute) {
             $payload[] = [
-                'attribute_id' => $attribute_id = $this->getAttributeId($attribute->attribute, $attribute->measurement_unit),
+                'attribute_id' => $attribute_id = $this->getAttributeId(
+                    attribute: $attribute->attribute,
+                    measurement_unit: $attribute->measurement_unit
+                ),
                 'measurement_unit' => $attribute->measurement_unit,
                 'attribute_value_id' => $this->getValueId($attribute->value, $attribute_id)
             ];
