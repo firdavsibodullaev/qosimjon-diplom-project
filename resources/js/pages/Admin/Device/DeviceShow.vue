@@ -1,22 +1,19 @@
 <template>
     <div class="mt-4" v-if="data">
         <div class="grid grid-cols-2 gap-6 mb-4">
-            <div class="text-lg"><strong>F.I.Sh.:</strong></div>
+            <div class="text-lg"><strong>Nomi:</strong></div>
             <div class="text-lg">{{ data.name }}</div>
         </div>
         <div class="grid grid-cols-2 gap-6 mb-4">
-            <div class="text-lg"><strong>Zavod:</strong></div>
-            <div class="text-lg">{{ factory ?? '-' }}</div>
+            <div class="text-lg"><strong>Hususiyatlari:</strong></div>
+            <div class="text-lg">
+                <div class="my-2"
+                    v-for="(attribute, index) in data.attributes"
+                     :key="`attribute-${index}`">
+                    <strong>{{ attribute.value.attribute.name }}:</strong> {{ attribute.value.value }} ({{ attribute.measurement_unit }})
+                </div>
+            </div>
         </div>
-        <div class="grid grid-cols-2 gap-6 mb-4">
-            <div class="text-lg"><strong>Sex:</strong></div>
-            <div class="text-lg">{{ floor ?? '-' }}</div>
-        </div>
-        <div class="grid grid-cols-2 gap-6 mb-4">
-            <div class="text-lg"><strong>Rol:</strong></div>
-            <div class="text-lg">{{ role ?? '-' }}</div>
-        </div>
-        <hr>
     </div>
     <div v-else class="min-h-screen"></div>
 </template>
@@ -34,29 +31,20 @@ export default {
     data() {
         return {
             data: null,
-            roles
+            roles,
         };
     },
     computed: {
         closeDrawer() {
             return this.$store.getters['drawer/getOpen'];
-        },
-        role() {
-            return this.data.roles.length ? roles[this.data.roles[0].key] : null;
-        },
-        factory() {
-          return this.data.floor ? `${this.data.floor.factory.name} (${this.data.floor.factory.number})` : null;
-        },
-        floor() {
-            return this.data.floor ? `${this.data.floor.name} (${this.data.floor.number})` : null;
         }
     },
     methods: {
         onClose() {
             this.$store.dispatch('drawer/clearDrawer');
         },
-        getUser() {
-            this.$api.getUser(
+        getDevice() {
+            this.$api.getDevice(
                 this.id,
                 ({data: res}) => {
                     this.data = res.data;
@@ -76,7 +64,7 @@ export default {
                 return;
             }
 
-            this.getUser();
+            this.getDevice();
         }
     },
     watch: {

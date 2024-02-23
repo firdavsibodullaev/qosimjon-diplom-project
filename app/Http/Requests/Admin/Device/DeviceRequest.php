@@ -11,7 +11,7 @@ use Illuminate\Support\Fluent;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
-class StoreRequest extends FormRequest
+class DeviceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -38,7 +38,8 @@
                 </template>
             </template>
         </a-table>
-        <Drawer key="Drawer"
+        <Drawer :width="850"
+            key="Drawer"
                 :componentKey="componentKey" :component="component"/>
     </Layout>
 </template>

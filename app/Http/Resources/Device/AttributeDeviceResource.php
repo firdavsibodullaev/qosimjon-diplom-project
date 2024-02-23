@@ -25,6 +25,7 @@ class AttributeDeviceResource extends JsonResource
             'device' => DeviceResource::make($this->whenLoaded('device')),
             'attribute' => AttributeResource::make($this->whenLoaded('attribute')),
             'value' => AttributeValueResource::make($this->whenLoaded('value')),
+            'measurement_unit' => $this->resource->measurement_unit
         ];
     }
 }

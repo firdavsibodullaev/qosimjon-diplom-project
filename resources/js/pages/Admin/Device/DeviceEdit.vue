@@ -5,130 +5,134 @@
             @finish="onFinish"
             @finishFailed="onFinishFailed"
             layout="vertical">
-        <a-space class="site-input-group-wrapper w-full" direction="vertical" size="middle">
-            <a-input-group>
-                <a-row :gutter="8">
-                    <a-col class="w-1/2">
-                        <a-form-item label="Familiyasi" name="last_name">
-                            <a-input v-model:value="form.last_name" placeholder="Familiyasi..."/>
-                        </a-form-item>
-                    </a-col>
-                    <a-col class="w-1/2">
-                        <a-form-item label="Ismi" name="first_name">
-                            <a-input v-model:value="form.first_name" placeholder="Ismi..."/>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-            </a-input-group>
-            <a-input-group>
-                <a-row :gutter="8">
-                    <a-col class="w-1/2">
-                        <a-form-item label="Login" name="username">
-                            <a-input v-model:value="form.username" placeholder="Login..."/>
-                        </a-form-item>
-                    </a-col>
-                    <a-col class="w-1/2">
-                        <a-form-item label="Parol" name="password">
-                            <a-input-password v-model:value="form.password" placeholder="Parol..."/>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-            </a-input-group>
-            <a-input-group>
-                <a-row :gutter="8">
-                    <a-col class="w-1/2">
-                        <a-form-item label="Zavod" name="factory_id">
-                            <a-select v-model:value="form.factory_id"
-                                      @change="getFactoryFloor"
-                                      placeholder="Zavod...">
-                                <a-select-option v-for="(factory, index) in factories"
-                                                 :key="`factory-type-${index}-${factory.id}`"
-                                                 :value="factory.id">{{ factory.name }} ({{ factory.number }})
-                                </a-select-option>
+        <a-space class="site-input-group-wrapper w-full" direction="vertical">
+            <a-form-item label="Nomi" name="name">
+                <a-input v-model:value="form.name" placeholder="Nomi..."/>
+            </a-form-item>
+            <a-form-item>
+                <a-button type="dashed"
+                          class="flex items-center"
+                          @click="addAttribute"
+                          html-type="button">
+                    <PlusOutlined/>
+                    Hususiyat qo'shish
+                </a-button>
+            </a-form-item>
+            <div class="max-h-[540px] flex items-center flex-col p-4 overflow-y-auto border-2 rounded">
+                <div v-for="(attribute, index) in form.attributes"
+                     :key="`space-${index}`"
+                     :class="{'border-b-2 pb-6': index !== form.attributes.length - 1}"
+                     class="flex my-[8px] items-center justify-between w-full gap-7">
+                    <div class="flex w-full justify-between gap-4 flex-wrap">
+                        <a-form-item class="w-[72%] mb-0" label="Hususiyat" :name="['attributes',index, 'attribute']">
+                            <a-select v-model:value="form.attributes[index].attribute"
+                                      @change="setAttributeValue"
+                                      :filter-option="filterOption"
+                                      :options="attributeOptions(index)"
+                                      :attributeKey="index"
+                                      show-search
+                                      placeholder="Hususiyat...">
+                                <template #dropdownRender="{ menuNode: menu }">
+                                    <v-nodes :key="`attribute-options-${index}`" :vnodes="menu"/>
+                                    <a-divider style="margin: 4px 0"/>
+                                    <a-space style="padding: 4px 8px">
+                                        <a-input v-model:value="newData"
+                                                 placeholder="Hususiyatni kiriting"/>
+                                        <a-button type="text" @click="addItem">
+                                            <template #icon>
+                                                <plus-outlined/>
+                                            </template>
+                                            Yangi hususiyat
+                                        </a-button>
+                                    </a-space>
+                                </template>
                             </a-select>
                         </a-form-item>
-                    </a-col>
-                    <a-col class="w-1/2">
-                        <a-form-item label="Sex" name="factory_floor_id">
-                            <a-select v-model:value="form.factory_floor_id" placeholder="Sex...">
-                                <a-select-option v-for="(floor, index) in floors"
-                                                 :key="`factory-type-${index}-${floor.id}`"
-                                                 :value="floor.id">{{ floor.name }} ({{ floor.number }})
-                                </a-select-option>
+                        <a-form-item class="w-1/4 mb-0"
+                                     label="O'lchov birlgi"
+                                     :name="['attributes',index, 'measurement_unit']">
+                            <a-input v-model:value="form.attributes[index].measurement_unit"
+                                     placeholder="O'lchov birligini kiriting"/>
+                        </a-form-item>
+                        <a-form-item class="w-full mb-0" label="Qiymati" :name="['attributes',index,'value']">
+                            <a-select v-model:value="form.attributes[index].value"
+                                      :options="values[index] ?? []"
+                                      @change="setValueValue"
+                                      placeholder="Qiymati...">
+                                <template #dropdownRender="{ menuNode: menu }">
+                                    <v-nodes :key="`value-options-${index}`" :vnodes="menu"/>
+                                    <a-divider style="margin: 4px 0"/>
+                                    <a-space style="padding: 4px 8px">
+                                        <a-input
+                                            v-model:value="newData"
+                                            placeholder="Qiymatni kiriting"/>
+                                        <a-button type="text"
+                                                  :valueKey="index"
+                                                  @click="addValueItem">
+                                            <template #icon>
+                                                <plus-outlined/>
+                                            </template>
+                                            Yangi qiymat
+                                        </a-button>
+                                    </a-space>
+                                </template>
                             </a-select>
                         </a-form-item>
-                    </a-col>
-                </a-row>
-            </a-input-group>
-            <a-col class="w-full">
-                <a-form-item label="Rol" name="role">
-                    <a-select v-model:value="form.role" placeholder="Rol...">
-                        <a-select-option v-for="(role, key) in rolesList"
-                                         :key="`factory-type-${key}`"
-                                         :value="key">{{ role }}
-                        </a-select-option>
-                    </a-select>
-                </a-form-item>
-            </a-col>
-            <a-col>
-                <a-form-item>
-                    <a-button type="primary" class="bg-ant-primary" html-type="submit">Saqlash</a-button>
-                </a-form-item>
-            </a-col>
+                    </div>
+                    <MinusCircleOutlined @click="removeAttribute(index)"
+                                         class="mt-7 hover:text-red-600 transition duration-100"/>
+                </div>
+            </div>
+            <a-form-item>
+                <a-button type="primary" class="bg-ant-primary" html-type="submit">Saqlash</a-button>
+            </a-form-item>
         </a-space>
     </a-form>
 </template>
 <script>
 
-import toastr from "toastr";
 import showValidationErrors from "@/utils/showValidationErrors";
-import roles from "@/pages/Admin/User/roles";
+import toastr from "toastr";
 
 export default {
-    name: 'UserEdit',
-    data() {
-        return {
-            form: {
-                last_name: null,
-                first_name: null,
-                username: null,
-                password: null,
-                factory_id: null,
-                factory_floor_id: null,
-                role: null
+    name: 'DeviceCreate',
+    components: {
+        VNodes: {
+            props: {
+                vnodes: {
+                    type: Object,
+                    required: true,
+                },
             },
-            rules: {
-                last_name: [{required: true, message: 'Familiyani kiriting'}],
-                first_name: [{required: true, message: 'Ismini kiriting'}],
-                username: [{required: true, message: 'Loginni kiriting'}],
-                factory_id: [{required: true, message: 'Zavodni kiriting'}],
-                factory_floor_id: [{required: true, message: 'Sexni kiriting'}],
-                role: [{required: true, message: 'Rolni kiriting'}],
+            render() {
+                return this.vnodes;
             },
-            factories: [],
-            floors: [],
-            rolesList: roles
-        };
+        }
     },
     props: {
         id: {
             type: Number
         },
-        last_name: {
+        name: {
             type: String
         },
-        first_name: {
-            type: String
-        },
-        username: {
-            type: String
-        },
-        floor: {
-            type: Object
-        },
-        roles: {
+        attributes: {
             type: Array
         }
+    },
+    data() {
+        return {
+            form: {
+                name: null,
+                attributes: [{attribute: null, value: null, measurement_unit: null}]
+            },
+            rules: {
+                name: [{required: true, message: 'Nomini kiriting'}]
+            },
+            attributesList: [],
+            values: [],
+            newData: null
+        };
     },
     computed: {
         closeDrawer() {
@@ -137,29 +141,131 @@ export default {
     },
     methods: {
         init() {
-            if (!this.$store.commit('spinner/toggleSpinning', 'drawer')) {
-                this.$store.commit('spinner/toggleSpinning', 'drawer')
+            this.getAttributes()
+                .then(() => this.setFormValues())
+                .then(() => this.$store.commit('spinner/toggleSpinning', 'drawer'));
+        },
+        async getAttributes() {
+            await this.$api.getAttributes(
+                {sorter: 'name'},
+                ({data: res}) => {
+                    this.attributesList = res.data;
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
+        },
+        setFormValues() {
+            this.form.name = this.name;
+            this.form.attributes = this.attributes.map((attribute, index) => {
+                let attributeId = attribute.value.attribute.id;
+
+                this.values[index] = this.attributesList
+                    .filter((item) => item.id === attributeId)[0]
+                    .values
+                    .map((valueData) => {
+                        return {
+                            value: valueData.id,
+                            label: valueData.value,
+                            key: `value-${index}-${valueData.id}`,
+                        };
+                    });
+
+                return {
+                    attribute: attributeId,
+                    value: attribute.value.id,
+                    measurement_unit: attribute.measurement_unit
+                };
+            });
+        },
+        addAttribute() {
+            this.form.attributes.push({attribute: null, value: null});
+        },
+        attributeOptions(key) {
+            return this.attributesList.map((item, index) => {
+                return {
+                    value: item.id,
+                    label: item.name,
+                    key: `attribute-${index}-${item.id}`,
+                    attributeKey: key,
+                }
+            });
+        },
+        filterOption(input, option) {
+            let regex = new RegExp(input);
+
+            return option.label.toLowerCase().match(regex);
+        },
+        setAttributeValue(value, option) {
+            let attributes = this.attributesList.filter((attribute) => attribute.id === value);
+            let index = option.attributeKey;
+
+            if (attributes.length === 0) {
+                return;
             }
 
-            this.$store.dispatch('factory/getOrFetchList')
-                .then(() => this.factories = this.$store.getters['factory/getList'])
-                .then(() => this.getFactoryFloor(this.floor?.factory.id))
-                .then(() => this.form = {
-                    last_name: this.last_name,
-                    first_name: this.first_name,
-                    username: this.username,
-                    factory_id: this.floor?.factory.id,
-                    factory_floor_id: this.floor?.id,
-                    role: this.roles.length ? this.roles[0].key : null
-                })
-                .then(() => this.$store.commit('spinner/toggleSpinning', 'drawer'));
+            let attribute = attributes[0];
+
+            let values = attribute.values.map((valueData) => {
+                return {
+                    value: valueData.id,
+                    label: valueData.value,
+                    key: `value-${index}-${valueData.id}`,
+                };
+            });
+
+            if (this.values[index]) {
+                this.values[index] = values;
+            } else {
+                this.values.push(values);
+            }
+
+            this.form.attributes[index].value = null;
+            this.form.attributes[index].attribute = value;
+            this.form.attributes[index].measurement_unit = attribute.measurement_unit ?? null;
+        },
+        setValueValue(value, option) {
+            let index = option.key.split('-')[1];
+
+            this.form.attributes[index].value = value;
+        },
+        addItem(e) {
+            e.preventDefault();
+
+            this.attributesList.unshift({
+                id: this.newData,
+                name: this.newData,
+                values: []
+
+            });
+            this.newData = '';
+
+        },
+        addValueItem(e) {
+            e.preventDefault();
+            let key = e.target.closest('button').getAttribute('valueKey');
+
+            this.values[key].unshift({
+                value: this.newData,
+                label: this.newData,
+                key: `value-${key}-${this.newData}`
+            });
+
+            this.newData = '';
+
+        },
+        removeAttribute(index) {
+            if (this.form.attributes.length === 1) return;
+            this.form.attributes.splice(index, 1);
+            this.values.splice(index, 1);
         },
         onClose() {
             this.$store.dispatch('drawer/clearDrawer');
         },
         onFinish(payload) {
             this.$store.commit('spinner/toggleSpinning', 'main');
-            this.$api.updateUser(
+            this.$api.updateDevice(
                 this.id,
                 payload,
                 ({data}) => {
@@ -168,7 +274,8 @@ export default {
                     this.$store.commit('factory/setIsReload', true);
                     this.onClose();
                 },
-                ({response}) => {
+                (response) => {
+                    console.log(response);
                     this.$store.commit('spinner/toggleSpinning', 'main');
                     if (response.status === 422) {
                         showValidationErrors(response.data.errors);
@@ -177,24 +284,14 @@ export default {
         },
         onFinishFailed(errors) {
             console.log(errors);
-        },
-        getFactoryFloor(value) {
-            if (!value) return;
-            this.form.factory_floor_id = null;
-            this.$api.getFactoryFloors({factory_id: value, list: 1}, ({data: res}) => this.floors = res.data);
         }
     },
     watch: {
         closeDrawer(newValue) {
             if (!newValue) {
                 this.form = {
-                    last_name: null,
-                    first_name: null,
-                    username: null,
-                    password: null,
-                    factory_id: null,
-                    factory_floor_id: null,
-                    role: null
+                    name: null,
+                    attributes: [{attribute: null, value: null, measurement_unit: null}]
                 };
             }
         }

@@ -22,8 +22,8 @@
                 <div v-for="(attribute, index) in form.attributes"
                      :key="`space-${index}`"
                      :class="{'border-b-2 pb-6': index !== form.attributes.length - 1}"
-                     class="flex my-[8px] items-center gap-7 w-full ">
-                    <div class="flex justify-between gap-4 flex-wrap">
+                     class="flex my-[8px] items-center justify-between w-full gap-7">
+                    <div class="flex w-full justify-between gap-4 flex-wrap">
                         <a-form-item class="w-[72%] mb-0" label="Hususiyat" :name="['attributes',index, 'attribute']">
                             <a-select v-model:value="form.attributes[index].attribute"
                                       @change="setAttributeValue"
@@ -130,16 +130,12 @@ export default {
     },
     methods: {
         init() {
-            this.$store.dispatch('factory/getOrFetchList')
-                .then(() => this.getAttributes())
+            this.getAttributes()
                 .then(() => this.values = [])
                 .then(() => this.$store.commit('spinner/toggleSpinning', 'drawer'));
         },
-        addAttribute() {
-            this.form.attributes.push({attribute: null, value: null});
-        },
-        getAttributes() {
-            this.$api.getAttributes(
+        async getAttributes() {
+            await this.$api.getAttributes(
                 {sorter: 'name'},
                 ({data: res}) => {
                     this.attributes = res.data;
@@ -148,6 +144,9 @@ export default {
                     console.log(error);
                 }
             );
+        },
+        addAttribute() {
+            this.form.attributes.push({attribute: null, value: null});
         },
         attributeOptions(key) {
             return this.attributes.map((item, index) => {

@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Http\Requests\Admin\Device\StoreRequest;
+use App\Http\Requests\Admin\Device\DeviceRequest;
 use App\Models\AttributeValue;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -10,7 +10,7 @@ use Illuminate\Translation\PotentiallyTranslatedString;
 
 class IsValueBelongsToAttribute implements ValidationRule
 {
-    public function __construct(protected StoreRequest $request)
+    public function __construct(protected DeviceRequest $request)
     {
     }
 

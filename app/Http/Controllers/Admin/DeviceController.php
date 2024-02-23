@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Device\DeviceRequest;
 use App\Http\Requests\Admin\Device\FilterRequest;
-use App\Http\Requests\Admin\Device\StoreRequest;
 use App\Http\Resources\Device\DeviceResource;
 use App\Models\Device;
 use App\Services\DeviceService;
 use Firdavsi\Responses\Http\SuccessResponse;
-use Illuminate\Http\Request;
 
 class DeviceController extends Controller
 {
@@ -33,7 +32,7 @@ class DeviceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request): SuccessResponse
+    public function store(DeviceRequest $request): SuccessResponse
     {
         $device = $this->deviceService->create($request->toDto());
 
@@ -47,17 +46,25 @@ class DeviceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Device $device)
+    public function show(Device $device): SuccessResponse
     {
-        //
+        return new SuccessResponse(
+            response: DeviceResource::make($device->load('attributes')),
+            message: 'Pribor tahrirlandi'
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Device $device)
+    public function update(DeviceRequest $request, Device $device): SuccessResponse
     {
-        //
+        $this->deviceService->update($device, $request->toDto());
+
+        return new SuccessResponse(
+            response: DeviceResource::make($device),
+            message: 'Pribor tahrirlandi'
+        );
     }
 
     /**

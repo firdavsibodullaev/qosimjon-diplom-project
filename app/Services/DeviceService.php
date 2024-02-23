@@ -23,7 +23,7 @@ class DeviceService
 
     public function paginate(FilterDTO $filter): LengthAwarePaginator
     {
-        return Device::filter($filter)->paginate($filter->total);
+        return Device::filter($filter)->with('attributes')->paginate($filter->total);
     }
 
     public function create(DevicePayloadDTO $payload): Device
@@ -38,26 +38,34 @@ class DeviceService
         });
     }
 
-    private function preparePayload(Collection $attributes): array
+    protected function preparePayload(Collection $attributes): array
     {
         $payload = [];
 
         /** @var DeviceAttributesDTO $attribute */
         foreach ($attributes as $attribute) {
-            $payload[] = [
-                'attribute_id' => $attribute_id = $this->getAttributeId(
-                    attribute: $attribute->attribute,
-                    measurement_unit: $attribute->measurement_unit
-                ),
-                'measurement_unit' => $attribute->measurement_unit,
-                'attribute_value_id' => $this->getValueId($attribute->value, $attribute_id)
-            ];
+            $payload[] = $this->preparePayloadItem($attribute);
         }
 
         return $payload;
     }
 
-    private function getAttributeId(int|string $attribute, string $measurement_unit): int
+    protected function preparePayloadItem(DeviceAttributesDTO $attribute): array
+    {
+        return [
+            'measurement_unit' => $attribute->measurement_unit,
+            'attribute_id' => $attribute_id = $this->getAttributeId(
+                attribute: $attribute->attribute,
+                measurement_unit: $attribute->measurement_unit
+            ),
+            'attribute_value_id' => $this->getValueId(
+                value: $attribute->value,
+                attribute: $attribute_id
+            )
+        ];
+    }
+
+    protected function getAttributeId(int|string $attribute, string $measurement_unit): int
     {
         if (is_int($attribute)) {
             return $attribute;
@@ -66,12 +74,27 @@ class DeviceService
         return $this->attributeService->create(new AttributePayloadDTO($attribute, $measurement_unit))->id;
     }
 
-    private function getValueId(int|string $value, int|string $attribute): int
+    protected function getValueId(int|string $value, int|string $attribute): int
     {
         if (is_int($value)) {
             return $value;
         }
 
         return $this->attributeValueService->create(new AttributeValuePayloadDTO($value, $attribute))->id;
+    }
+
+    public function update(Device $device, DevicePayloadDTO $payload)
+    {
+        return DB::transaction(function () use ($device, $payload) {
+            $device->fill(['name' => $payload->name]);
+
+            $device->attributes()->forceDelete();
+
+            $device->attributes()->createMany($this->preparePayload($payload->attributes));
+
+            $device->save();
+
+            return $device;
+        });
     }
 }
