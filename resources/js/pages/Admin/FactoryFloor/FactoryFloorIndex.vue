@@ -116,7 +116,7 @@ export default {
             await this.$api.getFactoryFloors(
                 {page: filters.page, sorter: filters.sorter},
                 ({data}) => {
-                    if (!data.data.length) {
+                    if (!data.data.length && data.meta.current_page !== 1) {
                         this.getFactoryFloors({page: data.meta.last_page, sorter: filters.sorter});
                         return;
                     }

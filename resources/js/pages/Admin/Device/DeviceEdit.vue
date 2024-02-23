@@ -193,7 +193,7 @@ export default {
             });
         },
         filterOption(input, option) {
-            let regex = new RegExp(input);
+            let regex = new RegExp(input.toLowerCase());
 
             return option.label.toLowerCase().match(regex);
         },

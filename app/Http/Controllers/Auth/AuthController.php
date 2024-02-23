@@ -38,7 +38,7 @@ class AuthController extends Controller
         return new SuccessResponse(
             response: response([
                 "token" => $token->plainTextToken,
-                "user" => UserResource::make($user->load('roles'))
+                "user" => UserResource::make($user->load(['roles', 'factoryFloor.factoryRelation']))
             ]),
             message: 'Tizimga kirdingiz'
         );

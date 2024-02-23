@@ -118,9 +118,11 @@ export default {
     },
     methods: {
         init() {
-            this.$store.dispatch('factory/getOrFetchList')
-                .then(() => this.factories = this.$store.getters['factory/getList'])
+            this.getFactories()
                 .then(() => this.$store.commit('spinner/toggleSpinning', 'drawer'));
+        },
+        async getFactories() {
+            await this.$api.getFactories({list: 1}, ({data}) => this.factories = data.data);
         },
         onClose() {
             this.$store.dispatch('drawer/clearDrawer');

@@ -64,10 +64,12 @@ export default {
     },
     methods: {
         init() {
-            this.$store.dispatch('factory/getOrFetchList')
-                .then(() => this.factories = this.$store.getters['factory/getList'])
+            this.getFactories()
                 .then(() => this.$store.commit('spinner/toggleSpinning', 'drawer'))
 
+        },
+        async getFactories() {
+            await this.$api.getFactories({list: 1}, ({data}) => this.factories = data.data);
         },
         onClose() {
             this.$store.dispatch('drawer/clearDrawer');
@@ -93,7 +95,7 @@ export default {
             console.log(errors);
         },
         filterOption(input, option) {
-            let regex = new RegExp(input);
+            let regex = new RegExp(input.toLowerCase());
             return option.children()[0].children.toLowerCase().match(regex);
         }
     },

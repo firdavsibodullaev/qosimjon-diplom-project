@@ -11,6 +11,7 @@ enum Role: string
     case ADMIN = 'admin';
     case TESTER = 'tester';
     case WORKER = 'worker';
+    case MODERATOR = 'moderator';
 
     public function translate(): string
     {
@@ -18,6 +19,7 @@ enum Role: string
             self::ADMIN => 'Admin',
             self::TESTER => 'Tekshiruvchi',
             self::WORKER => 'Ishchi',
+            self::MODERATOR => 'Moderator',
         };
     }
 
@@ -27,6 +29,7 @@ enum Role: string
             self::ADMIN->value => 'Admin',
             self::TESTER->value => 'Tekshiruvchi',
             self::WORKER->value => 'Ishchi',
+            self::MODERATOR->value => 'Moderator',
         ];
     }
 
@@ -43,6 +46,10 @@ enum Role: string
             ],
             [
                 'name' => self::WORKER->value,
+                'guard_name' => 'web'
+            ],
+            [
+                'name' => self::MODERATOR->value,
                 'guard_name' => 'web'
             ],
         ];

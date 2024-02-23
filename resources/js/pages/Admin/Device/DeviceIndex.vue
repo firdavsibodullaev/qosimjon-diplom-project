@@ -99,7 +99,7 @@ export default {
             await this.$api.getDevices(
                 {...filters},
                 ({data: res}) => {
-                    if (!res.data.length) {
+                    if (!res.data.length && data.meta.current_page !== 1) {
                         this.getDevices({page: res.meta.last_page, total: filters.total, sorter: filters.sorter});
                         return;
                     }

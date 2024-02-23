@@ -141,7 +141,7 @@ export default {
                 this.$store.commit('spinner/toggleSpinning', 'drawer')
             }
 
-            this.$store.dispatch('factory/getOrFetchList')
+            this.getFactories()
                 .then(() => this.factories = this.$store.getters['factory/getList'])
                 .then(() => this.getFactoryFloor(this.floor?.factory.id))
                 .then(() => this.form = {
@@ -153,6 +153,9 @@ export default {
                     role: this.roles.length ? this.roles[0].key : null
                 })
                 .then(() => this.$store.commit('spinner/toggleSpinning', 'drawer'));
+        },
+        async getFactories() {
+            await this.$api.getFactories({list: 1}, ({data}) => this.factories = data.data);
         },
         onClose() {
             this.$store.dispatch('drawer/clearDrawer');

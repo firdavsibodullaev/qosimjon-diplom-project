@@ -6,6 +6,7 @@ import UserIndex from "@/pages/Admin/User/UserIndex.vue";
 import DeviceIndex from "@/pages/Admin/Device/DeviceIndex.vue";
 import Page403 from "@/pages/Error/Page403.vue";
 import Page404 from "@/pages/Error/Page404.vue";
+import FactoryDeviceIndex from "@/pages/Moderator/FactoryDeviceIndex.vue";
 
 export default [
     {
@@ -89,6 +90,19 @@ export default [
             }
         ]
     },
+    {
+        path: '/factory-devices',
+        name: 'factoryDevices',
+        component: FactoryDeviceIndex,
+        meta: {
+            role: ['moderator'],
+            middleware: ['auth'],
+            sidebar: true,
+            main: true,
+            text: 'Pribor qo\'shish'
+        },
+    },
+
     {
         name: '403',
         path: '/403',
