@@ -8,6 +8,7 @@
 <script>
 import MenuItem from "@/components/MenuItem.vue";
 import SubMenu from "@/components/SubMenu.vue";
+import hasPermission from "@/utils/hasPermission";
 
 export default {
     name: 'Sidebar',
@@ -41,8 +42,8 @@ export default {
     computed: {
         routes() {
             return this.filterSidebarRoutes(
-                this.$router.getRoutes().filter(route => route.meta.main))
-                .map(route => this.prepareForMenu(route));
+                this.$router.getRoutes().filter(route => route.meta.main)
+            ).map(route => this.prepareForMenu(route));
         },
         loading() {
             return this.$store.getters['sidebar/getLoading'];
@@ -56,7 +57,7 @@ export default {
                     route.children = this.filterSidebarRoutes(route.children);
                 }
 
-                return route.meta.sidebar;
+                return route.meta.sidebar && hasPermission(route.meta.role);
             });
         },
         getPathUntilCurrentRoute(routes, current) {

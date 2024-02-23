@@ -2,13 +2,13 @@ import {createRouter, createWebHistory} from "vue-router";
 import Index from "@/pages/Index.vue";
 import Login from "@/pages/Auth/Login.vue";
 import kernel from "@/middlewares/kernel";
-import store from "@/store";
 import Page403 from "@/pages/Error/Page403.vue";
 import Page404 from "@/pages/Error/Page404.vue";
 import FactoryIndex from "@/pages/Admin/Factory/FactoryIndex.vue";
 import FactoryFloorIndex from "@/pages/Admin/FactoryFloor/FactoryFloorIndex.vue";
 import UserIndex from "@/pages/Admin/User/UserIndex.vue";
 import DeviceIndex from "@/pages/Admin/Device/DeviceIndex.vue";
+import hasPermission from "@/utils/hasPermission";
 
 const routes = [
     {
@@ -124,9 +124,7 @@ vueRouter.beforeEach((to, from, next) => {
         }
     }
 
-    let user = store.getters['auth/getUser'];
-
-    if (to.meta.role && !user.roles.filter(role => to.meta.role.includes(role.key)).length) {
+    if (!hasPermission(to.meta.role)) {
         return next({name: '403'})
     }
 
