@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $device_id
  * @property int $attribute_id
  * @property int $attribute_value_id
+ * @property string $measurement_unit
  * @property-read Device $device
  * @property-read Attribute $attribute
  * @property-read AttributeValue $value
@@ -22,7 +23,8 @@ class AttributeDevice extends Model
     protected $fillable = [
         'device_id',
         'attribute_id',
-        'attribute_value_id'
+        'attribute_value_id',
+        'measurement_unit'
     ];
 
     public $timestamps = false;

@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('device_id')->constrained('devices')->cascadeOnDelete();
             $table->foreignId('attribute_id')->constrained('attributes')->nullOnDelete();
             $table->foreignId('attribute_value_id')->constrained('attribute_values')->nullOnDelete();
+            $table->string('measurement_unit');
         });
     }
 

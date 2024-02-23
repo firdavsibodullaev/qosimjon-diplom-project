@@ -20,10 +20,13 @@ class AttributeDeviceFactory extends Factory
      */
     public function definition(): array
     {
+        /** @var Attribute $attribute */
+        $attribute = Attribute::query()->inRandomOrder()->first();
         return [
             'device_id' => Device::query()->inRandomOrder()->value('id'),
-            'attribute_id' => Attribute::query()->inRandomOrder()->value('id'),
+            'attribute_id' => $attribute->id,
             'attribute_value_id' => AttributeValue::query()->inRandomOrder()->value('id'),
+            'measurement_unit' => $attribute->measurement_unit
         ];
     }
 }
