@@ -50,9 +50,8 @@
                         </a-form-item>
                         <a-form-item class="w-1/4 mb-0"
                                      label="O'lchov birlgi"
-                                     :name="['attributes',index, 'measurement']">
-                            <a-input v-model:value="form.attributes[index].measurement"
-                                     :disabled="checkIsDisabled(form.attributes[index].attribute)"
+                                     :name="['attributes',index, 'measurement_unit']">
+                            <a-input v-model:value="form.attributes[index].measurement_unit"
                                      placeholder="O'lchov birligini kiriting"/>
                         </a-form-item>
                         <a-form-item class="w-full mb-0" label="Qiymati" :name="['attributes',index,'value']">
@@ -91,6 +90,9 @@
 </template>
 <script>
 
+import showValidationErrors from "@/utils/showValidationErrors";
+import toastr from "toastr";
+
 export default {
     name: 'DeviceCreate',
     components: {
@@ -110,7 +112,7 @@ export default {
         return {
             form: {
                 name: null,
-                attributes: [{attribute: null, value: null, measurement: null}]
+                attributes: [{attribute: null, value: null, measurement_unit: null}]
             },
             rules: {
                 name: [{required: true, message: 'Nomini kiriting'}]
@@ -187,7 +189,7 @@ export default {
 
             this.form.attributes[index].value = null;
             this.form.attributes[index].attribute = value;
-            this.form.attributes[index].measurement = attribute.measurement_unit ?? null;
+            this.form.attributes[index].measurement_unit = attribute.measurement_unit ?? null;
         },
         setValueValue(value, option) {
             let index = option.key.split('-')[1];
@@ -224,29 +226,26 @@ export default {
             this.form.attributes.splice(index, 1);
             this.values.splice(index, 1);
         },
-        checkIsDisabled(attribute) {
-            return typeof attribute === 'number' && !isNaN(attribute);
-        },
         onClose() {
             this.$store.dispatch('drawer/clearDrawer');
         },
         onFinish(payload) {
-            console.log(payload)
-            // this.$store.commit('spinner/toggleSpinning', 'main');
-            // this.$api.createUser(
-            //     payload,
-            //     ({data}) => {
-            //         toastr.success(data.message);
-            //         this.$store.commit('spinner/toggleSpinning', 'main');
-            //         this.$store.commit('factory/setIsReload', true);
-            //         this.onClose();
-            //     },
-            //     ({response}) => {
-            //         this.$store.commit('spinner/toggleSpinning', 'main');
-            //         if (response.status === 422) {
-            //             showValidationErrors(response.data.errors);
-            //         }
-            //     });
+            this.$store.commit('spinner/toggleSpinning', 'main');
+            this.$api.createDevice(
+                payload,
+                ({data}) => {
+                    toastr.success(data.message);
+                    this.$store.commit('spinner/toggleSpinning', 'main');
+                    this.$store.commit('factory/setIsReload', true);
+                    this.onClose();
+                },
+                (response) => {
+                    console.log(response);
+                    this.$store.commit('spinner/toggleSpinning', 'main');
+                    if (response.status === 422) {
+                        showValidationErrors(response.data.errors);
+                    }
+                });
         },
         onFinishFailed(errors) {
             console.log(errors);
@@ -257,7 +256,7 @@ export default {
             if (!newValue) {
                 this.form = {
                     name: null,
-                    attributes: [{attribute: null, value: null, measurement: null}]
+                    attributes: [{attribute: null, value: null, measurement_unit: null}]
                 };
             }
         }

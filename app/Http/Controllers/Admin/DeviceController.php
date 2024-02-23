@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Device\FilterRequest;
+use App\Http\Requests\Admin\Device\StoreRequest;
 use App\Http\Resources\Device\DeviceResource;
 use App\Models\Device;
 use App\Services\DeviceService;
@@ -32,9 +33,15 @@ class DeviceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request): SuccessResponse
     {
-        //
+        $device = $this->deviceService->create($request->toDto());
+
+        return new SuccessResponse(
+            response: DeviceResource::make($device),
+            message: 'Pribor yaratildi',
+            status: 201
+        );
     }
 
     /**
