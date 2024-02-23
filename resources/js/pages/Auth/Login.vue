@@ -1,6 +1,6 @@
 <template>
     <AuthLayout>
-        <div class="bg-[#f5f5f5] h-[100vh] w-[100vw] flex justify-center items-center">
+        <div class="bg-[#f5f5f5] h-[100vh] w-[100vw] flex justify-center items-center overflow-hidden">
             <div
                 class="w-[40rem] bg-white p-16 rounded-2xl shadow-current flex flex-col items-center content-center justify-center border-[#f5f5f5] border-t-ant-primary border-2">
                 <p class="w-full text-xl text-center mb-1"><strong>{{ $env.appName }}</strong></p>
@@ -72,7 +72,6 @@ export default {
                 ({data}) => {
                     this.$store.commit('auth/setToken', data.data.token);
                     this.$store.commit('auth/setUser', data.data.user);
-
                     this.$store.commit('spinner/toggleSpinning', 'main');
                     this.$router.push({name: 'index'});
                     toastr.success(data.message);

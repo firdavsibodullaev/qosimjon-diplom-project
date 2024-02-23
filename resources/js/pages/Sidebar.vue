@@ -9,6 +9,7 @@
 import MenuItem from "@/components/MenuItem.vue";
 import SubMenu from "@/components/SubMenu.vue";
 import hasPermission from "@/utils/hasPermission";
+import routes from "@/libs/routes";
 
 export default {
     name: 'Sidebar',
@@ -41,9 +42,7 @@ export default {
     },
     computed: {
         routes() {
-            return this.filterSidebarRoutes(
-                this.$router.getRoutes().filter(route => route.meta.main)
-            ).map(route => this.prepareForMenu(route));
+            return this.filterSidebarRoutes(routes).map(route => this.prepareForMenu(route));
         },
         loading() {
             return this.$store.getters['sidebar/getLoading'];
@@ -88,7 +87,6 @@ export default {
             }
         },
         prepareForMenu(route) {
-
             let result = {
                 key: `menu-key-${route.name}`,
                 label: route.meta.text,
@@ -96,7 +94,7 @@ export default {
                 disabled: this.loading
             }
 
-            if (route.children && route.children.length > 0) {
+            if (route.children) {
                 result.children = route.children.map(item => this.prepareForMenu(item));
             } else if (route.name !== this.$route.name) {
                 result.onClick = () => this.$router.push({name: route.name});
