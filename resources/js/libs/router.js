@@ -8,6 +8,7 @@ import Page404 from "@/pages/Error/Page404.vue";
 import FactoryIndex from "@/pages/Admin/Factory/FactoryIndex.vue";
 import FactoryFloorIndex from "@/pages/Admin/FactoryFloor/FactoryFloorIndex.vue";
 import UserIndex from "@/pages/Admin/User/UserIndex.vue";
+import DeviceIndex from "@/pages/Admin/Device/DeviceIndex.vue";
 
 const routes = [
     {
@@ -72,6 +73,17 @@ const routes = [
                     sidebar: true,
                     role: ['admin'],
                     text: 'Foydalanuvchilar'
+                }
+            },
+            {
+                name: 'device',
+                path: 'device',
+                component: DeviceIndex,
+                meta: {
+                    middleware: ['auth'],
+                    sidebar: true,
+                    role: ['admin'],
+                    text: 'Priborlar'
                 }
             }
         ]

@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Factory\FactoryRequest;
 use App\Http\Requests\Admin\Factory\FilterRequest;
-use App\Http\Requests\Admin\Factory\StoreRequest;
-use App\Http\Requests\Admin\Factory\UpdateRequest;
 use App\Http\Resources\Factory\FactoryResource;
 use App\Models\Factory;
 use App\Services\FactoryService;
@@ -47,7 +46,7 @@ class FactoryController extends Controller
         );
     }
 
-    public function store(StoreRequest $request): SuccessResponse
+    public function store(FactoryRequest $request): SuccessResponse
     {
         $factory = $this->factoryService->create($request->toDto());
 
@@ -58,7 +57,7 @@ class FactoryController extends Controller
         );
     }
 
-    public function update(UpdateRequest $request, Factory $factory): SuccessResponse
+    public function update(FactoryRequest $request, Factory $factory): SuccessResponse
     {
         $factory = $this->factoryService->update($factory, $request->toDto());
 

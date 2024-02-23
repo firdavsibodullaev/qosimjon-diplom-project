@@ -1,5 +1,5 @@
 <template>
-    <Layout page-title="Sexlar">
+    <Layout page-title="Priborlar">
         <a-button class="bg-ant-primary mb-4"
                   type="primary" @click="openWithComponent('create',null)">Yangi qo'shish
         </a-button>
@@ -38,29 +38,30 @@
                 </template>
             </template>
         </a-table>
-        <Drawer key="Drawer" :componentKey="componentKey" :component="component"/>
+        <Drawer key="Drawer"
+                :componentKey="componentKey" :component="component"/>
     </Layout>
 </template>
-<script>
 
+<script>
 import Layout from "@/pages/Layout.vue";
-import toastr from "toastr";
-import {markRaw} from "vue";
-import FactoryFloorCreate from "@/pages/Admin/FactoryFloor/FactoryFloorCreate.vue";
 import Drawer from "@/components/Drawer.vue";
-import FactoryFloorEdit from "@/pages/Admin/FactoryFloor/FactoryFloorEdit.vue";
-import FactoryFloorShow from "@/pages/Admin/FactoryFloor/FactoryFloorShow.vue";
+import {markRaw} from "vue";
+import toastr from "toastr";
 import makeSorterField from "@/utils/makeSorterField";
+import DeviceCreate from "@/pages/Admin/Device/DeviceCreate.vue";
+import DeviceEdit from "@/pages/Admin/Device/DeviceEdit.vue";
+import DeviceShow from "@/pages/Admin/Device/DeviceShow.vue";
 
 export default {
-    name: "FactoryFloorIndex",
+    name: "DeviceIndex",
     components: {Drawer, Layout},
     data() {
         return {
             pagination: {
                 total: 0,
                 current: this.$route.query.page ?? 1,
-                pageSize: 0,
+                pageSize: this.$route.query.total ?? 0,
             },
             sorter: this.$route.query.sorter ?? 'id',
             columns: [
@@ -81,68 +82,52 @@ export default {
                     width: 200
                 },
                 {
-                    title: 'Raqami',
-                    dataIndex: 'number',
-                    width: 50,
-                    sorter: true
-                },
-                {
-                    title: 'Zavod',
-                    dataIndex: 'factory',
-                    width: 50
-                },
-                {
                     title: '',
                     dataIndex: 'actions',
-                    width: 150,
+                    width: 90,
                 }
             ],
             componentKey: null,
             loading: true,
-            component: markRaw(FactoryFloorCreate),
+            component: markRaw(DeviceCreate),
             data: [],
         };
     },
-    computed: {
-        isReloadPage() {
-            return this.$store.getters['factory/getIsReload'];
-        },
-        drawerStatus() {
-            return this.$store.getters['drawer/getOpen'];
-        }
-    },
     methods: {
-        async getFactoryFloors(filters) {
-            await this.$api.getFactoryFloors(
-                {page: filters.page, sorter: filters.sorter},
-                ({data}) => {
-                    if (!data.data.length) {
-                        this.getFactoryFloors({page: data.meta.last_page, sorter: filters.sorter});
+        async getDevices(filters) {
+            await this.$api.getDevices(
+                {...filters},
+                ({data: res}) => {
+                    if (!res.data.length) {
+                        this.getDevices({page: res.meta.last_page, total: filters.total, sorter: filters.sorter});
                         return;
                     }
 
                     this.pagination = {
-                        total: data.meta.total,
-                        current: data.meta.current_page,
-                        pageSize: data.meta.per_page,
-                    }
+                        total: res.meta.total,
+                        current: res.meta.current_page,
+                        pageSize: res.meta.per_page,
+                    };
                     this.sorter = filters.sorter;
 
-                    this.data = data.data.map((item, index) => {
+                    this.data = res.data.map((item, index) => {
                         return {
                             record: item,
                             orderNumber: index + 1,
                             id: item.id,
                             name: item.name,
-                            number: item.number,
-                            factory: `${item.factory.name} (${item.factory.number})`,
                             actions: ''
                         };
                     });
                     this.loading = false;
+
                     this.$router.push({
-                        name: 'floor',
-                        query: {page: this.pagination.current, sorter: this.sorter}
+                        name: 'device',
+                        query: {
+                            total: this.pagination.pageSize,
+                            page: this.pagination.current,
+                            sorter: this.sorter
+                        }
                     });
                 },
                 (response) => {
@@ -153,11 +138,15 @@ export default {
         },
         onDelete(id) {
             this.loading = true;
-            this.$api.deleteFactoryFloor(
+            this.$api.deleteDevice(
                 id,
                 ({data}) => {
                     toastr.success(data.message);
-                    this.getFactoryFloors({page: this.pagination.current, sorter: this.sorter});
+                    this.getDevices({
+                        page: this.pagination.current,
+                        sorter: this.sorter,
+                        total: this.pagination.pageSize
+                    });
                 },
                 (error) => {
                     this.loading = false;
@@ -188,45 +177,57 @@ export default {
         },
         loadCreateComponent() {
             this.componentKey = `create`;
-            this.component = markRaw(FactoryFloorCreate);
-            this.$store.commit('drawer/setDrawerTitle', 'Yangi sex qo\'shish');
+            this.component = markRaw(DeviceCreate);
+            this.$store.commit('drawer/setDrawerTitle', 'Yangi pribor qo\'shish');
         },
         loadEditComponent(record) {
             this.componentKey = `edit-${record.number}-${record.id}`;
-            this.component = markRaw(FactoryFloorEdit);
+            this.component = markRaw(DeviceEdit);
             this.$store.commit('drawer/setComponentProps', record);
-            this.$store.commit('drawer/setDrawerTitle', 'Sexni tahrirlash');
+            this.$store.commit('drawer/setDrawerTitle', 'Priborni tahrirlash');
             document.getElementById(`record-${record.id}`).closest('tr').classList.add('bg-gray-100');
         },
         loadShowComponent(record) {
             this.componentKey = `show-${record.number}-${record.id}`;
-            this.component = markRaw(FactoryFloorShow);
+            this.component = markRaw(DeviceShow);
             this.$store.commit('drawer/setComponentProps', {componentType: record.componentType, id: record.id});
             this.$store.commit('drawer/setDrawerTitle', 'Batafsil');
             document.getElementById(`record-${record.id}`).closest('tr').classList.add('bg-gray-100');
         },
         handleTableChange(page, filters, sorter) {
             this.loading = true;
-            this.getFactoryFloors({
+            this.getDevices({
                 page: page.current,
+                total: page.pageSize,
                 sorter: makeSorterField(sorter.field, sorter.order)
             });
         }
     },
+    computed: {
+        isReloadPage() {
+            return this.$store.getters['factory/getIsReload'];
+        },
+        drawerStatus() {
+            return this.$store.getters['drawer/getOpen'];
+        }
+    },
     beforeMount() {
         this.$store.commit('sidebar/setLoading', true);
-        document.title = `${this.$env.appName} | Sexlar`;
-        this.getFactoryFloors({page: this.pagination.current, sorter: this.sorter})
-            .then(() => {
-                let data = this.$store.getters['drawer/getComponentProps'];
-                data && this.openWithComponent(data.componentType, data);
-            });
+        document.title = `${this.$env.appName} | Zavodlar`;
+        this.getDevices({
+            page: this.pagination.current,
+            sorter: this.sorter,
+            total: this.pagination.pageSize
+        }).then(() => {
+            let data = this.$store.getters['drawer/getComponentProps'];
+            data && this.openWithComponent(data.componentType, data);
+        });
     },
     watch: {
         isReloadPage(newValue) {
             if (newValue) {
                 this.loading = true;
-                this.getFactoryFloors({page: this.pagination.current, sorter: this.sorter});
+                this.getDevices({page: this.pagination.current, sorter: this.sorter});
                 this.$store.commit('factory/setIsReload', false);
             }
         },
@@ -242,3 +243,7 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+</style>

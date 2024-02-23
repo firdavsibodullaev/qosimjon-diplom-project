@@ -123,7 +123,7 @@ const apis = {
         return axiosDelete(`admin/factory-floor/${id}`, onSuccess, onError);
     },
 
-    // Цехи
+    // Пользователи
     getUsers(filters, onSuccess, onError = null) {
         return axiosGet(`admin/user?${makeQuery(filters)}`, onSuccess, onError);
     },
@@ -138,6 +138,27 @@ const apis = {
     },
     deleteUser(id, onSuccess, onError = null) {
         return axiosDelete(`admin/user/${id}`, onSuccess, onError);
+    },
+
+    // Приборы
+    getDevices(filters, onSuccess, onError = null) {
+        return axiosGet(`admin/device?${makeQuery(filters)}`, onSuccess, onError);
+    },
+    getDevice(id, onSuccess, onError = null) {
+        return axiosGet(`admin/device/${id}`, onSuccess, onError);
+    },
+    createDevice(data, onSuccess, onError = null) {
+        return axiosPost(`admin/device`, data, onSuccess, onError);
+    },
+    updateDevice(id, data, onSuccess, onError = null) {
+        return axiosPut(`admin/device/${id}`, data, onSuccess, onError);
+    },
+    deleteDevice(id, onSuccess, onError = null) {
+        return axiosDelete(`admin/device/${id}`, onSuccess, onError);
+    },
+
+    getAttributes(filters, onSuccess, onError = null) {
+        return axiosGet(`admin/attribute?${makeQuery(filters)}`, onSuccess, onError);
     }
 };
 

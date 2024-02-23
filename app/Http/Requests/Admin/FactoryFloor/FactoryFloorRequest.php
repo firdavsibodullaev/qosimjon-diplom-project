@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Admin\Factory;
+namespace App\Http\Requests\Admin\FactoryFloor;
 
-use App\DTOs\Factory\FactoryPayloadDTO;
-use App\Enums\Factory\FactoryType;
+use App\DTOs\FactoryFloor\FactoryFloorPayloadDTO;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rule;
 
-class StoreRequest extends FormRequest
+class FactoryFloorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,29 +27,24 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required|string|max:100',
             'number' => 'required|int|digits_between:1,5',
-            'type' => [
+            'factory_id' => [
                 'required',
-                'string',
-                new Enum(FactoryType::class)
-            ],
+                Rule::exists('factories', 'id')->where('deleted_at')
+            ]
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'name' => 'Zavod nomi',
-            'type' => 'Zavod turi',
-            'number' => 'Zavod raqami',
+            'name' => 'Sex nomi',
+            'factory_id' => 'Zavod',
+            'number' => 'Sex raqami',
         ];
     }
 
-    public function toDto(): FactoryPayloadDTO
+    public function toDto(): FactoryFloorPayloadDTO
     {
-        return new FactoryPayloadDTO(
-            name: $this->get('name'),
-            number: $this->get('number'),
-            type: FactoryType::tryFrom($this->get('type'))
-        );
+        return new FactoryFloorPayloadDTO(...$this->validated());
     }
 }

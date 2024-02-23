@@ -1,6 +1,8 @@
 <?php
 
 use App\Enums\Role\Role;
+use App\Http\Controllers\Admin\AttributeController;
+use App\Http\Controllers\Admin\DeviceController;
 use App\Http\Controllers\Admin\FactoryController;
 use App\Http\Controllers\Admin\FactoryFloorController;
 use App\Http\Controllers\Admin\RoleController;
@@ -31,7 +33,8 @@ Route::prefix('v1')->name('v1.')->group(function () {
             Route::apiResource('factory', FactoryController::class);
             Route::apiResource('factory-floor', FactoryFloorController::class);
             Route::apiResource('user', UserController::class);
+            Route::apiResource('device', DeviceController::class);
 
-            Route::get('role', RoleController::class)->name('role.index');
+            Route::get('attribute', [AttributeController::class, 'index'])->name('attribute.index');
         });
 });

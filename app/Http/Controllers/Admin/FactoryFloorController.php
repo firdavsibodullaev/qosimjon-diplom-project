@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\FactoryFloor\FilterRequest;
-use App\Http\Requests\Admin\FactoryFloor\StoreRequest;
+use App\Http\Requests\Admin\FactoryFloor\FactoryFloorRequest;
 use App\Http\Resources\FactoryFloor\FactoryFloorResource;
 use App\Models\FactoryFloor;
 use App\Services\FactoryFloorService;
@@ -35,7 +35,7 @@ class FactoryFloorController extends Controller
         );
     }
 
-    public function store(StoreRequest $request): SuccessResponse
+    public function store(FactoryFloorRequest $request): SuccessResponse
     {
         $factory = $this->factoryFloorService->create($request->toDto());
 
@@ -46,7 +46,7 @@ class FactoryFloorController extends Controller
         );
     }
 
-    public function update(StoreRequest $request, FactoryFloor $factory_floor): SuccessResponse
+    public function update(FactoryFloorRequest $request, FactoryFloor $factory_floor): SuccessResponse
     {
         $factory = $this->factoryFloorService->update($factory_floor, $request->toDto());
 

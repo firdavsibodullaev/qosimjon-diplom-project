@@ -19,7 +19,8 @@
             <a-form-item label="Zavod" name="factory_id">
                 <a-select v-model:value="form.factory_id"
                           :filter-option="filterOption"
-                          show-search placeholder="Zavod...">
+                          show-search
+                          placeholder="Zavod...">
                     <a-select-option v-for="(factory, index) in factories"
                                      :key="`factory-id-${index}-${factory.id}`"
                                      :value="factory.id">{{ factory.name }} ({{ factory.number }})

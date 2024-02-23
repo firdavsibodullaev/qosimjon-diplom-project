@@ -107,7 +107,7 @@ export default {
     methods: {
         async getFactories(filters) {
             await this.$api.getFactories(
-                {page: filters.page, sorter: filters.sorter},
+                {...filters},
                 ({data: res}) => {
                     if (!res.data.length && this.pagination.current !== 1) {
                         this.getFactories({page: res.meta.last_page, sorter: filters.sorter});
@@ -118,7 +118,9 @@ export default {
                         total: res.meta.total,
                         current: res.meta.current_page,
                         pageSize: res.meta.per_page,
-                    }
+                    };
+                    this.sorter = filters.sorter;
+
                     this.data = res.data.map((item, index) => {
                         return {
                             record: item,
@@ -130,12 +132,11 @@ export default {
                             actions: ''
                         };
                     });
-                    this.loading = false;
 
-                    this.sorter = filters.sorter;
+                    this.loading = false;
                     this.$router.push({
                         name: 'factory',
-                        query: {page: this.pagination.current, sorter: filters.sorter ?? 'number'}
+                        query: {page: this.pagination.current, sorter: this.sorter}
                     });
                 },
                 (response) => {
@@ -200,7 +201,10 @@ export default {
         },
         handleTableChange(page, filters, sorter) {
             this.loading = true;
-            this.getFactories({page: page.current, filters, sorter: makeSorterField(sorter.field, sorter.order)});
+            this.getFactories({
+                page: page.current,
+                sorter: makeSorterField(sorter.field, sorter.order)
+            });
         }
     },
     computed: {

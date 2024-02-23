@@ -38,7 +38,7 @@
                 </template>
             </template>
         </a-table>
-        <Drawer key="Drawer" :width="850" :componentKey="componentKey" :component="component"/>
+        <Drawer key="Drawer" :componentKey="componentKey" :component="component"/>
     </Layout>
 </template>
 
@@ -105,7 +105,7 @@ export default {
     methods: {
         async getUsers(filters) {
             await this.$api.getUsers(
-                {page: filters.page, total: filters.total, sorter: filters.sorter},
+                {...filters},
                 ({data: res}) => {
                     if (!res.data.length) {
                         this.getUsers({page: res.meta.last_page, total: filters.total, sorter: filters.sorter});
@@ -116,7 +116,9 @@ export default {
                         total: res.meta.total,
                         current: res.meta.current_page,
                         pageSize: res.meta.per_page,
-                    }
+                    };
+                    this.sorter = filters.sorter;
+
                     this.data = res.data.map((item, index) => {
                         return {
                             record: item,
@@ -130,13 +132,12 @@ export default {
                     });
                     this.loading = false;
 
-                    this.sorter = filters.sorter;
                     this.$router.push({
                         name: 'user',
                         query: {
                             total: this.pagination.pageSize,
                             page: this.pagination.current,
-                            sorter: filters.sorter ?? 'id'
+                            sorter: this.sorter
                         }
                     });
                 },
@@ -209,7 +210,6 @@ export default {
             this.getUsers({
                 page: page.current,
                 total: page.pageSize,
-                filters,
                 sorter: makeSorterField(sorter.field, sorter.order)
             });
         }
