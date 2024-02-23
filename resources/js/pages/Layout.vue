@@ -34,7 +34,7 @@
                         </a-dropdown>
                     </div>
                 </a-layout-header>
-                <a-layout-content class="my-[24px] p-[12px] bg-white min-h-[280px]">
+                <a-layout-content class="my-[24px] mx-[8px] p-[12px] bg-white min-h-[280px]">
                     <p class="text-xl mb-8"><strong>{{ pageTitle }}</strong></p>
                     <slot/>
                 </a-layout-content>

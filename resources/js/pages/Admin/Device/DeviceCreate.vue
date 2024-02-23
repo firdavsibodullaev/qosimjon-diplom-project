@@ -18,7 +18,7 @@
                     Hususiyat qo'shish
                 </a-button>
             </a-form-item>
-            <div class="max-h-[400px] flex items-center flex-col p-4 overflow-y-auto border-2 rounded">
+            <div class="max-h-[540px] flex items-center flex-col p-4 overflow-y-auto border-2 rounded">
                 <div v-for="(attribute, index) in form.attributes"
                      :key="`space-${index}`"
                      :class="{'border-b-2 pb-6': index !== form.attributes.length - 1}"
@@ -79,7 +79,8 @@
                             </a-select>
                         </a-form-item>
                     </div>
-                    <MinusCircleOutlined @click="removeAttribute(index)" class="mt-7"/>
+                    <MinusCircleOutlined @click="removeAttribute(index)"
+                                         class="mt-7 hover:text-red-600 transition duration-100"/>
                 </div>
             </div>
             <a-form-item>

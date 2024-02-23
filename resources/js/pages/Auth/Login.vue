@@ -1,8 +1,8 @@
 <template>
     <AuthLayout>
-        <div class="bg-gray-200 h-[100vh] w-[100vw] flex justify-center items-center">
+        <div class="bg-[#f5f5f5] h-[100vh] w-[100vw] flex justify-center items-center">
             <div
-                class="w-[40rem] bg-white p-16 rounded-2xl shadow-current flex flex-col items-center content-center justify-center border-t-ant-primary border-4">
+                class="w-[40rem] bg-white p-16 rounded-2xl shadow-current flex flex-col items-center content-center justify-center border-[#f5f5f5] border-t-ant-primary border-2">
                 <p class="w-full text-xl text-center mb-1"><strong>{{ $env.appName }}</strong></p>
                 <p class="w-full text-lg text-center mb-6 text-gray-600">Tizimga kirish</p>
                 <Spinner type="main">
