@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin\User;
 
 use App\DTOs\User\UserPayloadDTO;
 use App\Enums\Role\Role;
+use App\Rules\IsCheckFloorBelongsToFactory;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -42,7 +43,10 @@ class StoreRequest extends FormRequest
                 Password::default()
             ],
             'factory_id' => 'required|int',
-            'factory_floor_id' => 'array',
+            'factory_floor_id' => [
+                'array',
+                new IsCheckFloorBelongsToFactory($this, 'factory_id')
+            ],
             'factory_floor_id.*' => [
                 'present',
                 'int',
