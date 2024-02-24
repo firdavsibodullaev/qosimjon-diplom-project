@@ -110,7 +110,6 @@ export default {
                 first_name: [{required: true, message: 'Ismini kiriting'}],
                 username: [{required: true, message: 'Loginni kiriting'}],
                 password: [{required: true, message: 'Parolni kiriting'}],
-                factory_id: [{required: true, message: 'Zavodni kiriting'}],
                 role: [{required: true, message: 'Rolni kiriting'}],
             },
             factories: [],

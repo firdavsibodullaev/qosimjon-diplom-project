@@ -42,7 +42,7 @@ class StoreRequest extends FormRequest
                 'string',
                 Password::default()
             ],
-            'factory_id' => 'required|int',
+            'factory_id' => 'nullable|required_unless:role,admin|int',
             'factory_floor_id' => [
                 'array',
                 new IsCheckFloorBelongsToFactory($this, 'factory_id')
@@ -53,6 +53,20 @@ class StoreRequest extends FormRequest
                 Rule::exists('factory_floors', 'id')->where('deleted_at')
             ],
             'role' => ['required', 'string', new Enum(Role::class)]
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'last_name' => 'Familiyasi',
+            'first_name' => 'Ismi',
+            'username' => 'Logini',
+            'password' => 'Paroli',
+            'factory_id' => 'Zavod',
+            'factory_floor_id' => 'Sexlar ro\'yhati',
+            'factory_floor_id.*' => 'Sexi',
+            'role' => 'Roli',
         ];
     }
 

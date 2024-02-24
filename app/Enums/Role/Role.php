@@ -54,4 +54,9 @@ enum Role: string
             ],
         ];
     }
+
+    public function is(Role $role): bool
+    {
+        return $this === $role;
+    }
 }

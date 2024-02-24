@@ -10,7 +10,7 @@ use Illuminate\Translation\PotentiallyTranslatedString;
 
 class IsCheckFloorBelongsToFactory implements ValidationRule
 {
-    protected int $factory_id;
+    protected ?int $factory_id;
 
     public function __construct(FormRequest $request, string $column)
     {
@@ -24,7 +24,7 @@ class IsCheckFloorBelongsToFactory implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (empty($value)) {
+        if (empty($value) || !$this->factory_id) {
             return;
         }
 

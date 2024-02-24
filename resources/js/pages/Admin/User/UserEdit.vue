@@ -103,7 +103,6 @@ export default {
                 last_name: [{required: true, message: 'Familiyani kiriting'}],
                 first_name: [{required: true, message: 'Ismini kiriting'}],
                 username: [{required: true, message: 'Loginni kiriting'}],
-                factory_id: [{required: true, message: 'Zavodni kiriting'}],
                 role: [{required: true, message: 'Rolni kiriting'}],
             },
             factories: [],

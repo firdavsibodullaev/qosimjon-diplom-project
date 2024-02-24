@@ -44,7 +44,7 @@ class UpdateRequest extends FormRequest
                 'string',
                 Password::default()
             ],
-            'factory_id' => 'required|int',
+            'factory_id' => 'nullable|required_unless:role,admin|int',
             'factory_floor_id' => [
                 'array',
                 new IsCheckFloorBelongsToFactory($this, 'factory_id')
@@ -65,6 +65,7 @@ class UpdateRequest extends FormRequest
             'first_name' => 'Ismi',
             'username' => 'Logini',
             'password' => 'Paroli',
+            'factory_id' => 'Zavod',
             'factory_floor_id' => 'Sexlar ro\'yhati',
             'factory_floor_id.*' => 'Sexi',
             'role' => 'Roli',

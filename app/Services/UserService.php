@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTOs\User\FilterDTO;
 use App\DTOs\User\UserPayloadDTO;
+use App\Enums\Role\Role;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,7 @@ class UserService
 
     public function create(UserPayloadDTO $payload): User
     {
+        dd($payload);
         return DB::transaction(function () use ($payload) {
             $user = new User([
                 'last_name' => $payload->last_name,
@@ -34,7 +36,9 @@ class UserService
 
             $user->save();
 
-            $user->factoryFloors()->sync($this->getFloorIds($payload->factory_id, $payload->factory_floor_id));
+            if (!$payload->role->is(Role::ADMIN)) {
+                $user->factoryFloors()->sync($this->getFloorIds($payload->factory_id, $payload->factory_floor_id));
+            }
 
             $user->syncRoles($payload->role->value);
 
@@ -54,7 +58,9 @@ class UserService
 
             $user->save();
 
-            $user->factoryFloors()->sync($this->getFloorIds($payload->factory_id, $payload->factory_floor_id));
+            if (!$payload->role->is(Role::ADMIN)) {
+                $user->factoryFloors()->sync($this->getFloorIds($payload->factory_id, $payload->factory_floor_id));
+            }
 
             $user->syncRoles($payload->role->value);
 
