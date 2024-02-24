@@ -7,7 +7,7 @@ use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Model;
 use Illuminate\Notifications\Notifiable;
@@ -20,7 +20,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $first_name
  * @property string $username
  * @property string $password
- * @property int $factory_floor_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read string $name
@@ -39,7 +38,6 @@ class User extends Model
         'first_name',
         'username',
         'password',
-        'factory_floor_id',
     ];
 
     protected array $filters = [
@@ -56,9 +54,9 @@ class User extends Model
         'remember_token',
     ];
 
-    public function factoryFloor(): BelongsTo
+    public function factoryFloors(): BelongsToMany
     {
-        return $this->belongsTo(FactoryFloor::class);
+        return $this->belongsToMany(FactoryFloor::class);
     }
 
     public function name(): Attribute

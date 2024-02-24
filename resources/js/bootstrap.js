@@ -12,6 +12,7 @@ import api from "@/libs/api";
 import Antd from "ant-design-vue";
 import * as Icons from "@ant-design/icons-vue";
 import getenv from "@/libs/getenv";
+import setPrototypes from "@/utils/setPrototypes";
 
 
 const vueApp = createApp(App);
@@ -23,6 +24,7 @@ Object.keys(Icons).forEach(component => {
 
 const router = vueRouter;
 
+setPrototypes();
 
 vueApp.use(router)
     .use(store)

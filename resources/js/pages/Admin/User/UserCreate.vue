@@ -24,12 +24,18 @@
                 <a-row :gutter="8">
                     <a-col class="w-1/2">
                         <a-form-item label="Login" name="username">
-                            <a-input v-model:value="form.username" placeholder="Login..."/>
+                            <a-input
+                                autocomplete="new"
+                                v-model:value="form.username"
+                                placeholder="Login..."/>
                         </a-form-item>
                     </a-col>
                     <a-col class="w-1/2">
                         <a-form-item label="Parol" name="password">
-                            <a-input-password v-model:value="form.password" placeholder="Parol..."/>
+                            <a-input-password
+                                autocomplete="new-password"
+                                v-model:value="form.password"
+                                placeholder="Parol..."/>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -50,7 +56,9 @@
                     </a-col>
                     <a-col class="w-1/2">
                         <a-form-item label="Sex" name="factory_floor_id">
-                            <a-select v-model:value="form.factory_floor_id" placeholder="Sex...">
+                            <a-select v-model:value="form.factory_floor_id"
+                                      mode="multiple"
+                                      placeholder="Sex...">
                                 <a-select-option v-for="(floor, index) in floors"
                                                  :key="`factory-type-${index}-${floor.id}`"
                                                  :value="floor.id">{{ floor.name }} ({{ floor.number }})
@@ -94,7 +102,7 @@ export default {
                 username: null,
                 password: null,
                 factory_id: null,
-                factory_floor_id: null,
+                factory_floor_id: [],
                 role: null
             },
             rules: {
@@ -103,7 +111,6 @@ export default {
                 username: [{required: true, message: 'Loginni kiriting'}],
                 password: [{required: true, message: 'Parolni kiriting'}],
                 factory_id: [{required: true, message: 'Zavodni kiriting'}],
-                factory_floor_id: [{required: true, message: 'Sexni kiriting'}],
                 role: [{required: true, message: 'Rolni kiriting'}],
             },
             factories: [],
@@ -148,7 +155,7 @@ export default {
             console.log(errors);
         },
         getFactoryFloor(value) {
-            this.form.factory_floor_id = null;
+            this.form.factory_floor_id = [];
             this.$api.getFactoryFloors({factory_id: value, list: 1}, ({data: res}) => this.floors = res.data);
         }
     },
@@ -161,7 +168,7 @@ export default {
                     username: null,
                     password: null,
                     factory_id: null,
-                    factory_floor_id: null,
+                    factory_floor_id: [],
                     role: null
                 };
             }

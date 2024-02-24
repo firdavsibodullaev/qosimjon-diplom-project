@@ -50,4 +50,9 @@ class FactoryFloorService
     {
         return $factory_floor->delete();
     }
+
+    public function getByFactoryId(int $factory_id): Collection
+    {
+        return FactoryFloor::query()->where('factory_id', '=', $factory_id)->get();
+    }
 }

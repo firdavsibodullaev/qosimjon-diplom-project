@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->string('first_name');
             $table->string('username')->unique();
             $table->string('password');
-            $table->foreignId('factory_floor_id')->nullable()->constrained();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

@@ -38,7 +38,7 @@
                 </template>
             </template>
         </a-table>
-        <Drawer key="Drawer" :componentKey="componentKey" :component="component"/>
+        <Drawer key="Drawer" :width="900" :componentKey="componentKey" :component="component"/>
     </Layout>
 </template>
 
@@ -86,11 +86,6 @@ export default {
                     width: 50
                 },
                 {
-                    title: 'Sex',
-                    dataIndex: 'floor',
-                    width: 50,
-                },
-                {
                     title: '',
                     dataIndex: 'actions',
                     width: 150,
@@ -120,13 +115,13 @@ export default {
                     this.sorter = filters.sorter;
 
                     this.data = res.data.map((item, index) => {
+
                         return {
                             record: item,
                             orderNumber: index + 1,
                             id: item.id,
                             name: item.name,
-                            factory: item.floor ? `${item.floor.factory.name} (${item.floor.factory.number})` : '',
-                            floor: item.floor ? `${item.floor.name} (${item.floor.number})` : '',
+                            factory: item.floors.map(floor => `${floor.factory.name} (${floor.factory.number})`).unique().join(', '),
                             actions: ''
                         };
                     });

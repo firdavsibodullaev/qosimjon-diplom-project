@@ -10,10 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 class UserService
 {
+    public function __construct(protected FactoryFloorService $factoryFloorService)
+    {
+    }
+
     public function paginate(FilterDTO $filter): LengthAwarePaginator
     {
         return User::filter($filter)
-            ->with('factoryFloor.factoryRelation', 'roles')
+            ->with('factoryFloors.factoryRelation', 'roles')
             ->orderBy('id')
             ->paginate($filter->total);
     }
@@ -25,11 +29,12 @@ class UserService
                 'last_name' => $payload->last_name,
                 'first_name' => $payload->first_name,
                 'username' => $payload->username,
-                'factory_floor_id' => $payload->factory_floor_id,
                 'password' => bcrypt($payload->password)
             ]);
 
             $user->save();
+
+            $user->factoryFloors()->sync($this->getFloorIds($payload->factory_id, $payload->factory_floor_id));
 
             $user->syncRoles($payload->role->value);
 
@@ -44,11 +49,12 @@ class UserService
                 'last_name' => $payload->last_name,
                 'first_name' => $payload->first_name,
                 'username' => $payload->username,
-                'factory_floor_id' => $payload->factory_floor_id,
                 'password' => $payload->password ? bcrypt($payload->password) : $user->password
             ]);
 
             $user->save();
+
+            $user->factoryFloors()->sync($this->getFloorIds($payload->factory_id, $payload->factory_floor_id));
 
             $user->syncRoles($payload->role->value);
 
@@ -59,5 +65,14 @@ class UserService
     public function delete(User $user): ?bool
     {
         return $user->delete();
+    }
+
+    protected function getFloorIds(int $factory_id, array $factory_floor_id): array
+    {
+        if (count($factory_floor_id)) {
+            return $factory_floor_id;
+        }
+
+        return $this->factoryFloorService->getByFactoryId($factory_id)->pluck('id')->toArray();
     }
 }

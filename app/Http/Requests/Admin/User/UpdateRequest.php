@@ -43,8 +43,10 @@ class UpdateRequest extends FormRequest
                 'string',
                 Password::default()
             ],
-            'factory_floor_id' => [
-                'required',
+            'factory_id' => 'required|int',
+            'factory_floor_id' => 'array',
+            'factory_floor_id.*' => [
+                'present',
                 'int',
                 Rule::exists('factory_floors', 'id')->where('deleted_at')
             ],
@@ -52,14 +54,15 @@ class UpdateRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'last_name' => 'Familiyasi',
             'first_name' => 'Ismi',
             'username' => 'Logini',
             'password' => 'Paroli',
-            'factory_floor_id' => 'Sexi',
+            'factory_floor_id' => 'Sexlar ro\'yhati',
+            'factory_floor_id.*' => 'Sexi',
             'role' => 'Roli',
         ];
     }

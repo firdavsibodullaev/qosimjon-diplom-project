@@ -50,8 +50,10 @@
                     </a-col>
                     <a-col class="w-1/2">
                         <a-form-item label="Sex" name="factory_floor_id">
-                            <a-select v-model:value="form.factory_floor_id" placeholder="Sex...">
-                                <a-select-option v-for="(floor, index) in floors"
+                            <a-select v-model:value="form.factory_floor_id"
+                                      mode="multiple"
+                                      placeholder="Sex...">
+                                <a-select-option v-for="(floor, index) in floorsList"
                                                  :key="`factory-type-${index}-${floor.id}`"
                                                  :value="floor.id">{{ floor.name }} ({{ floor.number }})
                                 </a-select-option>
@@ -94,7 +96,7 @@ export default {
                 username: null,
                 password: null,
                 factory_id: null,
-                factory_floor_id: null,
+                factory_floor_id: [],
                 role: null
             },
             rules: {
@@ -102,11 +104,10 @@ export default {
                 first_name: [{required: true, message: 'Ismini kiriting'}],
                 username: [{required: true, message: 'Loginni kiriting'}],
                 factory_id: [{required: true, message: 'Zavodni kiriting'}],
-                factory_floor_id: [{required: true, message: 'Sexni kiriting'}],
                 role: [{required: true, message: 'Rolni kiriting'}],
             },
             factories: [],
-            floors: [],
+            floorsList: [],
             rolesList: roles
         };
     },
@@ -123,8 +124,8 @@ export default {
         username: {
             type: String
         },
-        floor: {
-            type: Object
+        floors: {
+            type: Array
         },
         roles: {
             type: Array
@@ -142,20 +143,31 @@ export default {
             }
 
             this.getFactories()
-                .then(() => this.factories = this.$store.getters['factory/getList'])
-                .then(() => this.getFactoryFloor(this.floor?.factory.id))
-                .then(() => this.form = {
-                    last_name: this.last_name,
-                    first_name: this.first_name,
-                    username: this.username,
-                    factory_id: this.floor?.factory.id,
-                    factory_floor_id: this.floor?.id,
-                    role: this.roles.length ? this.roles[0].key : null
-                })
+                .then(() => this.getFactoryFloor(this.floors.map(floor => floor.factory.id).unique()))
+                .then(() => this.setFormValues())
                 .then(() => this.$store.commit('spinner/toggleSpinning', 'drawer'));
         },
         async getFactories() {
             await this.$api.getFactories({list: 1}, ({data}) => this.factories = data.data);
+        },
+        getFactoryFloor(value) {
+            if (!value) return;
+            this.form.factory_floor_id = [];
+            this.$api.getFactoryFloors(
+                {factory_id: value.length ? value[0] : null, list: 1},
+                ({data: res}) => this.floorsList = res.data
+            );
+        },
+        setFormValues() {
+            let factoryIds = this.floors.map(floor => floor.factory.id).unique();
+            this.form = {
+                last_name: this.last_name,
+                first_name: this.first_name,
+                username: this.username,
+                factory_id: factoryIds.length ? factoryIds[0] : null,
+                factory_floor_id: this.floors.map(floor => floor.id).unique(),
+                role: this.roles.length ? this.roles[0].key : null
+            }
         },
         onClose() {
             this.$store.dispatch('drawer/clearDrawer');
@@ -180,11 +192,6 @@ export default {
         },
         onFinishFailed(errors) {
             console.log(errors);
-        },
-        getFactoryFloor(value) {
-            if (!value) return;
-            this.form.factory_floor_id = null;
-            this.$api.getFactoryFloors({factory_id: value, list: 1}, ({data: res}) => this.floors = res.data);
         }
     },
     watch: {

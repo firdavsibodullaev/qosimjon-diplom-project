@@ -41,8 +41,10 @@ class StoreRequest extends FormRequest
                 'string',
                 Password::default()
             ],
-            'factory_floor_id' => [
-                'required',
+            'factory_id' => 'required|int',
+            'factory_floor_id' => 'array',
+            'factory_floor_id.*' => [
+                'present',
                 'int',
                 Rule::exists('factory_floors', 'id')->where('deleted_at')
             ],

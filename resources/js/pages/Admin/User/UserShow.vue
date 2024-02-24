@@ -1,18 +1,30 @@
 <template>
     <div class="mt-4" v-if="data">
-        <div class="grid grid-cols-2 gap-6 mb-4">
+        <div class="grid grid-cols-2 gap-6 my-4">
             <div class="text-lg"><strong>F.I.Sh.:</strong></div>
             <div class="text-lg">{{ data.name }}</div>
         </div>
-        <div class="grid grid-cols-2 gap-6 mb-4">
+        <hr>
+        <div class="grid grid-cols-2 gap-6 my-4">
             <div class="text-lg"><strong>Zavod:</strong></div>
-            <div class="text-lg">{{ factory ?? '-' }}</div>
+            <div class="text-lg">{{ factory ? factory : '-' }}</div>
         </div>
-        <div class="grid grid-cols-2 gap-6 mb-4">
+        <hr>
+        <div class="grid grid-cols-2 gap-6 my-4">
             <div class="text-lg"><strong>Sex:</strong></div>
-            <div class="text-lg">{{ floor ?? '-' }}</div>
+            <div class="text-lg">
+                <div v-if="floors.length">
+                    <div :key="`factory-floor-${index}`"
+                       v-for="(floor, index) in floors">
+                        <p class="py-2">{{ floor }}</p>
+                        <hr v-if="index !== floors.length - 1">
+                    </div>
+                </div>
+                <div v-else>-</div>
+            </div>
         </div>
-        <div class="grid grid-cols-2 gap-6 mb-4">
+        <hr>
+        <div class="grid grid-cols-2 gap-6 my-4">
             <div class="text-lg"><strong>Rol:</strong></div>
             <div class="text-lg">{{ role ?? '-' }}</div>
         </div>
@@ -45,10 +57,10 @@ export default {
             return this.data.roles.length ? roles[this.data.roles[0].key] : null;
         },
         factory() {
-          return this.data.floor ? `${this.data.floor.factory.name} (${this.data.floor.factory.number})` : null;
+            return this.data.floors.map(floor => `${floor.factory.name} (${floor.factory.number})`).unique().join(', ')
         },
-        floor() {
-            return this.data.floor ? `${this.data.floor.name} (${this.data.floor.number})` : null;
+        floors() {
+            return this.data.floors.map(floor => `${floor.name} (${floor.number})`).unique()
         }
     },
     methods: {

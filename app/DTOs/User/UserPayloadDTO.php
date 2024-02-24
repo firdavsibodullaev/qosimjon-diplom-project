@@ -11,7 +11,8 @@ class UserPayloadDTO
         public string  $first_name,
         public string  $username,
         public Role    $role,
-        public int     $factory_floor_id,
+        public int     $factory_id,
+        public array   $factory_floor_id,
         public ?string $password = null
     )
     {
