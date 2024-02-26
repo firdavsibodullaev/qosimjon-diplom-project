@@ -24,7 +24,8 @@ class FactoryResource extends JsonResource
             'name' => $this->resource->name,
             'number' => $this->resource->number,
             'type' => $this->resource->type,
-            'floors' => FactoryFloorResource::collection($this->whenLoaded('factoryFloors'))
+            'floors' => FactoryFloorResource::collection($this->whenLoaded('factoryFloors')),
+            'is_deleted' => !is_null($this->resource->deleted_at)
         ];
     }
 }

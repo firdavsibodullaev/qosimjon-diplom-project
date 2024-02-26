@@ -10,7 +10,11 @@
         </div>
         <div class="grid grid-cols-2 gap-6 mb-4">
             <div class="text-lg"><strong>Zavod:</strong></div>
-            <div class="text-lg">{{ data.factory.name }} ({{ data.factory.number }})</div>
+            <div :class="{'text-red-600': data.factory.is_deleted}"
+                class="text-lg">
+                {{ data.factory.name }} ({{ data.factory.number }})
+                <span v-if="data.factory.is_deleted" class="text-sm">(O'chirilgan)</span>
+            </div>
         </div>
         <hr>
         <div class="mt-10">

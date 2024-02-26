@@ -89,7 +89,7 @@ export default {
                 {
                     title: 'Zavod',
                     dataIndex: 'factory',
-                    width: 50
+                    width: 200
                 },
                 {
                     title: '',
@@ -135,7 +135,7 @@ export default {
                             id: item.id,
                             name: item.name,
                             number: item.number,
-                            factory: `${item.factory.name} (${item.factory.number})`,
+                            factory: `${item.factory.name} (${item.factory.number})` + (item.factory.is_deleted ? ' (O\'chirilgan)' : ''),
                             actions: ''
                         };
                     });

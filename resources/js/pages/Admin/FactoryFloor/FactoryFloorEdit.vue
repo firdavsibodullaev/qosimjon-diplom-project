@@ -78,7 +78,13 @@ export default {
     methods: {
         init() {
             this.getFactories()
-                .then(() => this.form = {name: this.name, number: this.number, factory_id: this.factory.id})
+                .then(() => {
+                    this.form = {
+                        name: this.name,
+                        number: this.number,
+                        factory_id: this.factory.is_deleted ? null : this.factory.id
+                    }
+                })
                 .then(() => this.$store.commit('spinner/toggleSpinning', 'drawer'))
         },
         async getFactories() {

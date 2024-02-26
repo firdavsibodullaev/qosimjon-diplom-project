@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\FactoryFloor\FilterRequest;
 use App\Http\Requests\Admin\FactoryFloor\FactoryFloorRequest;
+use App\Http\Requests\Admin\FactoryFloor\FilterRequest;
 use App\Http\Resources\FactoryFloor\FactoryFloorResource;
 use App\Models\FactoryFloor;
 use App\Services\FactoryFloorService;
 use Firdavsi\Responses\Http\SuccessEmptyResponse;
 use Firdavsi\Responses\Http\SuccessResponse;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FactoryFloorController extends Controller
 {
@@ -30,7 +31,12 @@ class FactoryFloorController extends Controller
     public function show(FactoryFloor $factory_floor): SuccessResponse
     {
         return new SuccessResponse(
-            response: FactoryFloorResource::make($factory_floor->load(['factoryRelation', 'users'])),
+            response: FactoryFloorResource::make(
+                $factory_floor->load(relations: [
+                    'factoryRelation' => fn(BelongsTo $belongsTo) => $belongsTo->withTrashed(),
+                    'users'
+                ])
+            ),
             message: 'Sex haqida batafsil'
         );
     }

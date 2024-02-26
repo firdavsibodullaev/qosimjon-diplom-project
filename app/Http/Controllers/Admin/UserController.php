@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Services\UserService;
 use Firdavsi\Responses\Http\SuccessEmptyResponse;
 use Firdavsi\Responses\Http\SuccessResponse;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class UserController extends Controller
 {
@@ -51,7 +53,13 @@ class UserController extends Controller
     public function show(User $user): SuccessResponse
     {
         return new SuccessResponse(
-            response: UserResource::make($user->load('factoryFloors.factoryRelation', 'roles')),
+            response: UserResource::make($user->load([
+                'factoryFloors' => fn(BelongsToMany $belongsToMany) => $belongsToMany->with(
+                    relations: 'factoryRelation',
+                    callback: fn(BelongsTo $belongsTo) => $belongsTo->withTrashed()
+                )->withTrashed(),
+                'roles'
+            ])),
             message: 'Foydalanuvchi haqida batafsil'
         );
     }
