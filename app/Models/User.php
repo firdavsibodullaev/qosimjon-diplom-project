@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Filters\Sorter;
+use App\Filters\User\WithTrashedByFactoryFloor;
 use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -41,7 +42,8 @@ class User extends Model
     ];
 
     protected array $filters = [
-        Sorter::class => null
+        Sorter::class => null,
+        WithTrashedByFactoryFloor::class => null
     ];
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Filters\FactoryFloor\FilterByFactoryId;
+use App\Filters\FactoryFloor\WithTrashedByFactory;
 use App\Filters\Sorter;
 use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
@@ -35,7 +36,8 @@ class FactoryFloor extends Model
 
     protected array $filters = [
         Sorter::class => null,
-        FilterByFactoryId::class => 'factory_id'
+        FilterByFactoryId::class => 'factory_id',
+        WithTrashedByFactory::class => null
     ];
 
     public function users(): BelongsToMany

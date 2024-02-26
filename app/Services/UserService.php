@@ -7,8 +7,6 @@ use App\DTOs\User\UserPayloadDTO;
 use App\Enums\Role\Role;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 
 class UserService
@@ -20,20 +18,13 @@ class UserService
     public function paginate(FilterDTO $filter): LengthAwarePaginator
     {
         return User::filter($filter)
-            ->with([
-                'factoryFloors' => fn(BelongsToMany $belongsToMany) => $belongsToMany->with(
-                    relations: 'factoryRelation',
-                    callback: fn(BelongsTo $belongsTo) => $belongsTo->withTrashed()
-                )->withTrashed(),
-                'roles'
-            ])
+            ->with('roles')
             ->orderBy('id')
             ->paginate($filter->total);
     }
 
     public function create(UserPayloadDTO $payload): User
     {
-        dd($payload);
         return DB::transaction(function () use ($payload) {
             $user = new User([
                 'last_name' => $payload->last_name,

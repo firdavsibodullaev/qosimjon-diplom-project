@@ -30,6 +30,10 @@ class FactoryFloorController extends Controller
 
     public function show(FactoryFloor $factory_floor): SuccessResponse
     {
+        $factory_floor->load('factoryRelation', 'users');
+
+        abort_unless(!!$factory_floor->factoryRelation, 404);
+
         return new SuccessResponse(
             response: FactoryFloorResource::make(
                 $factory_floor->load(relations: [
@@ -54,6 +58,10 @@ class FactoryFloorController extends Controller
 
     public function update(FactoryFloorRequest $request, FactoryFloor $factory_floor): SuccessResponse
     {
+        $factory_floor->load('factoryRelation', 'users');
+
+        abort_unless(!!$factory_floor->factoryRelation, 404);
+
         $factory = $this->factoryFloorService->update($factory_floor, $request->toDto());
 
         return new SuccessResponse(
@@ -64,6 +72,10 @@ class FactoryFloorController extends Controller
 
     public function destroy(FactoryFloor $factory_floor): SuccessEmptyResponse
     {
+        $factory_floor->load('factoryRelation', 'users');
+
+        abort_unless(!!$factory_floor->factoryRelation, 404);
+
         $this->factoryFloorService->delete($factory_floor);
 
         return new SuccessEmptyResponse(

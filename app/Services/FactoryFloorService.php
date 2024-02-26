@@ -8,14 +8,12 @@ use App\Models\FactoryFloor;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FactoryFloorService
 {
     public function paginate(FilterDTO $filter = new FilterDTO()): Collection|LengthAwarePaginator
     {
         return FactoryFloor::filter($filter)
-            ->with('factoryRelation', fn(BelongsTo $belongsTo) => $belongsTo->withTrashed())
             ->when(
                 value: $filter->list,
                 callback: fn(Builder $builder) => $builder->get(),
