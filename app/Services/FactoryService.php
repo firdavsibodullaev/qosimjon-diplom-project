@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\DTOs\Factory\FactoryFloorPayloadDTO;
 use App\DTOs\Factory\FactoryPayloadDTO;
 use App\DTOs\Factory\FilterDTO;
 use App\Models\Factory;

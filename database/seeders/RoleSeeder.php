@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Role\Role;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class RoleSeeder extends Seeder
 {
@@ -12,8 +12,6 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (Role::forDB() as $role) {
-            \Spatie\Permission\Models\Role::query()->createOrFirst($role);
-        }
+        Artisan::call('app:update-role');
     }
 }

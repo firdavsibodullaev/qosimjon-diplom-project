@@ -16,7 +16,10 @@ class WithTrashedByFactoryFloor extends BaseFilter
     {
         /** @var FilterDTO $filters */
 
-        $floorsFilters = new FactoryFloorFilterDTO(with_trashed_factory: $filters->with_trashed_factory);
+        $floorsFilters = new FactoryFloorFilterDTO(
+            user: $filters->user,
+            with_trashed_factory: $filters->with_trashed_factory
+        );
 
         $builder->when(
             value: $filters->with_trashed_factory_floor,

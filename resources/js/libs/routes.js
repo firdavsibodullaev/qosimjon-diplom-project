@@ -35,7 +35,7 @@ export default [
         meta: {
             middleware: ['auth'],
             sidebar: true,
-            role: ['admin'],
+            role: ['admin', 'director'],
             main: true,
             text: 'Sozlamalar'
         },
@@ -60,7 +60,7 @@ export default [
                     public: true,
                     middleware: ['auth'],
                     sidebar: true,
-                    role: ['admin'],
+                    role: ['admin', 'director'],
                     text: 'Sexlar'
                 }
             },
@@ -72,7 +72,7 @@ export default [
                     public: true,
                     middleware: ['auth'],
                     sidebar: true,
-                    role: ['admin'],
+                    role: ['admin', 'director'],
                     text: 'Foydalanuvchilar'
                 }
             },

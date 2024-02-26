@@ -4,11 +4,11 @@ namespace App\Http\Requests\Admin\User;
 
 use App\DTOs\User\UserPayloadDTO;
 use App\Enums\Role\Role;
+use App\Models\User;
 use App\Rules\IsCheckFloorBelongsToFactory;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\Rules\Password;
 
 class StoreRequest extends FormRequest
@@ -28,6 +28,10 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var User $user */
+        $user = $this->user()->load('factoryFloors.factoryRelation');
+        $role = Role::tryFrom($user->getRoleNames()->first());
+
         return [
             'last_name' => 'required|string|max:190',
             'first_name' => 'required|string|max:190',
@@ -52,7 +56,11 @@ class StoreRequest extends FormRequest
                 'int',
                 Rule::exists('factory_floors', 'id')->where('deleted_at')
             ],
-            'role' => ['required', 'string', new Enum(Role::class)]
+            'role' => [
+                'required',
+                'string',
+                Rule::in($role->forRole())
+            ]
         ];
     }
 

@@ -8,4 +8,9 @@ trait InteractsWithRoles
     {
         return sprintf("role:%s", self::ADMIN->value);
     }
+
+    public static function adminDirector(): string
+    {
+        return sprintf("role:%s|%s", self::ADMIN->value, self::DIRECTOR->value);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Role\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Factory\FactoryRequest;
 use App\Http\Requests\Admin\Factory\FilterRequest;
@@ -18,6 +19,8 @@ class FactoryController extends Controller
 {
     public function __construct(protected FactoryService $factoryService)
     {
+        $this->middleware(Role::admin())->except('index');
+        $this->middleware(Role::adminDirector())->only('index');
     }
 
     #[Get(

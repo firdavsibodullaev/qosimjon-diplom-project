@@ -30,6 +30,9 @@ class FilterRequest extends FilterValidator
 
     public function toDto(): FilterDTO
     {
-        return new FilterDTO(...$this->validated());
+        $payload = $this->validated();
+        $payload['user'] = $this->request->user();
+
+        return new FilterDTO(...$payload);
     }
 }

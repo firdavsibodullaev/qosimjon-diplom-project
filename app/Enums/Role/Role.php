@@ -10,16 +10,18 @@ enum Role: string
 
     case ADMIN = 'admin';
     case TESTER = 'tester';
-    case WORKER = 'worker';
+    case DIRECTOR = 'director';
     case MODERATOR = 'moderator';
+    case WORKER = 'worker';
 
     public function translate(): string
     {
         return match ($this) {
             self::ADMIN => 'Admin',
             self::TESTER => 'Tekshiruvchi',
-            self::WORKER => 'Ishchi',
+            self::DIRECTOR => 'Direktor',
             self::MODERATOR => 'Moderator',
+            self::WORKER => 'Ishchi',
         };
     }
 
@@ -28,8 +30,9 @@ enum Role: string
         return [
             self::ADMIN->value => 'Admin',
             self::TESTER->value => 'Tekshiruvchi',
-            self::WORKER->value => 'Ishchi',
+            self::DIRECTOR->value => 'Direktor',
             self::MODERATOR->value => 'Moderator',
+            self::WORKER->value => 'Ishchi',
         ];
     }
 
@@ -45,11 +48,15 @@ enum Role: string
                 'guard_name' => 'web'
             ],
             [
-                'name' => self::WORKER->value,
+                'name' => self::DIRECTOR->value,
                 'guard_name' => 'web'
             ],
             [
                 'name' => self::MODERATOR->value,
+                'guard_name' => 'web'
+            ],
+            [
+                'name' => self::WORKER->value,
                 'guard_name' => 'web'
             ],
         ];
@@ -58,5 +65,15 @@ enum Role: string
     public function is(Role $role): bool
     {
         return $this === $role;
+    }
+
+    public function forRole(): array
+    {
+        return match ($this) {
+            self::ADMIN => array_column(self::cases(), 'value'),
+            self::DIRECTOR => [self::MODERATOR->value, self::WORKER->value],
+            self::MODERATOR => [self::WORKER->value],
+            default => []
+        };
     }
 }

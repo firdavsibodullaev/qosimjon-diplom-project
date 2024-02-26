@@ -15,7 +15,7 @@
             <div class="text-lg">
                 <div v-if="floors.length">
                     <div :key="`factory-floor-${index}`"
-                       v-for="(floor, index) in floors">
+                         v-for="(floor, index) in floors">
                         <p class="py-2">{{ floor }}</p>
                         <hr v-if="index !== floors.length - 1">
                     </div>
@@ -34,8 +34,6 @@
 </template>
 <script>
 
-import roles from "@/pages/Admin/User/roles";
-
 export default {
     name: 'UserShow',
     props: {
@@ -45,8 +43,7 @@ export default {
     },
     data() {
         return {
-            data: null,
-            roles
+            data: null
         };
     },
     computed: {
@@ -54,7 +51,7 @@ export default {
             return this.$store.getters['drawer/getOpen'];
         },
         role() {
-            return this.data.roles.length ? roles[this.data.roles[0].key] : null;
+            return this.data.roles.length ? this.data.roles[0].text : null;
         },
         factory() {
             return this.data.floors.map(floor => `${floor.factory.name} (${floor.factory.number})`).unique().join(', ')

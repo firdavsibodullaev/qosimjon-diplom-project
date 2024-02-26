@@ -28,12 +28,12 @@ Route::prefix('v1')->name('v1.')->group(function () {
     });
 
     Route::prefix('admin')->name('admin.')
-        ->middleware(['auth:sanctum', Role::admin()])
+        ->middleware('auth:sanctum')
         ->group(function () {
             Route::apiResource('factory', FactoryController::class);
-            Route::apiResource('factory-floor', FactoryFloorController::class);
-            Route::apiResource('user', UserController::class);
-            Route::apiResource('device', DeviceController::class);
+            Route::apiResource('factory-floor', FactoryFloorController::class)->middleware(Role::adminDirector());
+            Route::apiResource('user', UserController::class)->middleware(Role::adminDirector());
+            Route::apiResource('device', DeviceController::class)->middleware(Role::admin());
 
             Route::get('attribute', [AttributeController::class, 'index'])->name('attribute.index');
         });

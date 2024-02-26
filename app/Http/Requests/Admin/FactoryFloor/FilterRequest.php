@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Admin\FactoryFloor;
 
 use App\DTOs\FactoryFloor\FilterDTO;
+use App\Enums\Role\Role;
 use App\Http\Requests\FilterValidator;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 
 class FilterRequest extends FilterValidator
@@ -31,6 +33,12 @@ class FilterRequest extends FilterValidator
 
     public function toDto(): FilterDTO
     {
-        return new FilterDTO(...$this->validated());
+        /** @var User $user */
+        $user = auth()->user();
+
+        $payload = $this->validated();
+        $payload['user'] = $user;
+
+        return new FilterDTO(...$payload);
     }
 }

@@ -19,8 +19,6 @@
 </template>
 <script>
 
-import roles from "@/pages/Admin/User/roles";
-
 export default {
     name: 'UserShow',
     props: {
@@ -30,8 +28,7 @@ export default {
     },
     data() {
         return {
-            data: null,
-            roles,
+            data: null
         };
     },
     computed: {

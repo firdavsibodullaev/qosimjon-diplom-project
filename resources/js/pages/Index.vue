@@ -10,6 +10,7 @@ export default {
     methods: {},
     beforeMount() {
         document.title = `${this.$env.appName} | Bosh sahifa`;
+        this.$store.commit('sidebar/setLoading', false);
     }
 }
 </script>

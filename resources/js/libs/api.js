@@ -76,6 +76,10 @@ const errorHandler = (error, onError) => {
         }
     }
 
+    if (status === 403) {
+        toastr.error('Sizda kerakli ruxsatlar yo\'q');
+    }
+
     return typeof onError === 'function' && onError(error);
 }
 

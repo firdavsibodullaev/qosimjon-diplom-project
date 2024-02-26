@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Filters\Sorter;
+use App\Filters\User\Permitted;
 use App\Filters\User\WithTrashedByFactoryFloor;
 use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,6 +26,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read string $name
+ * @property-read Collection $factoryFloors
  */
 class User extends Model
 {
@@ -42,6 +45,7 @@ class User extends Model
     ];
 
     protected array $filters = [
+        Permitted::class => null,
         Sorter::class => null,
         WithTrashedByFactoryFloor::class => null
     ];

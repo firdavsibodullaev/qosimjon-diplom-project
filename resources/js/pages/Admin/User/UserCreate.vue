@@ -114,12 +114,15 @@ export default {
             },
             factories: [],
             floors: [],
-            roles: roles
+            roles: roles.forRole(this.currentRole)
         };
     },
     computed: {
         closeDrawer() {
             return this.$store.getters['drawer/getOpen'];
+        },
+        currentRole() {
+            return this.$store.getters['auth/getUser'].roles[0].key;
         }
     },
     methods: {
