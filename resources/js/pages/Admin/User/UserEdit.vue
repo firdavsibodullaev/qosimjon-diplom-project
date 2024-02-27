@@ -138,7 +138,7 @@ export default {
             return this.$store.getters['drawer/getOpen'];
         },
         propRole() {
-            return this.roles && this.roles.length ?  roles[0].key : null;
+            return this.roles && this.roles.length ?  this.roles[0].key : null;
         },
         currentRole() {
             return this.$store.getters['auth/getUser'].roles[0].key;

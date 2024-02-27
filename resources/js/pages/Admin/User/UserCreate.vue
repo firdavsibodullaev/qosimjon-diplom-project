@@ -114,7 +114,7 @@ export default {
             },
             factories: [],
             floors: [],
-            roles: roles.forRole(this.currentRole)
+            roles: roles.forRole(this.$store.getters['auth/getUser'].roles[0].key)
         };
     },
     computed: {
