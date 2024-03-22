@@ -45,7 +45,7 @@
     </AuthLayout>
 </template>
 <script>
-import toastr from "toastr";
+import {error, success} from "toastr";
 import AuthLayout from "@/pages/AuthLayout.vue";
 import Spinner from "@/components/Spinner.vue";
 import showValidationErrors from "@/utils/showValidationErrors";
@@ -74,12 +74,12 @@ export default {
                     this.$store.commit('auth/setUser', data.data.user);
                     this.$store.commit('spinner/toggleSpinning', 'main');
                     this.$router.push({name: 'index'});
-                    toastr.success(data.message);
+                    success(data.message);
                 },
                 ({response}) => {
                     switch (response.status) {
                         case 401:
-                            toastr.error(response.data.message);
+                            error(response.data.message);
                             break;
                         case 422:
                             showValidationErrors(response.data.errors);

@@ -17,7 +17,7 @@
                             @click="() => $store.commit('sidebar/setCollapsed')"
                         />
                         <MenuFoldOutlined v-else class="trigger" @click="() => $store.commit('sidebar/setCollapsed')"/>
-                            <p class="text-xl"><strong>{{ $env.appName }}</strong></p>
+                        <p class="text-xl"><strong>{{ $env.appName }}</strong></p>
                     </div>
                     <div class="mr-5">
                         <a-dropdown :trigger="['click']">
@@ -46,16 +46,17 @@
 import Spinner from "@/components/Spinner.vue";
 import toastr from "toastr";
 import Sidebar from "@/pages/Sidebar.vue";
+import {DownOutlined, MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons-vue";
 
 export default {
     name: 'Layout',
-    components: {Sidebar, Spinner},
+    components: {Sidebar, Spinner, MenuUnfoldOutlined, MenuFoldOutlined, DownOutlined},
     data() {
         return {
             collapsed: false,
         };
     },
-    props:{
+    props: {
         pageTitle: {
             type: String,
             required: true

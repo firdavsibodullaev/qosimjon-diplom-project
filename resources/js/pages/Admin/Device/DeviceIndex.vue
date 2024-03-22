@@ -48,7 +48,7 @@
 import Layout from "@/pages/Layout.vue";
 import Drawer from "@/components/Drawer.vue";
 import {markRaw} from "vue";
-import toastr from "toastr";
+import {success} from "toastr";
 import makeSorterField from "@/utils/makeSorterField";
 import DeviceCreate from "@/pages/Admin/Device/DeviceCreate.vue";
 import DeviceEdit from "@/pages/Admin/Device/DeviceEdit.vue";
@@ -142,7 +142,7 @@ export default {
             this.$api.deleteDevice(
                 id,
                 ({data}) => {
-                    toastr.success(data.message);
+                    success(data.message);
                     this.getDevices({
                         page: this.pagination.current,
                         sorter: this.sorter,

@@ -37,7 +37,7 @@
 </template>
 <script>
 
-import toastr from "toastr";
+import {success} from "toastr";
 import showValidationErrors from "@/utils/showValidationErrors";
 
 export default {
@@ -79,7 +79,7 @@ export default {
             this.$api.createFactoryFloor(
                 payload,
                 ({data}) => {
-                    toastr.success(data.message);
+                    success(data.message);
                     this.$store.commit('spinner/toggleSpinning', 'main');
                     this.$store.commit('factory/setIsReload', true);
                     this.onClose();

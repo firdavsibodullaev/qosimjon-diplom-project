@@ -89,7 +89,7 @@
 </template>
 <script>
 
-import toastr from "toastr";
+import {success} from "toastr";
 import showValidationErrors from "@/utils/showValidationErrors";
 import roles from "@/pages/Admin/User/roles";
 
@@ -126,20 +126,7 @@ export default {
         },
         currentRole() {
             return this.$store.getters['auth/getUser'].roles[0].key;
-        },
-        // rolesList() {
-        //     let list = roles.list(this.currentRole);
-        //
-        //     let activeList = Object.keys(list).filter((role) => list[role].enabled);
-        //
-        //     let result = {};
-        //
-        //     for (let i = 0; i < activeList.length; i++) {
-        //         result[activeList[i]] = list[activeList[i]];
-        //     }
-        //
-        //     return result;
-        // }
+        }
     },
     methods: {
         init() {
@@ -157,7 +144,7 @@ export default {
             this.$api.createUser(
                 payload,
                 ({data}) => {
-                    toastr.success(data.message);
+                    success(data.message);
                     this.$store.commit('spinner/toggleSpinning', 'main');
                     this.$store.commit('factory/setIsReload', true);
                     this.onClose();

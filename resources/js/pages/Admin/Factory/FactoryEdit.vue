@@ -34,7 +34,7 @@
 </template>
 <script>
 
-import toastr from "toastr";
+import {success} from "toastr";
 import factoryType from "@/pages/Admin/Factory/factoryType";
 import showValidationErrors from "@/utils/showValidationErrors";
 
@@ -97,7 +97,7 @@ export default {
                 this.id,
                 payload,
                 ({data}) => {
-                    toastr.success(data.message);
+                    success(data.message);
                     this.$store.commit('spinner/toggleSpinning', 'drawer');
                     this.$store.commit('factory/setIsReload', true);
                     this.onClose();

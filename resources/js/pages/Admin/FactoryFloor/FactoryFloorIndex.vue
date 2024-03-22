@@ -44,7 +44,7 @@
 <script>
 
 import Layout from "@/pages/Layout.vue";
-import toastr from "toastr";
+import {success} from "toastr";
 import {markRaw} from "vue";
 import FactoryFloorCreate from "@/pages/Admin/FactoryFloor/FactoryFloorCreate.vue";
 import Drawer from "@/components/Drawer.vue";
@@ -156,7 +156,7 @@ export default {
             this.$api.deleteFactoryFloor(
                 id,
                 ({data}) => {
-                    toastr.success(data.message);
+                    success(data.message);
                     this.getFactoryFloors({page: this.pagination.current, sorter: this.sorter});
                 },
                 (error) => {

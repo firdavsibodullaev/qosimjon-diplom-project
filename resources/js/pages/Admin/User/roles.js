@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import {findIndex, findLastIndex} from 'lodash';
 
 export default {
 
@@ -34,8 +34,8 @@ export default {
         let entries = Object.entries(roles);
 
         let index = selectedRole && !roles[selectedRole]?.enabled
-            ? _.findIndex(entries, (e) => e[0] === selectedRole)
-            : _.findLastIndex(entries, (e) => e[1]?.enabled === false) + 1;
+            ? findIndex(entries, (e) => e[0] === selectedRole)
+            : findLastIndex(entries, (e) => e[1]?.enabled === false) + 1;
 
         return Object.fromEntries(entries.slice(index));
 

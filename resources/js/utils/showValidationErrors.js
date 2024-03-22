@@ -1,6 +1,5 @@
-import toastr from "toastr";
+import {error} from "toastr";
 
 export default (errors) => {
-
-    return Object.keys(errors).forEach(key => toastr.error(errors[key][0]));
+    return Object.keys(errors).forEach(key => error(errors[key][0]));
 }

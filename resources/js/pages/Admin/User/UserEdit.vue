@@ -85,7 +85,7 @@
 </template>
 <script>
 
-import toastr from "toastr";
+import {success} from "toastr";
 import showValidationErrors from "@/utils/showValidationErrors";
 import roles from "@/pages/Admin/User/roles";
 
@@ -183,7 +183,7 @@ export default {
                 this.id,
                 payload,
                 ({data}) => {
-                    toastr.success(data.message);
+                    success(data.message);
                     this.$store.commit('spinner/toggleSpinning', 'main');
                     this.$store.commit('factory/setIsReload', true);
                     this.onClose();

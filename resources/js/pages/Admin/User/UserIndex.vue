@@ -47,7 +47,7 @@ import Layout from "@/pages/Layout.vue";
 import Drawer from "@/components/Drawer.vue";
 import {markRaw} from "vue";
 import UserCreate from "@/pages/Admin/User/UserCreate.vue";
-import toastr from "toastr";
+import {success} from "toastr";
 import makeSorterField from "@/utils/makeSorterField";
 import UserEdit from "@/pages/Admin/User/UserEdit.vue";
 import UserShow from "@/pages/Admin/User/UserShow.vue";
@@ -147,7 +147,7 @@ export default {
             this.$api.deleteUser(
                 id,
                 ({data}) => {
-                    toastr.success(data.message);
+                    success(data.message);
                     this.getUsers({
                         page: this.pagination.current,
                         sorter: this.sorter,

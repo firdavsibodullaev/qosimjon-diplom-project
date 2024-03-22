@@ -91,8 +91,9 @@
 </template>
 <script>
 
+import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons-vue";
 import showValidationErrors from "@/utils/showValidationErrors";
-import toastr from "toastr";
+import {success} from "toastr";
 
 export default {
     name: 'DeviceCreate',
@@ -107,7 +108,9 @@ export default {
             render() {
                 return this.vnodes;
             },
-        }
+        },
+        MinusCircleOutlined,
+        PlusOutlined
     },
     data() {
         return {
@@ -234,7 +237,7 @@ export default {
             this.$api.createDevice(
                 payload,
                 ({data}) => {
-                    toastr.success(data.message);
+                    success(data.message);
                     this.$store.commit('spinner/toggleSpinning', 'main');
                     this.$store.commit('factory/setIsReload', true);
                     this.onClose();

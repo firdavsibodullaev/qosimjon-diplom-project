@@ -5,5 +5,5 @@
 </template>
 <script setup>
 import Layout from "@/pages/Layout.vue";
-import store from "../../store";
+import store from "@/store";
 </script>

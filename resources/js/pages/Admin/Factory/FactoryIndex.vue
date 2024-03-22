@@ -44,7 +44,7 @@
 <script>
 
 import Layout from "@/pages/Layout.vue";
-import toastr from "toastr";
+import {success} from "toastr";
 import Drawer from "@/components/Drawer.vue";
 import FactoryEdit from "@/pages/Admin/Factory/FactoryEdit.vue";
 import FactoryCreate from "@/pages/Admin/Factory/FactoryCreate.vue";
@@ -150,7 +150,7 @@ export default {
             this.$api.deleteFactory(
                 id,
                 ({data}) => {
-                    toastr.success(data.message);
+                    success(data.message);
                     this.getFactories({page: this.pagination.current, sorter: this.sorter});
                 },
                 (error) => {
