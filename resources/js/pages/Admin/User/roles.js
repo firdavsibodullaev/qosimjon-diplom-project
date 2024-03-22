@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default {
 
     admin: 'Admin',
@@ -5,29 +7,38 @@ export default {
     director: 'Direktor',
     moderator: 'Moderator',
     worker: 'Ishchi',
-    list(role) {
-        return {
+    list(currentRole, selectedRole = null) {
+        let roles = {
             admin: {
                 text: this.admin,
-                enabled: ['admin'].includes(role)
+                enabled: ['admin'].includes(currentRole)
             },
             tester: {
                 text: this.tester,
-                enabled: ['admin'].includes(role)
+                enabled: ['admin'].includes(currentRole)
             },
             director: {
                 text: this.director,
-                enabled: ['admin'].includes(role)
+                enabled: ['admin'].includes(currentRole)
             },
             moderator: {
                 text: this.moderator,
-                enabled: ['admin', 'director'].includes(role)
+                enabled: ['admin', 'director'].includes(currentRole)
             },
             worker: {
                 text: this.worker,
-                enabled: ['admin', 'director', 'moderator'].includes(role)
+                enabled: ['admin', 'director', 'moderator'].includes(currentRole)
             }
         };
+
+        let entries = Object.entries(roles);
+
+        let index = selectedRole && !roles[selectedRole]?.enabled
+            ? _.findIndex(entries, (e) => e[0] === selectedRole)
+            : _.findLastIndex(entries, (e) => e[1]?.enabled === false) + 1;
+
+        return Object.fromEntries(entries.slice(index));
+
     },
     isEnabled(currentRole, role) {
         return {

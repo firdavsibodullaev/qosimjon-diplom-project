@@ -67,7 +67,7 @@
                     <a-select v-model:value="form.role"
                               :disabled="!rolesList.isEnabled(currentRole, form.role)"
                               placeholder="Rol...">
-                        <a-select-option v-for="(role, key) in rolesList.list(currentRole)"
+                        <a-select-option v-for="(role, key) in rolesList.list(currentRole, form.role)"
                                          :key="`factory-type-${key}`"
                                          :disabled="!role.enabled"
                                          :value="key">{{ role.text }}
@@ -81,7 +81,6 @@
                 </a-form-item>
             </a-col>
         </a-space>
-
     </a-form>
 </template>
 <script>

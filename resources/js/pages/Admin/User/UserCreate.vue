@@ -71,7 +71,7 @@
             <a-col class="w-full">
                 <a-form-item label="Rol" name="role">
                     <a-select v-model:value="form.role" placeholder="Rol...">
-                        <a-select-option v-for="(role, key) in rolesList"
+                        <a-select-option v-for="(role, key) in roles.list(currentRole)"
                                          :key="`factory-type-${key}`"
                                          :disabled="!role.enabled"
                                          :value="key">{{ role.text }}
@@ -127,19 +127,19 @@ export default {
         currentRole() {
             return this.$store.getters['auth/getUser'].roles[0].key;
         },
-        rolesList() {
-            let list = roles.list(this.currentRole);
-
-            let activeList = Object.keys(list).filter((role) => list[role].enabled);
-
-            let result = {};
-
-            for (let i = 0; i < activeList.length; i++) {
-                result[activeList[i]] = list[activeList[i]];
-            }
-
-            return result;
-        }
+        // rolesList() {
+        //     let list = roles.list(this.currentRole);
+        //
+        //     let activeList = Object.keys(list).filter((role) => list[role].enabled);
+        //
+        //     let result = {};
+        //
+        //     for (let i = 0; i < activeList.length; i++) {
+        //         result[activeList[i]] = list[activeList[i]];
+        //     }
+        //
+        //     return result;
+        // }
     },
     methods: {
         init() {
