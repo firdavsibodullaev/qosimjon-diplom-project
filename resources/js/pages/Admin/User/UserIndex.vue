@@ -184,13 +184,13 @@ export default {
         loadCreateComponent() {
             this.componentKey = `create`;
             this.component = markRaw(UserCreate);
-            this.$store.commit('drawer/setDrawerTitle', 'Yangi zavod qo\'shish');
+            this.$store.commit('drawer/setDrawerTitle', 'Yangi foydalanuvchi qo\'shish');
         },
         loadEditComponent(record) {
             this.componentKey = `edit-${record.number}-${record.id}`;
             this.component = markRaw(UserEdit);
             this.$store.commit('drawer/setComponentProps', record);
-            this.$store.commit('drawer/setDrawerTitle', 'Zavodni tahrirlash');
+            this.$store.commit('drawer/setDrawerTitle', 'Foydalanuvchini tahrirlash');
             document.getElementById(`record-${record.id}`).closest('tr').classList.add('bg-gray-100');
         },
         loadShowComponent(record) {
@@ -219,7 +219,7 @@ export default {
     },
     beforeMount() {
         this.$store.commit('sidebar/setLoading', true);
-        document.title = `${this.$env.appName} | Zavodlar`;
+        document.title = `${this.$env.appName} | Foydalanuvchilar`;
         this.getUsers({
             page: this.pagination.current,
             sorter: this.sorter,

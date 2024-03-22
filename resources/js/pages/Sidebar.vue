@@ -26,9 +26,9 @@ export default {
         let menuItem = [];
 
         function getKeys(sub, item, routes) {
-            if (routes.childs && routes.childs.length > 0) {
+            if (routes.openedChildren && routes.openedChildren.length > 0) {
                 sub.push(routes.key);
-                getKeys(sub, item, routes.childs[0]);
+                getKeys(sub, item, routes.openedChildren[0]);
             } else {
                 item.push(routes.key);
             }
@@ -53,7 +53,7 @@ export default {
             return routes.filter(route => {
 
                 if (route.meta.sidebar && route.children) {
-                    route.children = this.filterSidebarRoutes(route.children);
+                    route.sidebarChildren = this.filterSidebarRoutes(route.children);
                 }
 
                 return route.meta.sidebar && hasPermission(route.meta.role);
@@ -77,7 +77,7 @@ export default {
                         });
 
                         if (currentRouteTree.length > 0) {
-                            route.childs = currentRouteTree;
+                            route.openedChildren = currentRouteTree;
                             route.target = true;
                         }
 
@@ -94,8 +94,8 @@ export default {
                 disabled: this.loading
             }
 
-            if (route.children) {
-                result.children = route.children.map(item => this.prepareForMenu(item));
+            if (route.sidebarChildren) {
+                result.children = route.sidebarChildren.map(item => this.prepareForMenu(item));
             } else if (route.name !== this.$route.name) {
                 result.onClick = () => this.$router.push({name: route.name});
             }

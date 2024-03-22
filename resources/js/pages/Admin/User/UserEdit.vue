@@ -65,11 +65,12 @@
             <a-col class="w-full">
                 <a-form-item label="Rol" name="role">
                     <a-select v-model:value="form.role"
-                              :disabled="propRole === currentRole && currentRole !== 'admin'"
+                              :disabled="!rolesList.isEnabled(currentRole, form.role)"
                               placeholder="Rol...">
-                        <a-select-option v-for="(role, key) in rolesList"
+                        <a-select-option v-for="(role, key) in rolesList.list(currentRole)"
                                          :key="`factory-type-${key}`"
-                                         :value="key">{{ role }}
+                                         :disabled="!role.enabled"
+                                         :value="key">{{ role.text }}
                         </a-select-option>
                     </a-select>
                 </a-form-item>
@@ -110,7 +111,7 @@ export default {
             },
             factories: [],
             floorsList: [],
-            rolesList: roles.forRole(this.$store.getters['auth/getUser'].roles[0].key)
+            rolesList: roles
         };
     },
     props: {
@@ -136,9 +137,6 @@ export default {
     computed: {
         closeDrawer() {
             return this.$store.getters['drawer/getOpen'];
-        },
-        propRole() {
-            return this.roles && this.roles.length ?  this.roles[0].key : null;
         },
         currentRole() {
             return this.$store.getters['auth/getUser'].roles[0].key;
