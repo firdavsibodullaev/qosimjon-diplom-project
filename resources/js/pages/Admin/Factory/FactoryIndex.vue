@@ -154,6 +154,7 @@ export default {
                     this.getFactories({page: this.pagination.current, sorter: this.sorter});
                 },
                 (error) => {
+                    console.log(error);
                     this.loading = false;
                 }
             );
