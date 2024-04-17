@@ -186,6 +186,9 @@ const apis = {
 	getFactoryDevice(id, onSuccess, onError = null) {
 		return axiosGet(`factory-device/${id}`, onSuccess, onError);
 	},
+	createFactoryDevice(data, onSuccess, onError = null) {
+		return axiosPost(`factory-device`, data, onSuccess, onError);
+	},
 };
 
 export default {

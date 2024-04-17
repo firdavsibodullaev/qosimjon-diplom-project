@@ -17,7 +17,9 @@ class FilterRequest extends FilterValidator
                 'string',
                 Rule::in(['id', '-id', 'number', '-number'])
             ],
-            'total' => ['nullable', 'int']
+            'total' => ['nullable', 'int'],
+            'name' => ['nullable', 'string'],
+            'paginate' => ['nullable', 'boolean'],
         ];
     }
 

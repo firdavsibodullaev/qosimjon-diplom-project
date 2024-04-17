@@ -32,7 +32,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
             Route::apiResource('factory', FactoryController::class);
             Route::apiResource('factory-floor', FactoryFloorController::class)->middleware(Role::adminDirector());
             Route::apiResource('user', UserController::class)->middleware(Role::adminDirector());
-            Route::apiResource('device', DeviceController::class)->middleware(Role::admin());
+            Route::apiResource('device', DeviceController::class)->middleware(Role::adminModerator());
             Route::apiResource('factory-device', FactoryDeviceController::class)->middleware(Role::moderator());
 
             Route::get('attribute', [AttributeController::class, 'index'])->name('attribute.index');

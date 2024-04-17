@@ -53,7 +53,7 @@ class FactoryDeviceService
         $result = "";
 
         if ($factory_floor_id) {
-            $floor = $this->factoryFloorService->findById($factory_floor_id)->load('factory');
+            $floor = $this->factoryFloorService->findById($factory_floor_id)->load('factoryRelation');
             $result .= "{$floor->factoryRelation->number}$floor->number";
         } else {
             $factory = $this->factoryService->findById($factory_id);

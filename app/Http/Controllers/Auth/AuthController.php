@@ -19,7 +19,10 @@ class AuthController extends Controller
         $this->middleware('auth:sanctum')->only('logout');
     }
 
-    public function login(Request $request)
+    /**
+     * @throws AuthenticationException
+     */
+    public function login(Request $request): SuccessResponse
     {
         $credentials = $request->validate([
             'username' => 'required|string',

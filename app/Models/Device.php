@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filters\Device\FilterName;
 use App\Filters\Sorter;
 use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
@@ -29,6 +30,7 @@ class Device extends Model
 
     protected array $filters = [
         Sorter::class => null,
+        FilterName::class => null,
     ];
 
     public function attributes(): HasMany

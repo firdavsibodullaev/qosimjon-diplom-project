@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import api from '@/libs/api';
+import type { IUser } from '@/contracts/user/IUser';
 
 export const authModule = {
 	namespaced: true,
@@ -9,7 +10,7 @@ export const authModule = {
 		expiresAt: null,
 	}),
 	getters: {
-		getUser(state: any) {
+		getUser(state: any): IUser {
 			let user = state.user;
 
 			return user ? JSON.parse(user) : user;

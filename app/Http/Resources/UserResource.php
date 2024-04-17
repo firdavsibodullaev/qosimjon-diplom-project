@@ -26,7 +26,11 @@ class UserResource extends JsonResource
             'name' => $this->resource->name,
             'username' => $this->resource->username,
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
-            'floors' => FactoryFloorResource::collection($this->whenLoaded('factoryFloors'))
+            'floors' => FactoryFloorResource::collection($this->whenLoaded('factoryFloors')),
+            'has_permission_to_all_floors' => $this->whenLoaded(
+                relationship: 'factoryFloors',
+                value: fn() => $this->resource->has_permission_to_all_floors
+            )
         ];
     }
 }

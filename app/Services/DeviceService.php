@@ -9,6 +9,8 @@ use App\DTOs\Device\DevicePayloadDTO;
 use App\DTOs\Device\FilterDTO;
 use App\Models\Device;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -21,9 +23,15 @@ class DeviceService
     {
     }
 
-    public function paginate(FilterDTO $filter = new FilterDTO): LengthAwarePaginator
+    public function paginate(FilterDTO $filter = new FilterDTO): EloquentCollection|LengthAwarePaginator
     {
-        return Device::filter($filter)->with('attributes')->paginate($filter->total);
+        return Device::filter($filter)
+            ->with('attributes')
+            ->when(
+                value: $filter->paginate,
+                callback: fn(Builder $builder) => $builder->paginate($filter->total),
+                default: fn(Builder $builder) => $builder->get()
+            );
     }
 
     public function create(DevicePayloadDTO $payload): Device

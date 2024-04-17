@@ -7,6 +7,7 @@ use App\Enums\FactoryDevice\Status;
 use App\Filters\FactoryDevice\UserFilter;
 use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -27,7 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class FactoryDevice extends Model
 {
-    use InteractsWithFilters;
+    use HasFactory, InteractsWithFilters;
 
     public array $filters = [
         UserFilter::class => null
