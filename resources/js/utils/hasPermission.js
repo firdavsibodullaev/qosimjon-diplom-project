@@ -1,11 +1,11 @@
-import store from "@/store";
+import store from '@/store';
 
 export default (roles) => {
-    let userRole = store.getters['auth/getUser']?.roles[0].key;
+	let userRole = store.getters['auth/getUser']?.roles[0].key;
 
-    if (!userRole) {
-        return true;
-    }
+	if (!userRole) {
+		return true;
+	}
 
-    return !roles || roles.includes(userRole);
-}
+	return !roles || roles.includes(userRole);
+};

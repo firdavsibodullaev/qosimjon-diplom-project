@@ -1,5 +1,5 @@
 export default () => {
-    return function () {
-        return [...new Set(this)];
-    };
-}
+	return function () {
+		return [...new Set(this)];
+	};
+};

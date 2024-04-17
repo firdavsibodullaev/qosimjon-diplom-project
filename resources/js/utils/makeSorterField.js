@@ -1,7 +1,7 @@
 export default (field, order = null) => {
-    if (!field || !order) {
-        return null;
-    }
+	if (!field || !order) {
+		return null;
+	}
 
-    return (order !== 'ascend' ? '-' : '') + field;
-}
+	return (order !== 'ascend' ? '-' : '') + field;
+};

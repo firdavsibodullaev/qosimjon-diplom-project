@@ -1,16 +1,16 @@
 <template>
-    <Layout page-title="Bosh sahifa"></Layout>
+	<Layout page-title="Bosh sahifa"></Layout>
 </template>
 
 <script>
-import Layout from "@/pages/Layout.vue";
+import Layout from '@/pages/Layout.vue';
 
 export default {
-    components: {Layout},
-    methods: {},
-    beforeMount() {
-        document.title = `${this.$env.appName} | Bosh sahifa`;
-        this.$store.commit('sidebar/setLoading', false);
-    }
-}
+	components: { Layout },
+	methods: {},
+	beforeMount() {
+		document.title = `${this.$env.appName} | Bosh sahifa`;
+		this.$store.commit('sidebar/setLoading', false);
+	},
+};
 </script>

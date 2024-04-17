@@ -49,4 +49,12 @@ class FactoryService
     {
         return $factory->delete();
     }
+
+    public function findById(int $factory_id): ?Factory
+    {
+        /** @var Factory|null $factory */
+        $factory = Factory::query()->find($factory_id);
+
+        return $factory;
+    }
 }

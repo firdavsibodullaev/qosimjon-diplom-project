@@ -5,9 +5,9 @@ use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\DeviceController;
 use App\Http\Controllers\Admin\FactoryController;
 use App\Http\Controllers\Admin\FactoryFloorController;
-use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Moderator\FactoryDeviceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,13 +27,13 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });
 
-    Route::prefix('admin')->name('admin.')
-        ->middleware('auth:sanctum')
+    Route::middleware('auth:sanctum')
         ->group(function () {
             Route::apiResource('factory', FactoryController::class);
             Route::apiResource('factory-floor', FactoryFloorController::class)->middleware(Role::adminDirector());
             Route::apiResource('user', UserController::class)->middleware(Role::adminDirector());
             Route::apiResource('device', DeviceController::class)->middleware(Role::admin());
+            Route::apiResource('factory-device', FactoryDeviceController::class)->middleware(Role::moderator());
 
             Route::get('attribute', [AttributeController::class, 'index'])->name('attribute.index');
         });

@@ -21,6 +21,14 @@ class FactoryFloorService
             );
     }
 
+    public function findById(int $factory_floor_id): ?FactoryFloor
+    {
+        /** @var FactoryFloor|null $floor */
+        $floor = FactoryFloor::query()->find($factory_floor_id);
+
+        return $floor;
+    }
+
     public function create(FactoryFloorPayloadDTO $payload): FactoryFloor
     {
         $factory_floor = new FactoryFloor([

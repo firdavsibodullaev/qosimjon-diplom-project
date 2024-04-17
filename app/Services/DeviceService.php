@@ -21,7 +21,7 @@ class DeviceService
     {
     }
 
-    public function paginate(FilterDTO $filter): LengthAwarePaginator
+    public function paginate(FilterDTO $filter = new FilterDTO): LengthAwarePaginator
     {
         return Device::filter($filter)->with('attributes')->paginate($filter->total);
     }

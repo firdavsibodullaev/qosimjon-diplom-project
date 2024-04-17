@@ -27,6 +27,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon $updated_at
  * @property-read string $name
  * @property-read Collection $factoryFloors
+ * @property-read bool $has_permission_to_all_floors
  */
 class User extends Model
 {
@@ -68,5 +69,16 @@ class User extends Model
     public function name(): Attribute
     {
         return Attribute::get(fn() => "$this->last_name $this->first_name");
+    }
+
+    public function hasPermissionToAllFloors(): Attribute
+    {
+        $this->loadMissing('factoryFloors');
+
+        $factory_ids = $this->factoryFloors->pluck('factory_id')->unique();
+
+        $floors_count = FactoryFloor::query()->whereIn('factory_id', $factory_ids)->count();
+
+        return Attribute::get(fn() => $floors_count === $this->factoryFloors->count());
     }
 }

@@ -13,4 +13,9 @@ trait InteractsWithRoles
     {
         return sprintf("role:%s|%s", self::ADMIN->value, self::DIRECTOR->value);
     }
+
+    public static function moderator(): string
+    {
+        return sprintf("role:%s", self::MODERATOR->value);
+    }
 }
