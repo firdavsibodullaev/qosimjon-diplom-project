@@ -148,24 +148,13 @@ import { useFactoryDevices } from '@/hooks/useFactoryDevices';
 const { devices, getDevices } = useDevices();
 const { createDevice } = useFactoryDevices();
 
-const form = ref<IUploadPayload>({
-	device_id: null,
-	factory_id: null,
-	factory_floor_id: null,
-	number: null,
-	position: null,
-	status: null,
-});
-
 const user = computed<IUser>(() => store.getters['auth/getUser']);
-
 const factories = computed<IFactory[]>(
 	() =>
 		store.getters['auth/getUser'].floors
 			?.map((floor: IFloor) => floor.factory)
 			.unique('id') || [],
 );
-
 const numberPrefix = computed<string>(() => {
 	const factory = factories.value.find(
 		({ id }) => id == form.value.factory_id,
@@ -176,6 +165,15 @@ const numberPrefix = computed<string>(() => {
 	);
 
 	return `${factory?.number || ''}${floor?.number || ''}`;
+});
+
+const form = ref<IUploadPayload>({
+	device_id: null,
+	factory_id: null,
+	factory_floor_id: null,
+	number: null,
+	position: null,
+	status: null,
 });
 
 const rules = ref({
