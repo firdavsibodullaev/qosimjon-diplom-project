@@ -32,7 +32,7 @@ class StoreRequest extends FormRequest
             'device_id' => [
                 'required',
                 'integer',
-                Rule::exists('devices','id')->where('deleted_at')
+                Rule::exists('devices', 'id')->where('deleted_at')
             ],
             'number' => 'required|integer|digits_between:1,4',
             'factory_floor_id' => [
@@ -42,6 +42,17 @@ class StoreRequest extends FormRequest
             ],
             'status' => ['required', 'string', Rule::enum(Status::class)],
             'position' => ['required', 'string', Rule::enum(Position::class)],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'device_id' => 'Pribor',
+            'number' => 'Pribor raqami',
+            'factory_floor_id' => 'Sex',
+            'status' => 'Holati',
+            'position' => 'Joyi',
         ];
     }
 

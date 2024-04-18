@@ -64,4 +64,25 @@ class FactoryDeviceService
 
         return $result;
     }
+
+    public function update(FactoryDevice $device, DevicePayloadDTO $payload): FactoryDevice
+    {
+        $number = $this->generateNumber($payload->factory_id, $payload->number, $payload->factory_floor_id);
+
+        $device->fill([
+            'factory_id' => $payload->factory_id,
+            'factory_floor_id' => $payload->factory_floor_id,
+            'device_id' => $payload->device_id,
+            'number' => $payload->number,
+            'full_number' => $number,
+            'status' => $payload->status,
+            'position' => $payload->position,
+        ]);
+
+        $device->save();
+
+        $device->load(['factory', 'factoryFloor']);
+
+        return $device;
+    }
 }

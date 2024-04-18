@@ -4,10 +4,19 @@ enum position {
 	checking,
 }
 
-const translation = {
+const list = {
 	[position.warehouse]: 'Omborxonada',
 	[position['on-place']]: 'Transpluatatsiya joyida',
 	[position.checking]: 'Tekshirishda',
 };
 
-export { position, translation };
+const translation = {
+	[position.warehouse]: 'Omborxonada',
+	[position[position.warehouse]]: 'Omborxonada',
+	[position['on-place']]: 'Transpluatatsiya joyida',
+	[position[position['on-place']]]: 'Transpluatatsiya joyida',
+	[position.checking]: 'Tekshirishda',
+	[position[position.checking]]: 'Tekshirishda',
+};
+
+export { position, translation, list };

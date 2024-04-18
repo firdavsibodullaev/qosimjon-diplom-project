@@ -8,7 +8,7 @@ use App\Models\User;
 class FilterDTO extends BaseFilterDTO
 {
     public function __construct(
-        public User   $user,
+        public ?User  $user = null,
         public string $sorter = 'id',
         public ?int   $factory_id = null,
         public bool   $list = false,

@@ -91,7 +91,7 @@
 							class="w-full"
 						>
 							<a-select-option
-								v-for="(text, pos) in translation"
+								v-for="(text, pos) in list"
 								:key="`position-${pos}`"
 								:value="position[pos]"
 								>{{ text }}
@@ -108,7 +108,7 @@
 							class="w-full"
 						>
 							<a-select-option
-								v-for="(text, statusKey) in statusTranslation"
+								v-for="(text, statusKey) in statusList"
 								:key="`status-${statusKey}`"
 								:value="status[statusKey]"
 								>{{ text }}
@@ -137,8 +137,9 @@ import { useDevices } from '@/hooks/useDevices';
 import type { IUser } from '@/contracts/user/IUser';
 import type { IFactory } from '@/contracts/factory/IFactory';
 import type { IFloor } from '@/contracts/floor/IFloor';
-import { position, translation } from '@/enums/factory-device/position';
+import { list, position, translation } from '@/enums/factory-device/position';
 import {
+	list as statusList,
 	status,
 	translation as statusTranslation,
 } from '@/enums/factory-device/status';
@@ -146,7 +147,7 @@ import type { IUploadPayload } from '@/contracts/factory-device/IUploadPayload';
 import { useFactoryDevices } from '@/hooks/useFactoryDevices';
 
 const { devices, getDevices } = useDevices();
-const { createDevice } = useFactoryDevices();
+const { createDevice } = useFactoryDevices(false);
 
 const user = computed<IUser>(() => store.getters['auth/getUser']);
 const factories = computed<IFactory[]>(
@@ -200,7 +201,8 @@ const filterDevices = (searchName: string, option: { key: string }) => {
 };
 
 const onFinish = (payload: IUploadPayload) => {
-	createDevice(payload).then(() => store.dispatch('drawer/clearDrawer'));
+	store.commit('spinner/toggleSpinning', 'main');
+	createDevice(payload);
 };
 
 const onFinishFailed = () => {};

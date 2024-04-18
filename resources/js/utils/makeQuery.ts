@@ -1,4 +1,6 @@
-export default function (params?: Record<string, string | number | boolean>) {
+export default function (
+	params?: Record<string, string | number | boolean | null>,
+) {
 	if (!params) {
 		return '';
 	}

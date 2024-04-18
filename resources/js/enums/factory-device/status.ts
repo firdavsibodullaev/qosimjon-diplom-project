@@ -3,9 +3,16 @@ enum status {
 	inactive,
 }
 
-const translation = {
+const list = {
 	[status.active]: 'Soz',
 	[status.inactive]: 'Nosoz',
 };
 
-export { status, translation };
+const translation = {
+	[status.active]: 'Soz',
+	[status[status.active]]: 'Soz',
+	[status.inactive]: 'Nosoz',
+	[status[status.inactive]]: 'Nosoz',
+};
+
+export { status, translation, list };

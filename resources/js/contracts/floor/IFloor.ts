@@ -5,5 +5,5 @@ export interface IFloor {
 	name: string;
 	number: number;
 	is_deleted: boolean;
-	factory: IFactory;
+	factory?: IFactory;
 }

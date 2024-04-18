@@ -24,8 +24,8 @@ class FactoryDeviceResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'factory' => FactoryResource::make($this->whenLoaded('factory')),
-            'factory_floor_id' => FactoryFloorResource::make($this->whenLoaded('factoryFloor')),
-            'device_id' => DeviceResource::make($this->whenLoaded('device')),
+            'factory_floor' => FactoryFloorResource::make($this->whenLoaded('factoryFloor')),
+            'device' => DeviceResource::make($this->whenLoaded('device')),
             'number' => $this->resource->number,
             'full_number' => $this->resource->full_number,
             'status' => $this->resource->status,

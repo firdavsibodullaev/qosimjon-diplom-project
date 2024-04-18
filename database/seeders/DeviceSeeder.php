@@ -15,8 +15,8 @@ class DeviceSeeder extends Seeder
     {
         Device::factory(100)
             ->has(
+                relation: 'attributes',
                 factory: AttributeDevice::factory(4),
-                relationship: 'attributes'
             )
             ->create();
     }
