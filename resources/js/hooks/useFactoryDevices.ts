@@ -28,7 +28,7 @@ export function useFactoryDevices(isFetch: boolean = true) {
 		filters: { [key: string]: string | null | number } = {},
 	) => {
 		sorter.value = <string | null>filters.sorter;
-		api.apis.getFactoryDevices(filters, onSuccess);
+		await api.apis.getFactoryDevices(filters, onSuccess);
 	};
 
 	const onSuccess: IOnSuccess = (response) => {
@@ -96,7 +96,7 @@ export function useFactoryDevices(isFetch: boolean = true) {
 		}
 	};
 
-	const handleTableChange = (page, filters, sorter) => {
+	const handleTableChange = (page: any, filters: any, sorter: any) => {
 		isLoading.value = true;
 
 		getDevices({

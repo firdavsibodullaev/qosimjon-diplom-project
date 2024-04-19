@@ -2,9 +2,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 ::-webkit-scrollbar {
-	width: 6px;
-	height: 6px;
+	width: 10px;
+	height: 10px;
 }
 
 /* Customize the track (background) of the scrollbar */
