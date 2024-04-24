@@ -137,8 +137,8 @@ import { useDevices } from '@/hooks/useDevices';
 import type { IUser } from '@/contracts/user/IUser';
 import type { IFactory } from '@/contracts/factory/IFactory';
 import type { IFloor } from '@/contracts/floor/IFloor';
-import { position, list } from '@/enums/factory-device/position';
-import { status, list as statusList } from '@/enums/factory-device/status';
+import { list, position } from '@/enums/factory-device/position';
+import { list as statusList, status } from '@/enums/factory-device/status';
 import type { IUploadPayload } from '@/contracts/factory-device/IUploadPayload';
 import { useFactoryDevices } from '@/hooks/useFactoryDevices';
 import type { IDevice } from '@/contracts/device/IDevice';
@@ -207,7 +207,6 @@ const filterDevices = (searchName: string, option: { key: string }) => {
 };
 
 const onFinish = (payload: IUploadPayload) => {
-	store.commit('spinner/toggleSpinning', 'main');
 	updateDevice(device.id, payload);
 };
 

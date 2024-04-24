@@ -74,13 +74,15 @@ export function useFactoryDevices(isFetch: boolean = true) {
 	const createDevice = async (payload: IUploadPayload) =>
 		await api.apis.createFactoryDevice(payload, onSaveSuccess, onSaveError);
 
-	const updateDevice = async (id: number, payload: IUploadPayload) =>
+	const updateDevice = async (id: number, payload: IUploadPayload) => {
+		store.commit('spinner/toggleSpinning', 'main');
 		await api.apis.updateFactoryDevice(
 			id,
 			payload,
 			onSaveSuccess,
 			onSaveError,
 		);
+	};
 
 	const onSaveSuccess = ({ data: response }: ISuccessResponse) => {
 		success(response.message);
@@ -90,6 +92,7 @@ export function useFactoryDevices(isFetch: boolean = true) {
 	};
 
 	const onSaveError = ({ response }: { response: IErrorResponse }) => {
+		store.commit('spinner/toggleSpinning', 'main');
 		const { status, data } = response;
 		if (status === 422 && data.errors) {
 			showValidationErrors(data.errors);

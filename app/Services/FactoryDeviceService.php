@@ -22,7 +22,7 @@ class FactoryDeviceService
             ->with([
                 'factory',
                 'factoryFloor',
-                'device',
+                'device.attributes',
             ])
             ->paginate($filter->total);
     }
