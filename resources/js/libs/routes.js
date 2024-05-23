@@ -7,6 +7,7 @@ import DeviceIndex from '@/pages/Admin/Device/DeviceIndex.vue';
 import Page403 from '@/pages/Error/Page403.vue';
 import Page404 from '@/pages/Error/Page404.vue';
 import FactoryDeviceIndex from '@/pages/Moderator/FactoryDeviceIndex.vue';
+import Calibration from '@/pages/Worker/Calibration.vue';
 
 export default [
 	{
@@ -36,6 +37,7 @@ export default [
 			middleware: ['auth'],
 			sidebar: true,
 			role: ['admin', 'director'],
+			type: 'giving_for_test',
 			main: true,
 			text: 'Sozlamalar',
 		},
@@ -49,6 +51,7 @@ export default [
 					middleware: ['auth'],
 					sidebar: true,
 					role: ['admin'],
+					type: 'giving_for_test',
 					text: 'Zavodlar',
 				},
 			},
@@ -61,6 +64,7 @@ export default [
 					middleware: ['auth'],
 					sidebar: true,
 					role: ['admin', 'director'],
+					type: 'giving_for_test',
 					text: 'Sexlar',
 				},
 			},
@@ -73,6 +77,7 @@ export default [
 					middleware: ['auth'],
 					sidebar: true,
 					role: ['admin', 'director'],
+					type: 'giving_for_test',
 					text: 'Foydalanuvchilar',
 				},
 			},
@@ -85,6 +90,7 @@ export default [
 					middleware: ['auth'],
 					sidebar: true,
 					role: ['admin'],
+					type: 'giving_for_test',
 					text: 'Priborlar',
 				},
 			},
@@ -95,14 +101,27 @@ export default [
 		name: 'factoryDevices',
 		component: FactoryDeviceIndex,
 		meta: {
-			role: ['moderator'],
 			middleware: ['auth'],
 			sidebar: true,
+			role: ['moderator'],
+			type: 'giving_for_test',
 			main: true,
 			text: "Pribor qo'shish",
 		},
 	},
-
+	{
+		path: '/calibration',
+		name: 'calibration',
+		component: Calibration,
+		meta: {
+			middleware: ['auth'],
+			sidebar: true,
+			role: ['worker'],
+			type: 'giving_for_test',
+			main: true,
+			text: 'Ariza berish',
+		},
+	},
 	{
 		name: '403',
 		path: '/403',

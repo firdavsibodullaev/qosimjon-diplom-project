@@ -11,10 +11,14 @@ class Sorter extends BaseFilter
     {
         $builder->when(
             value: $filters->sorter,
-            callback: fn(Builder $builder) => $builder->orderBy(
-                column: str($filters->sorter)->replace('-', ''),
-                direction: !str($filters->sorter)->match('/^\-/')->toString() ? 'asc' : 'desc'
-            ),
+            callback: function (Builder $builder, string $sorter) {
+                collect(explode(',', $sorter))
+                    ->map(
+                        callback: fn(string $sorter_item) => $builder->orderBy(
+                            column: str($sorter_item)->replace('-', ''),
+                            direction: !str($sorter_item)->match('/^\-/')->toString() ? 'asc' : 'desc')
+                    );
+            },
             default: fn(Builder $builder) => $builder->orderBy('id')
         );
     }

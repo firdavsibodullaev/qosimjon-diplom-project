@@ -1,5 +1,5 @@
 export default function (
-	params?: Record<string, string | number | boolean | null>,
+	params?: Record<string, string | number | boolean | null> | object,
 ) {
 	if (!params) {
 		return '';

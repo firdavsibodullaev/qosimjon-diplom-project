@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Calibration;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -25,7 +26,8 @@ class AppServiceProvider extends ServiceProvider
         Model::shouldBeStrict();
 
         Relation::enforceMorphMap([
-            'user' => User::class
+            'user' => User::class,
+            'calibration' => Calibration::class
         ]);
     }
 }

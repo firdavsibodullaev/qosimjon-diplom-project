@@ -2,11 +2,11 @@
 
 namespace App\Enums\FactoryDevice;
 
-use App\Traits\InteractsWithEnumValues;
+use App\Traits\InteractsWithEnums;
 
 enum Position: string
 {
-    use InteractsWithEnumValues;
+    use InteractsWithEnums;
 
     case WAREHOUSE = 'warehouse';
     case ON_PLACE = 'on-place';

@@ -21,7 +21,7 @@ export const drawerModule = {
 		},
 	},
 	mutations: {
-		setOpen(state: any, value: any) {
+		setOpen(state: any, value: boolean) {
 			state.open = value;
 		},
 		setComponentProps(state: any, data: any) {

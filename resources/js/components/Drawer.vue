@@ -9,6 +9,7 @@
 	>
 		<Spinner type="drawer">
 			<component
+				v-if="component"
 				:is="component"
 				ref="myComponent"
 				:key="componentKey"

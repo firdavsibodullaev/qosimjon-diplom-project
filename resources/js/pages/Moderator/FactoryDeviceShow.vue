@@ -58,7 +58,7 @@ const device = defineProps<{
 	position: position;
 	status: status;
 }>();
-console.log(device);
+
 const init = () => {
 	store.commit('spinner/toggleSpinning', 'drawer');
 };

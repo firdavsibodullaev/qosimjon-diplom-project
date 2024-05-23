@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Concerns\InteractsWithInput;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Factory;
+use Illuminate\Validation\ValidationException;
 
 abstract class FilterValidator
 {
@@ -12,13 +14,15 @@ abstract class FilterValidator
 
     private Factory $validator;
 
-    public function __construct(
-        protected Request $request
-    )
+    public function __construct(protected Request $request)
     {
         $this->validator = app('validator');
     }
 
+    /**
+     * @throws BindingResolutionException
+     * @throws ValidationException
+     */
     public function validated()
     {
         $validator = $this->validator->make($this->request->all(), $this->rules());

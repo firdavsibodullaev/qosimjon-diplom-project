@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Moderator;
 
-use App\DTOs\FactoryDevice\FilterDTO;
+use App\Enums\Role\Role;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Moderator\FactoryDevice\FilterRequest;
 use App\Http\Requests\Moderator\FactoryDevice\StoreRequest;
 use App\Http\Resources\FactoryDevice\FactoryDeviceResource;
 use App\Models\FactoryDevice;
@@ -18,13 +19,13 @@ class FactoryDeviceController extends Controller
         protected FactoryDeviceService $factoryDeviceService,
     )
     {
+        $this->middleware(Role::moderator())->except('index');
+        $this->middleware(Role::moderatorWorker())->only('index');
     }
 
-    public function index(): SuccessResponse
+    public function index(FilterRequest $request): SuccessResponse
     {
-        $filter = new FilterDTO(
-            factory_user: auth()->user()->load('factoryFloors')
-        );
+        $filter = $request->toDto();
 
         $devices = $this->factoryDeviceService->paginate($filter);
 
@@ -45,9 +46,9 @@ class FactoryDeviceController extends Controller
         );
     }
 
-    public function update(FactoryDevice $factory_device,StoreRequest $request): SuccessResponse
+    public function update(FactoryDevice $factory_device, StoreRequest $request): SuccessResponse
     {
-        $device = $this->factoryDeviceService->update($factory_device,$request->toDto());
+        $device = $this->factoryDeviceService->update($factory_device, $request->toDto());
 
         return new SuccessResponse(
             response: FactoryDeviceResource::make($device),

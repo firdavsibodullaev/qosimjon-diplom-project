@@ -26,7 +26,7 @@ export const factoryModule = {
 		},
 	},
 	mutations: {
-		setIsReload(state: any, data: any) {
+		setIsReload(state: any, data: boolean) {
 			state.isReload = !!data;
 		},
 		setList(state: any, data = null) {

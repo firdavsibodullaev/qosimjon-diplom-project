@@ -11,26 +11,15 @@ use App\Models\Factory;
 use App\Services\FactoryService;
 use Firdavsi\Responses\Http\SuccessEmptyResponse;
 use Firdavsi\Responses\Http\SuccessResponse;
-use OpenApi\Attributes\Get;
-use OpenApi\Attributes\JsonContent;
-use OpenApi\Attributes\Response;
 
 class FactoryController extends Controller
 {
     public function __construct(protected FactoryService $factoryService)
     {
         $this->middleware(Role::admin())->except('index');
-        $this->middleware(Role::adminDirector())->only('index');
+        $this->middleware(Role::adminDirectorWorker())->only('index');
     }
 
-    #[Get(
-        path: '/api/v1/admin/factory',
-        summary: 'Список заводов',
-        tags: ['Factories'],
-        responses: [
-            new Response(response: 200, description: 'Korxonalar ro\'yhati', content: new JsonContent())
-        ]
-    )]
     public function index(FilterRequest $request): SuccessResponse
     {
         $factories = $this->factoryService->paginate($request->toDto());

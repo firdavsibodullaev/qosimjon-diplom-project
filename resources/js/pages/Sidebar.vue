@@ -54,6 +54,9 @@ export default {
 		loading() {
 			return this.$store.getters['sidebar/getLoading'];
 		},
+		user() {
+			return this.$store.getters['auth/getUser'];
+		},
 	},
 	methods: {
 		filterSidebarRoutes(routes) {
@@ -64,7 +67,13 @@ export default {
 					);
 				}
 
-				return route.meta.sidebar && hasPermission(route.meta.role);
+				return (
+					route.meta.sidebar &&
+					hasPermission(route.meta.role) &&
+					(this.user.roles[0].key === 'admin' ||
+						!route.meta?.type ||
+						route.meta?.type === this.user.floors[0]?.factory.type)
+				);
 			});
 		},
 		getPathUntilCurrentRoute(routes, current) {

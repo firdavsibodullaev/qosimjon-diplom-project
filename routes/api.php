@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DeviceController;
 use App\Http\Controllers\Admin\FactoryController;
 use App\Http\Controllers\Admin\FactoryFloorController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Moderator\FactoryDeviceController;
 use Illuminate\Support\Facades\Route;
@@ -30,10 +31,16 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::middleware('auth:sanctum')
         ->group(function () {
             Route::apiResource('factory', FactoryController::class);
+
             Route::apiResource('factory-floor', FactoryFloorController::class)->middleware(Role::adminDirector());
+
             Route::apiResource('user', UserController::class)->middleware(Role::adminDirector());
+
             Route::apiResource('device', DeviceController::class)->middleware(Role::adminModerator());
-            Route::apiResource('factory-device', FactoryDeviceController::class)->middleware(Role::moderator());
+
+            Route::apiResource('factory-device', FactoryDeviceController::class);
+
+            Route::apiResource('application', ApplicationController::class)->middleware(Role::directorModeratorWorker());
 
             Route::get('attribute', [AttributeController::class, 'index'])->name('attribute.index');
         });

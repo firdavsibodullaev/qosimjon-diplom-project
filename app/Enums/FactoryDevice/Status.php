@@ -2,11 +2,11 @@
 
 namespace App\Enums\FactoryDevice;
 
-use App\Traits\InteractsWithEnumValues;
+use App\Traits\InteractsWithEnums;
 
 enum Status: string
 {
-    use InteractsWithEnumValues;
+    use InteractsWithEnums;
 
     case ACTIVE = 'active';
     case INACTIVE = 'inactive';

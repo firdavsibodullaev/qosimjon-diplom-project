@@ -7,6 +7,6 @@ export interface IFactoryDevices extends IOnSuccessData {
 	data: IFactoryDevice[];
 	message: string;
 	success: boolean;
-	links: ILinks;
-	meta: IMeta;
+	links?: ILinks;
+	meta?: IMeta;
 }

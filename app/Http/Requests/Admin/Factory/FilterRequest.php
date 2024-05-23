@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin\Factory;
 
 use App\DTOs\Factory\FilterDTO;
+use App\Enums\Factory\FactoryType;
 use App\Http\Requests\FilterValidator;
 use Illuminate\Validation\Rule;
 
@@ -17,7 +18,8 @@ class FilterRequest extends FilterValidator
                 'string',
                 Rule::in(['id', '-id', 'number', '-number'])
             ],
-            'list' => 'nullable|boolean'
+            'list' => 'nullable|boolean',
+            'type' => ['nullable', 'string', Rule::enum(FactoryType::class)],
         ];
     }
 
@@ -32,7 +34,7 @@ class FilterRequest extends FilterValidator
     {
         $payload = $this->validated();
         $payload['user'] = $this->request->user();
-
+        $payload['type'] = isset($payload['type']) ? FactoryType::tryFrom($payload['type']) : null;
         return new FilterDTO(...$payload);
     }
 }

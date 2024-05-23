@@ -11,6 +11,7 @@ class FilterDTO extends BaseFilterDTO
         public string $sorter = 'id',
         public int    $total = 20,
         public ?User  $factory_user = null,
+        public bool   $list = false
     )
     {
         parent::__construct($sorter);

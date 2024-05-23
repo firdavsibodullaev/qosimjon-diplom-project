@@ -2,11 +2,12 @@
 
 namespace App\Enums\Role;
 
+use App\Traits\InteractsWithEnums;
 use App\Traits\InteractsWithRoles;
 
 enum Role: string
 {
-    use InteractsWithRoles;
+    use InteractsWithRoles, InteractsWithEnums;
 
     case ADMIN = 'admin';
     case TESTER = 'tester';
@@ -60,11 +61,6 @@ enum Role: string
                 'guard_name' => 'web'
             ],
         ];
-    }
-
-    public function is(Role $role): bool
-    {
-        return $this === $role;
     }
 
     public function forRole(): array

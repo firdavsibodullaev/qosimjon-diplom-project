@@ -16,11 +16,11 @@ const api = axios.create({
 	withCredentials: false,
 });
 
-const getApiHeaders = (): IHeader => {
+const getApiHeaders = (isFile: boolean = false): IHeader => {
 	let headers: IHeader = {
 		'X-Requested-With': 'XMLHttpRequest',
 		Accept: 'application/json',
-		'Content-Type': 'application/json',
+		'Content-Type': isFile ? 'multipart/form-data' : 'application/json',
 	};
 	let token = store.getters['auth/getToken'];
 
@@ -51,9 +51,19 @@ const axiosPost = async (
 	await api
 		.post(url, body, { headers: getApiHeaders() })
 		.then((response) => onSuccess(response))
-		.catch((error) => {
-			errorHandler(error, onError);
-		});
+		.catch((error) => errorHandler(error, onError));
+};
+
+const axiosPostUpload = async (
+	url: string,
+	body: IPayload,
+	onSuccess: IOnSuccess,
+	onError?: IOnError,
+) => {
+	await api
+		.post(url, body, { headers: getApiHeaders(true) })
+		.then((response) => onSuccess(response))
+		.catch((error) => errorHandler(error, onError));
 };
 
 const axiosPut = async (
@@ -63,13 +73,25 @@ const axiosPut = async (
 	onError?: IOnError,
 ) => {
 	await api
-		.put(url, body, {
-			headers: getApiHeaders(),
-		})
+		.put(url, body, { headers: getApiHeaders() })
 		.then((response) => onSuccess(response))
-		.catch((error) => {
-			errorHandler(error, onError);
-		});
+		.catch((error) => errorHandler(error, onError));
+};
+
+const axiosPutUpload = async (
+	url: string,
+	body: IPayload,
+	onSuccess: IOnSuccess,
+	onError?: IOnError,
+) => {
+	await api
+		.post(
+			url,
+			{ _method: 'put', ...body },
+			{ headers: getApiHeaders(true) },
+		)
+		.then((response) => onSuccess(response))
+		.catch((error) => errorHandler(error, onError));
 };
 
 const axiosDelete = async (
@@ -123,7 +145,7 @@ const apis = {
 
 	// Заводы
 	getFactories(
-		filters: { [key: string]: string },
+		filters: { [key: string]: string | null | number } | object,
 		onSuccess: IOnSuccess,
 		onError?: IOnError,
 	) {
@@ -267,6 +289,33 @@ const apis = {
 		onError?: IOnError,
 	) {
 		return axiosPut(`factory-device/${id}`, data, onSuccess, onError);
+	},
+
+	getApplication(
+		filters: { [key: string]: number | string | null },
+		onSuccess: IOnSuccess,
+		onError?: IOnError,
+	) {
+		return axiosGet(
+			`application?${makeQuery(filters)}`,
+			onSuccess,
+			onError,
+		);
+	},
+	createApplication(
+		payload: IUploadPayload,
+		onSuccess: IOnSuccess,
+		onError?: IOnError,
+	) {
+		return axiosPostUpload('application', payload, onSuccess, onError);
+	},
+	updateApplication(
+		id: number,
+		payload: IUploadPayload,
+		onSuccess: IOnSuccess,
+		onError?: IOnError,
+	) {
+		return axiosPutUpload(`application/${id}`, payload, onSuccess, onError);
 	},
 };
 

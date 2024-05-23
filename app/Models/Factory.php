@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Factory\FactoryType;
+use App\Filters\Factory\TypeFilter;
 use App\Filters\Sorter;
 use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
@@ -32,7 +33,8 @@ class Factory extends Model
     ];
 
     protected array $filters = [
-        Sorter::class => null
+        Sorter::class => null,
+        TypeFilter::class => 'type'
     ];
 
     protected $casts = [

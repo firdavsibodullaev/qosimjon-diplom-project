@@ -12,7 +12,7 @@ import type { IFactoryDevice } from '@/contracts/factory-device/IFactoryDevice';
 import makeSorterField from '@/utils/makeSorterField';
 import { useRoute, useRouter } from 'vue-router';
 
-export function useFactoryDevices(isFetch: boolean = true) {
+export function useFactoryDevices(isFetch: boolean = true, filter?: object) {
 	const route = useRoute();
 	const router = useRouter();
 	const devices = ref<IFactoryDevice[]>([]);
@@ -53,7 +53,7 @@ export function useFactoryDevices(isFetch: boolean = true) {
 		isLoading.value = false;
 
 		router.push({
-			name: 'factoryDevices',
+			name: route.name,
 			query: {
 				total: pagination.value.pageSize,
 				page: pagination.value.current,
@@ -64,11 +64,13 @@ export function useFactoryDevices(isFetch: boolean = true) {
 
 	isFetch &&
 		onBeforeMount(() =>
-			getDevices({
-				page: pagination.value.current,
-				total: pagination.value.pageSize,
-				sorter: sorter.value,
-			}),
+			getDevices(
+				filter ?? {
+					page: pagination.value.current,
+					total: pagination.value.pageSize,
+					sorter: sorter.value,
+				},
+			),
 		);
 
 	const createDevice = async (payload: IUploadPayload) =>

@@ -14,7 +14,7 @@ export const useDrawers = (
 		[Types.Edit]: editComponent,
 		[Types.Show]: showComponent,
 	};
-	const component = ref(createComponent);
+	const component = ref<Component | null>(null);
 	const componentKey = ref('');
 
 	const getComponent = (type: Types) => {

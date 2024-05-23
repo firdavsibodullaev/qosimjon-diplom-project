@@ -201,8 +201,10 @@ const filterDevices = (searchName: string, option: { key: string }) => {
 };
 
 const onFinish = (payload: IUploadPayload) => {
-	store.commit('spinner/toggleSpinning', 'main');
 	createDevice(payload);
+	store.commit('spinner/toggleSpinning', 'main');
+	store.commit('factory/setIsReload', true);
+	store.dispatch('drawer/clearDrawer');
 };
 
 const onFinishFailed = () => {};

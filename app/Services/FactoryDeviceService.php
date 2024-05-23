@@ -4,8 +4,11 @@ namespace App\Services;
 
 use App\DTOs\FactoryDevice\DevicePayloadDTO;
 use App\DTOs\FactoryDevice\FilterDTO;
+use App\Enums\FactoryDevice\Position;
 use App\Models\FactoryDevice;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class FactoryDeviceService
 {
@@ -16,7 +19,7 @@ class FactoryDeviceService
     {
     }
 
-    public function paginate(FilterDTO $filter): LengthAwarePaginator
+    public function paginate(FilterDTO $filter): Collection|LengthAwarePaginator
     {
         return FactoryDevice::filter($filter)
             ->with([
@@ -24,7 +27,11 @@ class FactoryDeviceService
                 'factoryFloor',
                 'device.attributes',
             ])
-            ->paginate($filter->total);
+            ->when(
+                value: $filter->list,
+                callback: fn(Builder $builder) => $builder->get(),
+                default: fn(Builder $builder) => $builder->paginate($filter->total)
+            );
     }
 
     public function create(DevicePayloadDTO $payload): FactoryDevice
@@ -82,6 +89,15 @@ class FactoryDeviceService
         $device->save();
 
         $device->load(['factory', 'factoryFloor']);
+
+        return $device;
+    }
+
+    public function updateStatus(int $factory_device_id, Position $position): FactoryDevice
+    {
+        /** @var FactoryDevice $device */
+        $device = FactoryDevice::query()->find($factory_device_id);
+        $device->update(['position' => $position]);
 
         return $device;
     }
