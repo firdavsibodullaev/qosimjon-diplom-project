@@ -67,7 +67,7 @@
 			</template>
 		</a-table>
 		<Drawer
-			:width="850"
+			:width="1000"
 			key="Drawer"
 			:componentKey="componentKey"
 			:component="component"
@@ -99,13 +99,12 @@ const columns = ref([
 	{
 		title: '№',
 		dataIndex: 'orderNumber',
-		width: 40,
+		width: 50,
 	},
 	{
 		title: 'ID',
 		dataIndex: 'id',
-		width: 40,
-		sorter: true,
+		width: 50,
 	},
 	{
 		title: 'Pribor nomi',

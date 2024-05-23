@@ -68,7 +68,7 @@ class StoreRequest extends FormRequest
             applicant_id: $user->id,
             checker_factory_id: $payload['factory_id'],
             status: Status::NEW,
-            deadline: now()->addDays(10)->endOfDay(),
+            deadline: now()->addDays(9)->endOfDay(),
             document: $payload['document']
         );
     }

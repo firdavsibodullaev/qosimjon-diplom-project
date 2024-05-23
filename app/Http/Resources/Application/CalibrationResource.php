@@ -38,16 +38,17 @@ class CalibrationResource extends JsonResource
                 'value' => $this->resource->result?->text(),
             ],
             'created_at' => $this->resource->created_at->toDateTimeString(),
+            'deadline' => $this->resource->deadline,
             'checked_at' => $this->resource->checked_at?->toDateTimeString(),
             'comment' => $this->resource->comment,
             'document' => $this->whenLoaded(
                 relationship: 'media',
-                value: function() {
+                value: function () {
                     $file = $this->resource->getFirstMedia(MediaCollection::DOCUMENT->value);
 
                     return [
                         'url' => $file->getUrl(),
-                        'name' =>  $file->file_name,
+                        'name' => $file->file_name,
                         'size' => $file->humanReadableSize
                     ];
                 }

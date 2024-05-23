@@ -15,7 +15,20 @@ class FilterSearch extends BaseFilter
 
         $builder->when(
             value: $filters->q,
-            callback: fn(Builder $builder) => $builder->where('id', '=', $this->getFilterValue($filters->q))
+            callback: fn(Builder $builder) => $builder
+                ->where(
+                    column: fn(Builder $builder) => $builder
+                        ->where(
+                            column: 'id',
+                            operator: $this->getFilterValue($filters->q)
+                        )
+                        ->orWhereRelation(
+                            relation: 'device',
+                            column: 'full_number',
+                            operator: '=',
+                            value: $filters->q
+                        )
+                )
         );
     }
 

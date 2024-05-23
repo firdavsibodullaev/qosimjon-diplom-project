@@ -24,7 +24,7 @@ class ApplicationService
     public function paginate(FilterDTO $filter): Collection|LengthAwarePaginator
     {
         return Calibration::filter($filter)
-            ->with(['media', 'applicant', 'checker', 'applicantFactory', 'checkerFactory', 'device.device'])
+            ->with(['media', 'applicant', 'checker', 'applicantFactory', 'checkerFactory', 'device.device.attributes'])
             ->paginate(15);
     }
 
