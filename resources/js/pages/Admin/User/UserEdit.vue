@@ -202,10 +202,12 @@ export default {
 			);
 		},
 		getFactoryFloor(value) {
-			if (!value) return;
+			value = typeof value === 'object' ? value : [value];
+
+			if (!value.length) return;
 			this.form.factory_floor_id = [];
 			this.$api.getFactoryFloors(
-				{ factory_id: value.length ? value[0] : null, list: 1 },
+				{ factory_id: value[0], list: 1 },
 				({ data: res }) => (this.floorsList = res.data),
 			);
 		},

@@ -47,10 +47,12 @@ class UpdateRequest extends FormRequest
             'factory_id' => 'nullable|required_unless:role,admin|int',
             'factory_floor_id' => [
                 'array',
+                'required_unless:role,admin',
                 new IsCheckFloorBelongsToFactory($this, 'factory_id')
             ],
             'factory_floor_id.*' => [
                 'present',
+                'required_unless:role,admin',
                 'int',
                 Rule::exists('factory_floors', 'id')->where('deleted_at')
             ],
