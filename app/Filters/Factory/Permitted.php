@@ -13,11 +13,12 @@ class Permitted extends BaseFilter
     public function filter(Builder $builder, BaseFilterDTO $filters): void
     {
         /** @var FilterDTO $filters */
+        $user = $filters->user?->load('factoryFloors.factoryRelation');
 
-        $user = $filters->user->load('factoryFloors.factoryRelation');
-        $role = Role::tryFrom($user->getRoleNames()->first());
+        $role = Role::tryFrom($user?->getRoleNames()->first());
+
         $builder->when(
-            value: $role->is(Role::DIRECTOR),
+            value: $user && $role->is(Role::DIRECTOR),
             callback: fn(Builder $builder) => $builder->whereKey($user->factoryFloors->pluck('factory_id'))
         );
     }

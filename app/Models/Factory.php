@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Factory\FactoryType;
+use App\Filters\Factory\Permitted;
 use App\Filters\Factory\TypeFilter;
 use App\Filters\Sorter;
 use App\Traits\InteractsWithFilters;
@@ -34,7 +35,8 @@ class Factory extends Model
 
     protected array $filters = [
         Sorter::class => null,
-        TypeFilter::class => 'type'
+        TypeFilter::class => 'type',
+        Permitted::class => null,
     ];
 
     protected $casts = [
