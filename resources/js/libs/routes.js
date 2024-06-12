@@ -8,6 +8,7 @@ import Page403 from '@/pages/Error/Page403.vue';
 import Page404 from '@/pages/Error/Page404.vue';
 import FactoryDeviceIndex from '@/pages/Moderator/FactoryDeviceIndex.vue';
 import Calibration from '@/pages/Worker/Calibration.vue';
+import Application from '@/pages/Tester/Application.vue';
 
 export default [
 	{
@@ -120,6 +121,19 @@ export default [
 			type: 'giving_for_test',
 			main: true,
 			text: 'Ariza berish',
+		},
+	},
+	{
+		path: '/application',
+		name: 'application',
+		component: Application,
+		meta: {
+			middleware: ['auth'],
+			sidebar: true,
+			role: ['tester'],
+			type: 'tester',
+			main: true,
+			text: 'Arizalar',
 		},
 	},
 	{

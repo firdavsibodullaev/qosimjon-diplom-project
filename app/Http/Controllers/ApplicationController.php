@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Application\ApproveRequest;
 use App\Http\Requests\Application\FilterRequest;
-use App\Http\Requests\Application\StoreRequest;
-use App\Http\Requests\Application\UpdateRequest;
+use App\Http\Requests\Application\RejectRequest;
 use App\Http\Resources\Application\CalibrationResource;
 use App\Models\Calibration;
+use App\Models\User;
 use App\Services\ApplicationService;
-use Firdavsi\Responses\Http\ErrorResponse;
 use Firdavsi\Responses\Http\SuccessResponse;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 
 class ApplicationController extends Controller
 {
@@ -29,33 +31,68 @@ class ApplicationController extends Controller
         );
     }
 
-    public function store(StoreRequest $request): ErrorResponse|SuccessResponse
+    public function accept(Calibration $calibration): SuccessResponse
     {
-        $payload = $request->toDto();
+        /** @var User $user */
+        $user = auth()->user()->load('factoryFloors.factoryRelation');
 
-        if ($this->applicationService->hasActiveDeviceStatus($payload->factory_device_id)) {
-            return new ErrorResponse(
-                message: "Pribor tekshiruvda",
-                status: 400
-            );
-        }
+        abort_if(!$this->applicationService->hasAccessToAccept($calibration, $user), 403, 'Forbidden');
 
-        $application = $this->applicationService->create($payload);
+        abort_if($this->applicationService->applicationHasBeenAccepted($calibration), 403, 'Forbidden');
+
+        $calibration = $this->applicationService->accept($calibration, $user);
 
         return new SuccessResponse(
-            response: CalibrationResource::make($application),
-            message: 'Ariza yaratildi',
-            status: 201
+            response: CalibrationResource::make($calibration),
+            message: 'Ariza qabul qilindi'
         );
     }
 
-    public function update(UpdateRequest $request, Calibration $application): SuccessResponse
+    /**
+     * @param ApproveRequest $request
+     * @param Calibration $calibration
+     * @return SuccessResponse
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function approve(ApproveRequest $request, Calibration $calibration): SuccessResponse
     {
-        $application = $this->applicationService->update($application, $request->toDto());
+        /** @var User $user */
+        $user = auth()->user();
+
+        abort_if(!$this->applicationService->hasPermissionToReact($calibration, $user), 403, 'Forbidden');
+
+        abort_if(!$this->applicationService->applicationHasBeenAccepted($calibration), 403, 'Forbidden');
+
+        $calibration = $this->applicationService->approve($calibration, $request->toDto());
 
         return new SuccessResponse(
-            response: CalibrationResource::make($application),
-            message: 'Ariza tahrirlandi'
+            response: CalibrationResource::make($calibration),
+            message: 'Ariza tasdiqlandi'
+        );
+    }
+
+    /**
+     * @param RejectRequest $request
+     * @param Calibration $calibration
+     * @return SuccessResponse
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function reject(RejectRequest $request, Calibration $calibration): SuccessResponse
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        abort_if(!$this->applicationService->hasPermissionToReact($calibration, $user), 403, 'Forbidden');
+
+        abort_if(!$this->applicationService->applicationHasBeenAccepted($calibration), 403, 'Forbidden');
+
+        $calibration = $this->applicationService->reject($calibration, $request->toDto());
+
+        return new SuccessResponse(
+            response: CalibrationResource::make($calibration),
+            message: 'Ariza rad etildi'
         );
     }
 }

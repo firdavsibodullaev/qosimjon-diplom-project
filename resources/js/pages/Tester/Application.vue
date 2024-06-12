@@ -1,14 +1,6 @@
 <template>
-	<Layout page-title="O'lchov vositalarini qiyoslashga berish">
+	<Layout page-title="O'lchov vositalarini qiyoslashga berilgan arizalar">
 		<div class="flex gap-4">
-			<a-button
-				class="bg-ant-primary mb-4"
-				type="primary"
-				@click="
-					openWithComponent(Types.Create, 'create', 'Ariza yaratish')
-				"
-				>Ariza yaratish
-			</a-button>
 			<div>
 				<a-input-search
 					v-model:value="searchText"
@@ -22,7 +14,6 @@
 			:columns="columns"
 			:loading="isLoading"
 			:data-source="data"
-			:pagination="pagination"
 			:scroll="{ y: 530 }"
 		>
 			<template #bodyCell="{ column, text, record }">
@@ -39,8 +30,8 @@
 						type="primary"
 						@click="
 							openWithComponent(
-								Types.Show,
-								`show-${record.id}`,
+								Types.Edit,
+								`check-${record.id}`,
 								`Ariza №${record.id}`,
 								record.record,
 							)
@@ -48,53 +39,35 @@
 						class="mr-2 bg-ant-primary"
 						>Batafsil
 					</a-button>
-					<a-button
-						type="primary"
-						:id="`record-${1}`"
-						:disabled="record.record.status.key !== 'new'"
-						@click="
-							openWithComponent(
-								Types.Edit,
-								`show-${record.id}`,
-								'Arizani tahrirlash',
-								record.record,
-							)
-						"
-						:class="`mr-2 bg-yellow-400 text-black ${record.record.status.key === 'new' ? 'hover:!bg-yellow-300 hover:!text-black' : ''}`"
-						>Tahrirlash
-					</a-button>
 				</template>
 			</template>
 		</a-table>
 		<Drawer
 			:width="1000"
 			key="Drawer"
+			padding-bottom="0"
 			:componentKey="componentKey"
 			:component="component"
-			padding-bottom="0"
 		/>
 	</Layout>
 </template>
 <script setup lang="ts">
 import Layout from '@/pages/Layout.vue';
 import { computed, markRaw, ref } from 'vue';
-import Types from '@/enums/drawer/Types';
-import { useDrawers } from '@/hooks/useDrawers';
-import CalibrationCreate from '@/pages/Worker/CalibrationCreate.vue';
-import CalibrationEdit from '@/pages/Worker/CalibrationEdit.vue';
-import CalibrationShow from '@/pages/Worker/CalibrationShow.vue';
-import Drawer from '@/components/Drawer.vue';
-import { useCalibration } from '@/hooks/calibration/useCalibration';
 import formatDate from '@/utils/formatDate';
 import { useRoute } from 'vue-router';
+import { useApplication } from '@/hooks/application/useApplication';
+import { useDrawers } from '@/hooks/useDrawers';
+import Check from '@/pages/Tester/Check.vue';
+import Drawer from '@/components/Drawer.vue';
+import Types from '@/enums/drawer/Types';
 
-const { applications, isLoading, pagination, getCalibrations } =
-	useCalibration();
 const { openDrawer, componentKey, component } = useDrawers(
-	markRaw(CalibrationCreate),
-	markRaw(CalibrationEdit),
-	markRaw(CalibrationShow),
+	undefined,
+	markRaw(Check),
+	undefined,
 );
+
 const route = useRoute();
 const columns = ref([
 	{
@@ -144,7 +117,10 @@ const columns = ref([
 	},
 ]);
 const searchText = ref(route.query.q || '');
-
+const { fetch, applications, isLoading } = useApplication({
+	isLoad: true,
+	isLoop: true,
+});
 const data = computed(() =>
 	applications.value.map((item, index) => ({
 		record: item,
@@ -160,7 +136,7 @@ const data = computed(() =>
 );
 
 const onSearch = (value: string) => {
-	getCalibrations({ q: value });
+	fetch({ q: value });
 };
 
 const openWithComponent = (

@@ -40,6 +40,8 @@ class RouteServiceProvider extends ServiceProvider
             'user' => '[0-9]+',
             'factory_floor' => '[0-9]+',
             'device' => '[0-9]+',
+            'calibration' => '[0-9]+',
+            'application' => '[0-9]+',
         ]);
     }
 

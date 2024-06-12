@@ -53,6 +53,18 @@ class CalibrationResource extends JsonResource
                     ];
                 }
             ),
+            'react_document' => $this->whenLoaded(
+                relationship: 'media',
+                value: function () {
+                    $file = $this->resource->getFirstMedia(MediaCollection::REACT_DOCUMENT->value);
+
+                    return [
+                        'url' => $file?->getUrl(),
+                        'name' => $file?->file_name,
+                        'size' => $file?->humanReadableSize
+                    ];
+                }
+            ),
         ];
     }
 }

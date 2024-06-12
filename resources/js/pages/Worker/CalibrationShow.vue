@@ -17,10 +17,10 @@
 				<span
 					class="rounded border border-dashed border-gray-400 px-2 py-1"
 				>
-					<a target="_blank" :href="document.url">
+					<a target="_blank" :href="document?.url">
 						{{ document?.name }}
 						<span class="ml-1 text-gray-500">
-							({{ document.size }})
+							({{ document?.size }})
 						</span>
 					</a>
 				</span>
@@ -33,9 +33,9 @@
 			</a-col>
 			<a-col :span="16">
 				<span
-					:class="`text-lg rounded py-1 px-2 ${getStatusBlockBackgroundClass(status.key)}`"
+					:class="`text-lg rounded py-1 px-2 ${getStatusBlockBackgroundClass(status?.key)}`"
 				>
-					{{ status.value }}
+					{{ status?.value }}
 				</span>
 			</a-col>
 		</a-row>
@@ -46,9 +46,35 @@
 			</a-col>
 			<a-col :span="16">
 				<span
-					:class="`text-lg rounded py-1 px-2 ${getStatusBlockBackgroundClass(result.key)}`"
+					:class="`text-lg rounded py-1 px-2 ${getStatusBlockBackgroundClass(result?.key)}`"
 				>
-					{{ result.value || "Ko'rib chiqilmoqda" }}
+					{{ result?.value || "Ko'rib chiqilmoqda" }}
+				</span>
+			</a-col>
+		</a-row>
+		<a-row class="my-2">
+			<a-col :span="8" class="text-lg">
+				<strong>Hisobot</strong>
+			</a-col>
+			<a-col :span="16" class="text-lg">
+				{{ comment }}
+			</a-col>
+		</a-row>
+		<a-row>
+			<a-col :span="8" class="text-lg">
+				<strong>Natija hujjati</strong>
+			</a-col>
+			<a-col :span="16" class="text-lg">
+				<span
+					v-if="react_document && react_document.url"
+					class="rounded border border-dashed border-gray-400 px-2 py-1"
+				>
+					<a target="_blank" :href="react_document?.url">
+						{{ react_document?.name }}
+						<span class="ml-1 text-gray-500">
+							({{ react_document?.size }})
+						</span>
+					</a>
 				</span>
 			</a-col>
 		</a-row>
@@ -68,7 +94,18 @@
 			</a-col>
 			<a-col :span="16" class="text-lg">
 				{{ formatDate(deadline) }} <br />
-				<span class="text-sm">({{ timer }})</span>
+				<span v-if="status?.key !== 'reviewed'" class="text-sm"
+					>({{ timer }})</span
+				>
+			</a-col>
+		</a-row>
+		<hr class="my-4" />
+		<a-row>
+			<a-col :span="8" class="text-lg">
+				<strong>Ko'rib chiqilgan vaqt</strong>
+			</a-col>
+			<a-col :span="16" class="text-lg">
+				<span v-if="checked_at">{{ formatDate(checked_at) }}</span>
 			</a-col>
 		</a-row>
 		<hr class="my-4" />
@@ -77,27 +114,27 @@
 				<strong>Pribor</strong>
 			</a-col>
 			<a-col :span="16" class="text-lg">
-				<span>{{ device.device.name }} ({{ device.full_number }})</span>
-				<a-row class="mt-4">
-					<a-col :span="8" class="text-lg">
-						<strong> Hususiyatlari </strong>
-					</a-col>
-					<a-col :span="16" class="text-lg">
-						<div
-							class="my-2"
-							v-for="(attribute, index) in device.device
-								.attributes"
-							:key="`attribute-${index}`"
-						>
-							<strong
-								>{{ attribute.value.attribute.name }}:</strong
-							>
-							{{ attribute.value.value }} ({{
-								attribute.measurement_unit
-							}})
-						</div>
-					</a-col>
-				</a-row>
+				<span
+					>{{ device?.device.name }} ({{ device?.full_number }})</span
+				>
+			</a-col>
+		</a-row>
+		<a-row class="mt-4">
+			<a-col :span="8" class="text-lg">
+				<strong> Hususiyatlari </strong>
+			</a-col>
+			<a-col :span="16" class="text-lg">
+				<div
+					class="my-2"
+					v-for="(attribute, index) in device?.device.attributes ||
+					[]"
+					:key="`attribute-${index}`"
+				>
+					<strong>{{ attribute.value.attribute.name }}:</strong>
+					{{ attribute.value.value }} ({{
+						attribute.measurement_unit
+					}})
+				</div>
 			</a-col>
 		</a-row>
 		<hr class="my-4" />
@@ -111,15 +148,15 @@
 						<strong>Korxona</strong>
 					</a-col>
 					<a-col :span="16" class="text-lg mb-4">
-						{{ applicantFactory.name }} ({{
-							applicantFactory.number
+						{{ applicantFactory?.name }} ({{
+							applicantFactory?.number
 						}})
 					</a-col>
 					<a-col :span="8" class="text-lg">
 						<strong>Xodim</strong>
 					</a-col>
 					<a-col :span="16" class="text-lg">
-						{{ applicant.name }}
+						{{ applicant?.name }}
 					</a-col>
 				</a-row>
 			</a-col>
@@ -135,9 +172,9 @@
 						<strong>Korxona</strong>
 					</a-col>
 					<a-col :span="16" class="text-lg mb-4">
-						{{ checkerFactory.name }}
-						<span v-if="checkerFactory.number">
-							({{ checkerFactory.number }})
+						{{ checkerFactory?.name }}
+						<span v-if="checkerFactory?.number">
+							({{ checkerFactory?.number }})
 						</span>
 					</a-col>
 					<a-col :span="8" class="text-lg">
@@ -175,6 +212,7 @@ const props = defineProps<{
 	id: number;
 	result: { key: string; value: string };
 	status: { key: string; value: string };
+	react_document: { url: string; name: string; size: string } | null;
 }>();
 
 const timer = ref<string>('');
@@ -207,9 +245,18 @@ const getStatusBlockBackgroundClass = (key: string) => {
 };
 
 const closeDrawer = computed(() => store.getters['drawer/getOpen']);
+const statusValue = computed(() => props?.status);
 
 watch(closeDrawer, (newValue) => {
 	if (!newValue) {
+		interval.value = countDay(props.deadline, timer, interval.value);
+	} else {
+		interval.value = countDay(props.deadline, timer);
+	}
+});
+
+watch(statusValue, (newValue) => {
+	if (newValue?.key === 'reviewed') {
 		interval.value = countDay(props.deadline, timer, interval.value);
 	} else {
 		interval.value = countDay(props.deadline, timer);

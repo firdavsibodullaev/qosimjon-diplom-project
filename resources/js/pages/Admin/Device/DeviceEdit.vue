@@ -129,8 +129,8 @@
 					type="primary"
 					class="bg-ant-primary"
 					html-type="submit"
-					>Saqlash</a-button
-				>
+					>Saqlash
+				</a-button>
 			</a-form-item>
 		</a-space>
 	</a-form>

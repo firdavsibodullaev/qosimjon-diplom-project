@@ -19,10 +19,12 @@ export const useCalibration = (isFetch: boolean = true, filters = {}) => {
 		() => store.getters['factory/getIsReload'],
 	);
 
-	const getApplications = async (filter = {}) => {
+	const getCalibrations = async (filter = {}) => {
 		isLoading.value = true;
-		await api.apis.getApplication(filter, ({ data }) =>
-			onSuccess({ data }, filter),
+		await api.apis.getCalibration(
+			filter,
+			({ data }) => onSuccess({ data }, filter),
+			onError,
 		);
 	};
 
@@ -46,14 +48,18 @@ export const useCalibration = (isFetch: boolean = true, filters = {}) => {
 		});
 	};
 
-	watch(isPageReload, (newValue) => newValue && getApplications(filters));
+	const onError = (response) => {
+		isLoading.value = false;
+	};
 
-	isFetch && onMounted(() => getApplications(filters));
+	watch(isPageReload, (newValue) => newValue && getCalibrations(filters));
+
+	isFetch && onMounted(() => getCalibrations(filters));
 
 	return {
 		isLoading,
 		applications,
 		pagination,
-		getApplications,
+		getCalibrations,
 	};
 };

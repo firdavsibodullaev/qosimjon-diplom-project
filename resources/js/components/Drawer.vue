@@ -3,7 +3,7 @@
 		:title="$store.getters['drawer/getDrawerTitle']"
 		:width="width"
 		:open="$store.getters['drawer/getOpen']"
-		:body-style="{ paddingBottom: '80px' }"
+		:body-style="{ paddingBottom }"
 		:footer-style="{ textAlign: 'right' }"
 		@close="onClose"
 	>
@@ -34,6 +34,10 @@ export default {
 		width: {
 			type: Number,
 			default: 720,
+		},
+		paddingBottom: {
+			type: String,
+			default: '80px',
 		},
 	},
 	computed: {

@@ -12,6 +12,7 @@
 			:accept="accept"
 			@change="updateValue"
 			type="file"
+			ref="inputRef"
 			style="display: none"
 		/>
 		<div
@@ -61,10 +62,9 @@ const fileName = ref(props.defaultFile?.name || '');
 const fileSize = ref(props.defaultFile?.size || '');
 const filePreviewUrl = ref(props.defaultFile?.url || '');
 const file = ref<File | null>(null);
-
+const inputRef = ref();
 const updateValue = (e: Event) => {
 	file.value = (e.target as HTMLInputElement).files!.item(0);
-
 	if (file.value) {
 		if (file.value.size > 10 * 1024 * 1024) {
 			error('10MBdan kichikroq fayl yuklang');
@@ -76,6 +76,7 @@ const updateValue = (e: Event) => {
 
 const removeSelectedFile = () => {
 	file.value = null;
+	inputRef.value.value = '';
 };
 
 const parseFileSize = (size: number, unit: number = 0): string => {

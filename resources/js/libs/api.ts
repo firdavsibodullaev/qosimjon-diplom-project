@@ -94,6 +94,34 @@ const axiosPutUpload = async (
 		.catch((error) => errorHandler(error, onError));
 };
 
+const axiosPatch = async (
+	url: string,
+	body: IPayload,
+	onSuccess: IOnSuccess,
+	onError?: IOnError,
+) => {
+	await api
+		.patch(url, body, { headers: getApiHeaders() })
+		.then((response) => onSuccess(response))
+		.catch((error) => errorHandler(error, onError));
+};
+
+const axiosPatchUpload = async (
+	url: string,
+	body: IPayload,
+	onSuccess: IOnSuccess,
+	onError?: IOnError,
+) => {
+	await api
+		.post(
+			url,
+			{ _method: 'patch', ...body },
+			{ headers: getApiHeaders(true) },
+		)
+		.then((response) => onSuccess(response))
+		.catch((error) => errorHandler(error, onError));
+};
+
 const axiosDelete = async (
 	url: string,
 	onSuccess: IOnSuccess,
@@ -291,6 +319,33 @@ const apis = {
 		return axiosPut(`factory-device/${id}`, data, onSuccess, onError);
 	},
 
+	getCalibration(
+		filters: { [key: string]: number | string | null },
+		onSuccess: IOnSuccess,
+		onError?: IOnError,
+	) {
+		return axiosGet(
+			`calibration?${makeQuery(filters)}`,
+			onSuccess,
+			onError,
+		);
+	},
+	createCalibration(
+		payload: IUploadPayload,
+		onSuccess: IOnSuccess,
+		onError?: IOnError,
+	) {
+		return axiosPostUpload('calibration', payload, onSuccess, onError);
+	},
+	updateCalibration(
+		id: number,
+		payload: IUploadPayload,
+		onSuccess: IOnSuccess,
+		onError?: IOnError,
+	) {
+		return axiosPutUpload(`calibration/${id}`, payload, onSuccess, onError);
+	},
+
 	getApplication(
 		filters: { [key: string]: number | string | null },
 		onSuccess: IOnSuccess,
@@ -302,20 +357,34 @@ const apis = {
 			onError,
 		);
 	},
-	createApplication(
-		payload: IUploadPayload,
-		onSuccess: IOnSuccess,
-		onError?: IOnError,
-	) {
-		return axiosPostUpload('application', payload, onSuccess, onError);
+	acceptApplication(id: number, onSuccess: IOnSuccess, onError?: IOnError) {
+		return axiosPatch(`application/accept/${id}`, {}, onSuccess, onError);
 	},
-	updateApplication(
+	approveApplication(
 		id: number,
-		payload: IUploadPayload,
+		body: object,
 		onSuccess: IOnSuccess,
 		onError?: IOnError,
 	) {
-		return axiosPutUpload(`application/${id}`, payload, onSuccess, onError);
+		return axiosPatchUpload(
+			`application/approve/${id}`,
+			body,
+			onSuccess,
+			onError,
+		);
+	},
+	rejectApplication(
+		id: number,
+		body: object,
+		onSuccess: IOnSuccess,
+		onError?: IOnError,
+	) {
+		return axiosPatchUpload(
+			`application/reject/${id}`,
+			body,
+			onSuccess,
+			onError,
+		);
 	},
 };
 

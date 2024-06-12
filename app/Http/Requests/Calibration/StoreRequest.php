@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Application;
+namespace App\Http\Requests\Calibration;
 
 use App\DTOs\Application\ApplicationDTO;
 use App\Enums\Calibration\Status;
 use App\Enums\Factory\FactoryType;
-use App\Models\Calibration;
 use App\Models\Factory;
 use App\Models\FactoryDevice;
 use App\Models\User;
@@ -13,17 +12,14 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        /** @var Calibration $application */
-        $application = $this->route('application');
-
-        return $application->status->is(Status::NEW) && $application->applicant_id === auth()->id();
+        return true;
     }
 
     /**
@@ -46,7 +42,7 @@ class UpdateRequest extends FormRequest
                     ->where('type', FactoryType::TESTER)
                     ->whereNull('deleted_at')
             ],
-            'document' => 'nullable|file|mimes:pdf|max:' . (1024 * 10),
+            'document' => 'required|file|mimes:pdf|max:' . (1024 * 10),
         ];
     }
 
@@ -66,17 +62,14 @@ class UpdateRequest extends FormRequest
 
         $payload = $this->validated();
 
-        /** @var Calibration $calibration */
-        $calibration = $this->route('application');
-
         return new ApplicationDTO(
             factory_device_id: $payload['device_id'],
             applicant_factory_id: $user->factoryFloors->first()->factory_id,
             applicant_id: $user->id,
             checker_factory_id: $payload['factory_id'],
             status: Status::NEW,
-            deadline: $calibration->deadline,
-            document: $payload['document'] ?? null
+            deadline: now()->addDays(9)->endOfDay(),
+            document: $payload['document']
         );
     }
 }

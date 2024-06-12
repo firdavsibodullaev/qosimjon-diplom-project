@@ -1,7 +1,6 @@
 import type { Ref } from 'vue';
 
 export const countDay = (dateTime: string, timer: Ref, interval?: number) => {
-	// const considerTime = new Date('2023-01-01');
 	const considerTime = new Date(dateTime);
 	const considerTimestamp = considerTime.getTime();
 
@@ -22,8 +21,6 @@ export const countDay = (dateTime: string, timer: Ref, interval?: number) => {
 			return;
 		}
 
-		// 100 / 60
-
 		const days = Math.floor(difference / (1000 * 60 * 60 * 24));
 		const hours = Math.floor(
 			(difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
@@ -32,7 +29,6 @@ export const countDay = (dateTime: string, timer: Ref, interval?: number) => {
 			(difference % (1000 * 60 * 60)) / (1000 * 60),
 		);
 		const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-		console.log(seconds);
 		timer.value = `${formatNumber(days)} kun ${formatNumber(hours)}s ${formatNumber(minutes)}m ${formatNumber(seconds)} soniya qoldi`;
 	}, 1000);
 

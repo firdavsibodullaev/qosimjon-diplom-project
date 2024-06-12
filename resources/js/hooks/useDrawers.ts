@@ -5,16 +5,16 @@ import store from '@/store';
 import type { IUseDrawers } from '@/contracts/drawer/IUseDrawers';
 
 export const useDrawers = (
-	createComponent: Component,
-	editComponent: Component,
-	showComponent: Component,
+	createComponent?: Component,
+	editComponent?: Component,
+	showComponent?: Component,
 ): IUseDrawers => {
-	const componentByType: Record<Types, Component> = {
+	const componentByType: Record<Types, Component | undefined> = {
 		[Types.Create]: createComponent,
 		[Types.Edit]: editComponent,
 		[Types.Show]: showComponent,
 	};
-	const component = ref<Component | null>(null);
+	const component = ref<Component | null | undefined>(null);
 	const componentKey = ref('');
 
 	const getComponent = (type: Types) => {

@@ -4,7 +4,7 @@ import store from '@/store';
 
 export const useCalibrationCreate = () => {
 	const create = async (payload) => {
-		await api.apis.createApplication(payload, onSuccess, onError);
+		await api.apis.createCalibration(payload, onSuccess, onError);
 	};
 
 	const edit = async (id: number, payload) => {

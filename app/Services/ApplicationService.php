@@ -2,16 +2,18 @@
 
 namespace App\Services;
 
-use App\DTOs\Application\ApplicationDTO;
+use App\DTOs\Application\ApproveDTO;
 use App\DTOs\Application\FilterDTO;
+use App\DTOs\Application\RejectDTO;
 use App\Enums\Calibration\MediaCollection;
-use App\Enums\FactoryDevice\Position;
+use App\Enums\Calibration\Result;
+use App\Enums\Calibration\Status;
 use App\Models\Calibration;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 
 class ApplicationService
 {
@@ -28,47 +30,70 @@ class ApplicationService
             ->paginate(15);
     }
 
-    public function create(ApplicationDTO $payload): Calibration
+    public function hasAccessToAccept(Calibration $calibration, User $user): bool
     {
-        return DB::transaction(function () use ($payload) {
-            /** @var Calibration $application */
-            $application = Calibration::query()->create(Arr::except((array)$payload, 'document'));
-
-            $this->factoryDeviceService->updateStatus($payload->factory_device_id, Position::CHECKING);
-
-            $application->addMedia($payload->document)->toMediaCollection(MediaCollection::DOCUMENT->value);
-
-            return $application->load(['applicant', 'checker', 'applicantFactory', 'checkerFactory', 'device.device']);
-        });
+        return $user->factoryFloors->contains('factory_id', $calibration->checker_factory_id);
     }
 
-    public function update(Calibration $application, ApplicationDTO $payload): Calibration
+    public function applicationHasBeenAccepted(Calibration $calibration): bool
     {
-        return DB::transaction(function () use ($application, $payload) {
-            $application->update(Arr::except((array)$payload, 'document'));
-
-            if ($payload->document) {
-                $collection = MediaCollection::DOCUMENT->value;
-
-                if ($file = $application->getFirstMedia($collection)) {
-                    $file->delete();
-                }
-
-                $application->addMedia($payload->document)->toMediaCollection($collection);
-            }
-
-            return $application->load(['applicant', 'checker', 'applicantFactory', 'checkerFactory', 'device.device']);
-        });
+        return !$calibration->status->is(Status::NEW);
     }
 
-    public function hasActiveDeviceStatus(int $factory_device_id): bool
+    public function accept(Calibration $calibration, User $user): Calibration
     {
-        return Calibration::query()
-            ->where('factory_device_id', $factory_device_id)
-            ->whereHas(
-                relation: 'device',
-                callback: fn(Builder $builder) => $builder->whereIn('position', [Position::ON_PLACE, Position::WAREHOUSE])
-            )
-            ->exists();
+        $calibration->update([
+            'checker_id' => $user->id,
+            'status' => Status::PROCESS
+        ]);
+
+        return $calibration->load(['checker']);
+    }
+
+    public function hasPermissionToReact(Calibration $calibration, User $user): bool
+    {
+        return $calibration->checker_id === $user->id;
+    }
+
+    /**
+     * @param Calibration $calibration
+     * @param ApproveDTO $payload
+     * @return Calibration
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function approve(Calibration $calibration, ApproveDTO $payload): Calibration
+    {
+        $calibration->update([
+            'comment' => $payload->comment,
+            'status' => Status::REVIEWED,
+            'result' => Result::APPROVED,
+            'checked_at' => now()
+        ]);
+
+        $calibration->addMedia($payload->document)->toMediaCollection(MediaCollection::REACT_DOCUMENT->value);
+
+        return $calibration->load('media');
+    }
+
+    /**
+     * @param Calibration $calibration
+     * @param RejectDTO $payload
+     * @return Calibration
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function reject(Calibration $calibration, RejectDTO $payload): Calibration
+    {
+        $calibration->update([
+            'comment' => $payload->comment,
+            'status' => Status::REVIEWED,
+            'result' => Result::REJECTED,
+            'checked_at' => now()
+        ]);
+
+        $calibration->addMedia($payload->document)->toMediaCollection(MediaCollection::REACT_DOCUMENT->value);
+
+        return $calibration->load('media');
     }
 }

@@ -17,6 +17,7 @@ export interface IOnSuccessWrapper extends AxiosResponse {
 }
 
 export interface IOnSuccessData {
+	data?: any;
 	message: string;
 	success: boolean;
 }
