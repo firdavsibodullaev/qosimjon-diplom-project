@@ -14,7 +14,9 @@
 			:columns="columns"
 			:loading="isLoading"
 			:data-source="data"
+			:pagination="pagination"
 			:scroll="{ y: 530 }"
+			@change="handleTableChange"
 		>
 			<template #bodyCell="{ column, text, record }">
 				<template v-if="column.dataIndex === 'document'">
@@ -67,6 +69,18 @@ const { openDrawer, componentKey, component } = useDrawers(
 	markRaw(Check),
 	undefined,
 );
+const {
+	fetch,
+	applications,
+	isLoading,
+	searchQuery,
+	canRequestServer,
+	pagination,
+	handleTableChange,
+} = useApplication({
+	isLoad: true,
+	isLoop: true,
+});
 
 const route = useRoute();
 const columns = ref([
@@ -116,11 +130,8 @@ const columns = ref([
 		width: 200,
 	},
 ]);
+
 const searchText = ref(route.query.q || '');
-const { fetch, applications, isLoading } = useApplication({
-	isLoad: true,
-	isLoop: true,
-});
 const data = computed(() =>
 	applications.value.map((item, index) => ({
 		record: item,
@@ -135,8 +146,11 @@ const data = computed(() =>
 	})),
 );
 
-const onSearch = (value: string) => {
-	fetch({ q: value });
+const onSearch = () => {
+	isLoading.value = true;
+	canRequestServer.value = false;
+	searchQuery.value = searchText.value;
+	fetch().finally(() => (canRequestServer.value = true));
 };
 
 const openWithComponent = (
