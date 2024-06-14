@@ -37,7 +37,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
             Route::apiResource('user', UserController::class)->middleware(Role::adminDirector());
 
-            Route::apiResource('device', DeviceController::class)->middleware(Role::adminModerator());
+            Route::apiResource('device', DeviceController::class)->middleware(Role::adminDirectorModerator());
 
             Route::apiResource('factory-device', FactoryDeviceController::class);
 

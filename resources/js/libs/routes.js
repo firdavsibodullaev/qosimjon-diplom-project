@@ -104,7 +104,7 @@ export default [
 		meta: {
 			middleware: ['auth'],
 			sidebar: true,
-			role: ['moderator'],
+			role: ['moderator', 'director'],
 			type: 'giving_for_test',
 			main: true,
 			text: "Pribor qo'shish",
@@ -117,7 +117,7 @@ export default [
 		meta: {
 			middleware: ['auth'],
 			sidebar: true,
-			role: ['worker'],
+			role: ['director', 'worker'],
 			type: 'giving_for_test',
 			main: true,
 			text: 'Ariza berish',

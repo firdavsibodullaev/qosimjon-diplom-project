@@ -18,6 +18,7 @@ class FilterRequest extends FilterValidator
     public function toDto(): FilterDTO
     {
         return new FilterDTO(
+            user: auth()->user()->load('factoryFloors.factoryRelation'),
             sorter: $this->request->get('sorter', '-status,-created_at'),
             q: $this->request->get('q')
         );

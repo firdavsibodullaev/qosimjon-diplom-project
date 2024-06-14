@@ -72,6 +72,7 @@ const emits = defineEmits([
 	'updateResult',
 	'updateComment',
 	'updateReactDocumentValue',
+	'updateCheckedAtValue',
 ]);
 const props = defineProps<{
 	id: number;
@@ -95,11 +96,12 @@ const handleApplicationReact = (action: string, actionForm: any) => {
 };
 
 const onSuccess = ({ data }) => {
-	const { status, result, comment, react_document } = data.data;
+	const { status, result, comment, react_document, checked_at } = data.data;
 	updateStatus(status);
 	emits('updateResult', result);
 	emits('updateComment', comment);
 	emits('updateReactDocumentValue', react_document);
+	emits('updateCheckedAtValue', checked_at);
 };
 
 defineExpose({ init });

@@ -14,7 +14,7 @@
 					<CalibrationShow
 						:id="id"
 						:applicant-factory="applicantFactory"
-						:checked_at="checked_at"
+						:checked_at="checkedAtValue"
 						:document="document"
 						:created_at="created_at"
 						:checker="checkerValue"
@@ -47,6 +47,7 @@
 						@updateResult="updateResult"
 						@updateComment="updateComment"
 						@updateReactDocumentValue="updateReactDocumentValue"
+						@updateCheckedAtValue="updateCheckedAtValue"
 					/>
 				</div>
 			</a-col>
@@ -85,6 +86,7 @@ const checkerValue = ref(props.checker);
 const resultValue = ref(props.result);
 const commentValue = ref(props.comment);
 const reactDocumentValue = ref(props.react_document);
+const checkedAtValue = ref(props.checked_at);
 const closeDrawer = computed(() => store.getters['drawer/getOpen']);
 
 const init = () => {
@@ -109,6 +111,10 @@ const updateComment = (value: any) => {
 
 const updateReactDocumentValue = (value: any) => {
 	reactDocumentValue.value = value;
+};
+
+const updateCheckedAtValue = (value: any) => {
+	checkedAtValue.value = value;
 };
 
 defineExpose({ init });

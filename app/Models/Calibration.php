@@ -6,6 +6,7 @@ use App\Enums\Calibration\Result;
 use App\Enums\Calibration\Status;
 use App\Filters\Calibration\FilterSearch;
 use App\Filters\Calibration\FilterTesterUser;
+use App\Filters\Calibration\FilterUser;
 use App\Filters\Sorter;
 use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
@@ -42,7 +43,8 @@ class Calibration extends Model implements HasMedia
     public array $filters = [
         Sorter::class => null,
         FilterSearch::class => null,
-        FilterTesterUser::class => 'checker_factory_id'
+        FilterTesterUser::class => 'checker_factory_id',
+        FilterUser::class => 'applicant_factory_id',
     ];
 
     protected $fillable = [

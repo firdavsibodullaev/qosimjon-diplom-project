@@ -19,8 +19,8 @@ class FactoryDeviceController extends Controller
         protected FactoryDeviceService $factoryDeviceService,
     )
     {
-        $this->middleware(Role::moderator())->except('index');
-        $this->middleware(Role::moderatorWorker())->only('index');
+        $this->middleware(Role::directorModerator())->except('index');
+        $this->middleware(Role::directorModeratorWorker())->only('index');
     }
 
     public function index(FilterRequest $request): SuccessResponse
