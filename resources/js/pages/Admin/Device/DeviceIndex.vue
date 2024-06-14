@@ -135,7 +135,6 @@ export default {
 							actions: '',
 						};
 					});
-					this.loading = false;
 
 					this.$router.push({
 						name: 'device',
@@ -148,9 +147,9 @@ export default {
 				},
 				(response) => {
 					console.log(response);
-					this.loading = false;
 				},
 			);
+			this.loading = false;
 		},
 		onDelete(id) {
 			this.loading = true;
