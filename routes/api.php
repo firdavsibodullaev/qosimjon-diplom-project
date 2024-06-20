@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\FactoryController;
 use App\Http\Controllers\Admin\FactoryFloorController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\ApplicationViewController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CalibrationController;
 use App\Http\Controllers\Moderator\FactoryDeviceController;
@@ -51,5 +52,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
             });
 
             Route::get('attribute', [AttributeController::class, 'index'])->name('attribute.index');
+
+            Route::get('application-view', ApplicationViewController::class)->name('application_view');
         });
 });

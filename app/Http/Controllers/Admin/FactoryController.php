@@ -11,6 +11,8 @@ use App\Models\Factory;
 use App\Services\FactoryService;
 use Firdavsi\Responses\Http\SuccessEmptyResponse;
 use Firdavsi\Responses\Http\SuccessResponse;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Validation\ValidationException;
 
 class FactoryController extends Controller
 {
@@ -20,6 +22,10 @@ class FactoryController extends Controller
         $this->middleware(Role::adminDirectorWorker())->only('index');
     }
 
+    /**
+     * @throws BindingResolutionException
+     * @throws ValidationException
+     */
     public function index(FilterRequest $request): SuccessResponse
     {
         $factories = $this->factoryService->paginate($request->toDto());

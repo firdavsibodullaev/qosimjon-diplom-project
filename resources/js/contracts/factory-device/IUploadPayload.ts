@@ -8,4 +8,5 @@ export interface IUploadPayload {
 	number: number | null;
 	position: position | null;
 	status: status | null;
+	check_every_time: number | null;
 }

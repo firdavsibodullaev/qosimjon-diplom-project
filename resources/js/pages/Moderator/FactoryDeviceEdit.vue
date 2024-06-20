@@ -8,6 +8,28 @@
 		layout="vertical"
 	>
 		<a-space class="site-input-group-wrapper w-full" direction="vertical">
+			<a-col class="w-full">
+				<a-form-item label="Pribor" name="device_id">
+					<a-select
+						show-search
+						v-model:value="form.device_id"
+						placeholder="Priborni tanlang"
+						show-arrow
+						:filter-option="
+							(input: string, option: any) =>
+								filterDevices(input, option)
+						"
+						class="w-full"
+					>
+						<a-select-option
+							v-for="device in devices"
+							:key="`device-${device.id}-${device.name}`"
+							:value="device.id"
+							>{{ device.name }}
+						</a-select-option>
+					</a-select>
+				</a-form-item>
+			</a-col>
 			<a-row :gutter="8">
 				<a-col class="w-1/2">
 					<a-form-item label="Zavod" name="factory_id">
@@ -48,28 +70,6 @@
 			</a-row>
 			<a-row :gutter="8">
 				<a-col class="w-1/2">
-					<a-form-item label="Pribor" name="device_id">
-						<a-select
-							show-search
-							v-model:value="form.device_id"
-							placeholder="Priborni tanlang"
-							show-arrow
-							:filter-option="
-								(input: string, option: any) =>
-									filterDevices(input, option)
-							"
-							class="w-full"
-						>
-							<a-select-option
-								v-for="device in devices"
-								:key="`device-${device.id}-${device.name}`"
-								:value="device.id"
-								>{{ device.name }}
-							</a-select-option>
-						</a-select>
-					</a-form-item>
-				</a-col>
-				<a-col class="w-1/2">
 					<a-form-item label="Pribor raqami" name="number">
 						<a-input
 							:prefix="numberPrefix"
@@ -77,6 +77,18 @@
 							class="device-number"
 							v-model:value.number="form.number"
 							placeholder="Pribor raqamini kiriting"
+						/>
+					</a-form-item>
+				</a-col>
+				<a-col class="w-1/2">
+					<a-form-item
+						label="Har nechi oyda tekshiruvdan o'tishi kerak"
+						name="check_every_time"
+					>
+						<a-input-number
+							placeholder="Har nechi oyda tekshiruvdan o'tishi kerak ekanligini kiriting"
+							v-model:value="form.check_every_time"
+							class="w-full"
 						/>
 					</a-form-item>
 				</a-col>
@@ -172,6 +184,7 @@ const device = defineProps<{
 	number: number;
 	position: position;
 	status: status;
+	check_every_time: number | null;
 }>();
 
 const form = ref<IUploadPayload>({
@@ -181,6 +194,7 @@ const form = ref<IUploadPayload>({
 	number: device.number,
 	position: device.position,
 	status: device.status,
+	check_every_time: device.check_every_time,
 });
 
 const rules = ref({
@@ -189,6 +203,13 @@ const rules = ref({
 	number: [{ required: true, message: 'Pribor raqamini kiriting' }],
 	position: [{ required: true, message: 'Joyini tanlang' }],
 	status: [{ required: true, message: 'Holatini tanlang' }],
+	check_every_time: [
+		{
+			required: true,
+			message:
+				"Har nechi oyda tekshiruvdan o'tishi kerak ekanligini kiriting",
+		},
+	],
 	factory_floor_id: [
 		{
 			required: user.value.has_permission_to_all_floors,

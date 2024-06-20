@@ -42,6 +42,7 @@ class StoreRequest extends FormRequest
             ],
             'status' => ['required', 'string', Rule::enum(Status::class)],
             'position' => ['required', 'string', Rule::enum(Position::class)],
+            'check_every_time' => 'required|int|max:255'
         ];
     }
 
@@ -53,6 +54,7 @@ class StoreRequest extends FormRequest
             'factory_floor_id' => 'Sex',
             'status' => 'Holati',
             'position' => 'Joyi',
+            'check_every_time' => 'Har necha oyda tekshiruvdan o\'tkazish'
         ];
     }
 
@@ -69,8 +71,8 @@ class StoreRequest extends FormRequest
             factory_id: $user->factoryFloors->first()->factory_id,
             status: Status::tryFrom($validated['status']),
             position: Position::tryFrom($validated['position']),
-            factory_floor_id: $validated['factory_floor_id'] ?? null,
-
+            check_every_time: $validated['check_every_time'],
+            factory_floor_id: $validated['factory_floor_id'] ?? null
         );
     }
 }

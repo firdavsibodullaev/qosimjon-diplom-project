@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\FactoryDevice\Position;
 use App\Enums\FactoryDevice\Status;
 use App\Filters\FactoryDevice\UserFilter;
+use App\Filters\Sorter;
 use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $full_number
  * @property Status $status
  * @property Position $position
+ * @property Carbon|null $last_checked_at
+ * @property int|null $check_every_time
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read Factory $factory
@@ -31,7 +34,8 @@ class FactoryDevice extends Model
     use HasFactory, InteractsWithFilters;
 
     public array $filters = [
-        UserFilter::class => null
+        UserFilter::class => null,
+        Sorter::class => null
     ];
 
     protected $table = 'factory_device';
@@ -44,11 +48,14 @@ class FactoryDevice extends Model
         'full_number',
         'status',
         'position',
+        'last_checked_at',
+        'check_every_time',
     ];
 
     protected $casts = [
         'status' => Status::class,
         'position' => Position::class,
+        'last_checked_at' => 'datetime'
     ];
 
     public function factory(): BelongsTo

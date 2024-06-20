@@ -30,6 +30,8 @@ class FactoryDeviceResource extends JsonResource
             'full_number' => $this->resource->full_number,
             'status' => $this->resource->status,
             'position' => $this->resource->position,
+            'last_checked_at' => $this->resource->last_checked_at?->toDateTimeString(),
+            'check_every_time' => $this->resource->check_every_time
         ];
     }
 }

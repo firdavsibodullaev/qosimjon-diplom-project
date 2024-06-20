@@ -25,6 +25,7 @@ class FilterRequest extends FilterValidator
     public function rules(): array
     {
         return [
+            'sorter' => 'string|nullable',
             'list' => 'nullable|boolean'
         ];
     }
@@ -40,6 +41,7 @@ class FilterRequest extends FilterValidator
         $user = auth()->user()->load('factoryFloors');
 
         return new FilterDTO(
+            sorter: $this->request->get('sorter','id'),
             factory_user: $user,
             list: $this->request->boolean('list')
         );

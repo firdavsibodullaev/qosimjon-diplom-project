@@ -49,7 +49,6 @@ export function useFactoryDevices(isFetch: boolean = true, filter?: object) {
 			current: data.meta.current_page,
 			pageSize: data.meta.per_page,
 		};
-
 		isLoading.value = false;
 
 		router.push({
@@ -101,10 +100,10 @@ export function useFactoryDevices(isFetch: boolean = true, filter?: object) {
 		}
 	};
 
-	const handleTableChange = (page: any, filters: any, sorter: any) => {
+	const handleTableChange = async (page: any, filters: any, sorter: any) => {
 		isLoading.value = true;
 
-		getDevices({
+		await getDevices({
 			page: page.current,
 			total: page.pageSize,
 			sorter: makeSorterField(sorter.field, sorter.order),

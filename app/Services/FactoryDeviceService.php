@@ -46,6 +46,7 @@ class FactoryDeviceService
             'full_number' => $number,
             'status' => $payload->status,
             'position' => $payload->position,
+            'check_every_time' => $payload->check_every_time
         ]);
 
         $device->save();
@@ -84,6 +85,7 @@ class FactoryDeviceService
             'full_number' => $number,
             'status' => $payload->status,
             'position' => $payload->position,
+            'check_every_time' => $payload->check_every_time
         ]);
 
         $device->save();

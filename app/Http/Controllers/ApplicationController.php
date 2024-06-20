@@ -52,8 +52,6 @@ class ApplicationController extends Controller
      * @param ApproveRequest $request
      * @param Calibration $calibration
      * @return SuccessResponse
-     * @throws FileDoesNotExist
-     * @throws FileIsTooBig
      */
     public function approve(ApproveRequest $request, Calibration $calibration): SuccessResponse
     {

@@ -45,20 +45,6 @@
 						class="mr-2 bg-yellow-400 text-black hover:!bg-yellow-300 hover:!text-black"
 						>Tahrirlash
 					</a-button>
-					<!--					<a-popconfirm-->
-					<!--						v-if="data.length"-->
-					<!--						title="Ma'umotni o'chirmoqchimisiz?"-->
-					<!--					>-->
-					<!--						<template #okButton>-->
-					<!--							<a-button-->
-					<!--								@click="onDelete(record.id)"-->
-					<!--								danger-->
-					<!--								type="primary"-->
-					<!--								>O'chirish-->
-					<!--							</a-button>-->
-					<!--						</template>-->
-					<!--						<a-button type="primary" danger>O'chirish</a-button>-->
-					<!--					</a-popconfirm>-->
 				</template>
 			</template>
 		</a-table>

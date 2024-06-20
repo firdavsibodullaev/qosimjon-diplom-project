@@ -13,6 +13,7 @@ class DevicePayloadDTO
         public int      $factory_id,
         public Status   $status,
         public Position $position,
+        public int      $check_every_time,
         public ?int     $factory_floor_id = null,
     )
     {

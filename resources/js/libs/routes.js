@@ -9,6 +9,7 @@ import Page404 from '@/pages/Error/Page404.vue';
 import FactoryDeviceIndex from '@/pages/Moderator/FactoryDeviceIndex.vue';
 import Calibration from '@/pages/Worker/Calibration.vue';
 import Application from '@/pages/Tester/Application.vue';
+import FactoryDeviceList from '@/pages/FactoryDevice/FactoryDeviceList.vue';
 
 export default [
 	{
@@ -108,6 +109,19 @@ export default [
 			type: 'giving_for_test',
 			main: true,
 			text: "Pribor qo'shish",
+		},
+	},
+	{
+		path: '/factory-devices-list',
+		name: 'factoryDevicesList',
+		component: FactoryDeviceList,
+		meta: {
+			middleware: ['auth'],
+			sidebar: true,
+			role: ['worker', 'moderator', 'director'],
+			type: 'giving_for_test',
+			main: true,
+			text: 'Priborlar',
 		},
 	},
 	{

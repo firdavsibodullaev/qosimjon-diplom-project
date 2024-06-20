@@ -18,9 +18,12 @@ class Permitted extends BaseFilter
 
         $role = Role::tryFrom($user?->getRoleNames()->first());
 
+        /** @var FactoryType|null $type */
+        $type = $user->factoryFloors->first()?->factoryRelation->type;
+
         $builder->when(
-            value: $user && $role->is(Role::DIRECTOR) && $filters->type?->is(FactoryType::GIVING_FOR_TEST),
-            callback: fn(Builder $builder) => $builder->whereKey($user->factoryFloors->pluck('factory_id'))
+            value: $user && $role->is(Role::DIRECTOR) && $type?->is(FactoryType::GIVING_FOR_TEST),
+            callback: fn(Builder $builder) => $builder->whereKey($user->factoryFloors->pluck('factory_id')->unique())
         );
     }
 }

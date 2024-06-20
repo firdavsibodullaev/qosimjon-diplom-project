@@ -24,6 +24,14 @@
 			<div class="text-lg">{{ device.full_number }}</div>
 		</div>
 		<div class="grid grid-cols-2 gap-6 mb-4">
+			<div class="text-lg">
+				<strong
+					>Qurilma har necha oyda tekshiruvdan o'tishi kerak:</strong
+				>
+			</div>
+			<div class="text-lg">{{ device.check_every_time }}</div>
+		</div>
+		<div class="grid grid-cols-2 gap-6 mb-4">
 			<div class="text-lg"><strong>Zavod:</strong></div>
 			<div class="text-lg">
 				{{ device.factory.name }} ({{ device.factory.number }})
@@ -57,6 +65,7 @@ const device = defineProps<{
 	full_number: number;
 	position: position;
 	status: status;
+	check_every_time: number | null;
 }>();
 
 const init = () => {

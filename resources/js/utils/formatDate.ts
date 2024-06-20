@@ -1,4 +1,8 @@
-export default (dateTime: string) => {
+export default (dateTime: string | null): null | string => {
+	if (!dateTime) {
+		return null;
+	}
+
 	const date = new Date(dateTime);
 	const day = date.getDate();
 	const month = date.getMonth();

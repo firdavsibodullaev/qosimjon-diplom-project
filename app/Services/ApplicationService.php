@@ -12,6 +12,7 @@ use App\Models\Calibration;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 
@@ -59,21 +60,26 @@ class ApplicationService
      * @param Calibration $calibration
      * @param ApproveDTO $payload
      * @return Calibration
-     * @throws FileDoesNotExist
-     * @throws FileIsTooBig
      */
     public function approve(Calibration $calibration, ApproveDTO $payload): Calibration
     {
-        $calibration->update([
-            'comment' => $payload->comment,
-            'status' => Status::REVIEWED,
-            'result' => Result::APPROVED,
-            'checked_at' => now()
-        ]);
+        $calibration->loadMissing('device');
+        return DB::transaction(function () use ($calibration, $payload) {
+            $calibration->update([
+                'comment' => $payload->comment,
+                'status' => Status::REVIEWED,
+                'result' => Result::APPROVED,
+                'checked_at' => now()
+            ]);
 
-        $calibration->addMedia($payload->document)->toMediaCollection(MediaCollection::REACT_DOCUMENT->value);
+            $calibration->device->update([
+                'last_checked_at' => now()
+            ]);
 
-        return $calibration->load('media');
+            $calibration->addMedia($payload->document)->toMediaCollection(MediaCollection::REACT_DOCUMENT->value);
+
+            return $calibration->load('media');
+        });
     }
 
     /**
