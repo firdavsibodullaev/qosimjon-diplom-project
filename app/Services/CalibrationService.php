@@ -28,6 +28,17 @@ class CalibrationService
             ->paginate(15);
     }
 
+    public function hasActiveDeviceStatus(int $factory_device_id): bool
+    {
+        return Calibration::query()
+            ->where('factory_device_id', $factory_device_id)
+            ->whereHas(
+                relation: 'device',
+                callback: fn(Builder $builder) => $builder->whereIn('position', [Position::ON_PLACE, Position::WAREHOUSE])
+            )
+            ->exists();
+    }
+
     public function create(ApplicationDTO $payload): Calibration
     {
         return DB::transaction(function () use ($payload) {
@@ -59,16 +70,5 @@ class CalibrationService
 
             return $application->load(['applicant', 'checker', 'applicantFactory', 'checkerFactory', 'device.device']);
         });
-    }
-
-    public function hasActiveDeviceStatus(int $factory_device_id): bool
-    {
-        return Calibration::query()
-            ->where('factory_device_id', $factory_device_id)
-            ->whereHas(
-                relation: 'device',
-                callback: fn(Builder $builder) => $builder->whereIn('position', [Position::ON_PLACE, Position::WAREHOUSE])
-            )
-            ->exists();
     }
 }
