@@ -28,7 +28,10 @@ export function useFactoryDevices(isFetch: boolean = true, filter?: object) {
 		filters: { [key: string]: string | null | number } = {},
 	) => {
 		sorter.value = <string | null>filters.sorter;
-		await api.apis.getFactoryDevices(filters, onSuccess);
+		await api.apis.getFactoryDevices(
+			{ 'with-calibration': 1, ...filters },
+			onSuccess,
+		);
 	};
 
 	const onSuccess: IOnSuccess = (response) => {

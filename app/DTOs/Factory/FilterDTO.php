@@ -10,7 +10,7 @@ class FilterDTO extends BaseFilterDTO
 {
     public function __construct(
         public ?User        $user = null,
-        public string       $sorter = 'id',
+        public ?string      $sorter = 'id',
         public bool         $list = false,
         public ?FactoryType $type = null
     )

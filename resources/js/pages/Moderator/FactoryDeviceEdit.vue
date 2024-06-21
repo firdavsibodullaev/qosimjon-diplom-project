@@ -117,6 +117,7 @@
 							v-model:value="form.status"
 							placeholder="Holatini tanlang"
 							show-arrow
+							:disabled="latest_calibration !== null"
 							class="w-full"
 						>
 							<a-select-option
@@ -185,6 +186,7 @@ const device = defineProps<{
 	position: position;
 	status: status;
 	check_every_time: number | null;
+	latest_calibration: object | null;
 }>();
 
 const form = ref<IUploadPayload>({

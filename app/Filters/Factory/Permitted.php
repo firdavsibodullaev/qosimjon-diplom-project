@@ -16,14 +16,24 @@ class Permitted extends BaseFilter
         /** @var FilterDTO $filters */
         $user = $filters->user?->load('factoryFloors.factoryRelation');
 
+        $builder->when(
+            value: $this->isGetJustOwnFloors($filters),
+            callback: fn(Builder $builder) => $builder->whereKey($user->factoryFloors->pluck('factory_id')->unique())
+        );
+    }
+
+    private function isGetJustOwnFloors(BaseFilterDTO|FilterDTO $filters): bool
+    {
+        /** @var FilterDTO $filters */
+        $user = $filters->user?->load('factoryFloors.factoryRelation');
+
         $role = Role::tryFrom($user?->getRoleNames()->first());
 
         /** @var FactoryType|null $type */
         $type = $user->factoryFloors->first()?->factoryRelation->type;
 
-        $builder->when(
-            value: $user && $role->is(Role::DIRECTOR) && $type?->is(FactoryType::GIVING_FOR_TEST),
-            callback: fn(Builder $builder) => $builder->whereKey($user->factoryFloors->pluck('factory_id')->unique())
-        );
+        $request_type = $filters->type;
+
+        return $user && $role->is(Role::DIRECTOR) && $type?->is(FactoryType::GIVING_FOR_TEST) && !$request_type?->is(FactoryType::TESTER);
     }
 }

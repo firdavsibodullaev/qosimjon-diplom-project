@@ -26,7 +26,10 @@ class FilterRequest extends FilterValidator
     {
         return [
             'sorter' => 'string|nullable',
-            'list' => 'nullable|boolean'
+            'list' => 'nullable|boolean',
+            'with-calibration' => 'nullable|boolean',
+            'all-calibrations' => 'nullable|boolean',
+            'checking-important' => 'nullable|boolean',
         ];
     }
 
@@ -39,11 +42,14 @@ class FilterRequest extends FilterValidator
     {
         /** @var User $user */
         $user = auth()->user()->load('factoryFloors');
-
+        $is_checking_important = $this->request->boolean('checking-important');
         return new FilterDTO(
-            sorter: $this->request->get('sorter','id'),
+            sorter: $is_checking_important ? null : $this->request->get('sorter', 'id'),
             factory_user: $user,
-            list: $this->request->boolean('list')
+            list: $this->request->boolean('list'),
+            with_calibration: $this->request->boolean('with-calibration'),
+            all_calibrations: $this->request->boolean('all-calibrations'),
+            checking_important: $is_checking_important,
         );
     }
 }

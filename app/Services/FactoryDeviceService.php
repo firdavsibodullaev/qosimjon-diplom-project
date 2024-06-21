@@ -83,10 +83,14 @@ class FactoryDeviceService
             'device_id' => $payload->device_id,
             'number' => $payload->number,
             'full_number' => $number,
-            'status' => $payload->status,
             'position' => $payload->position,
+            'status' => $payload->status,
             'check_every_time' => $payload->check_every_time
         ]);
+
+        if ($device->lastCalibration()->exists()) {
+            $device->status = $device->getOriginal('status');
+        }
 
         $device->save();
 

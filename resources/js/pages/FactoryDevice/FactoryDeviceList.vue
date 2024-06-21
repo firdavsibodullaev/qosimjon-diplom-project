@@ -5,6 +5,7 @@ import Drawer from '@/components/Drawer.vue';
 import api from '@/libs/api';
 import formatDate from '@/utils/formatDate';
 import FactoryDeviceShow from '@/pages/FactoryDevice/FactoryDeviceShow.vue';
+import { getDateDifference } from '@/utils/getDateDifference';
 
 const columns = [
 	{
@@ -61,18 +62,30 @@ export default defineComponent({
 	methods: {
 		async fetch(filters?: object) {
 			await api.apis.getFactoryDevices(
-				filters,
+				{ 'with-calibration': 1, 'all-calibrations': 1, ...filters },
 				({ data }) => {
 					const { data: jsonData, meta } = data;
-					console.log(jsonData);
+
 					this.data = jsonData.map((item, index) => ({
 						orderNumber: index + 1,
 						id: item.id,
-						name: item.device.name,
+						name: `${item.device.name} (${item.full_number})`,
 						factory: `${item.factory.name} (${item.factory.number})`,
 						floor: `${item.factory_floor.name} (${item.factory_floor.number})`,
 						last_checked_at:
-							formatDate(item.last_checked_at) || '—',
+							formatDate(item.last_checked_at, false) || '—',
+						is_too_close_to_check:
+							item.last_checked_at && item.check_every_time
+								? getDateDifference(
+										item.last_checked_at,
+										this.nextCheckDate(
+											item.last_checked_at,
+											item.check_every_time,
+										),
+									) -
+										50 <=
+									0
+								: false,
 						record: item,
 					}));
 				},
@@ -81,6 +94,11 @@ export default defineComponent({
 				},
 			);
 			this.loading = false;
+		},
+		nextCheckDate(fromDate: null | string, months: number) {
+			const date = new Date(fromDate);
+			date.setMonth(date.getMonth() + months);
+			return date;
 		},
 		handleTableChange() {},
 		onDelete(id: number) {},
@@ -93,7 +111,7 @@ export default defineComponent({
 		},
 	},
 	mounted() {
-		this.fetch({ sorter: '-last_checked_at,id' });
+		this.fetch({ sorter: '-last_checked_at,id', 'checking-important': 1 });
 	},
 });
 </script>
@@ -105,10 +123,16 @@ export default defineComponent({
 			:columns="columns"
 			:data-source="data"
 			:pagination="pagination"
-			:scroll="{ y: 530 }"
+			:scroll="{ y: 560 }"
 			@change="handleTableChange"
 		>
-			<template #bodyCell="{ column, text, record }">
+			<template class="321321" #bodyCell="{ column, text, record }">
+				<template v-if="column.dataIndex === 'orderNumber'">
+					<span
+						:class="`${record.is_too_close_to_check && 'red-bg'}`"
+						>{{ text }}</span
+					>
+				</template>
 				<template v-if="column.dataIndex === 'actions'">
 					<a-button
 						type="primary"
@@ -127,4 +151,8 @@ export default defineComponent({
 		/>
 	</Layout>
 </template>
-<style scoped></style>
+<style scoped>
+div:deep(tr:has(td > span.red-bg)) {
+	background-color: #f3c3c3;
+}
+</style>

@@ -6,6 +6,7 @@ use App\Enums\Role\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Moderator\FactoryDevice\FilterRequest;
 use App\Http\Requests\Moderator\FactoryDevice\StoreRequest;
+use App\Http\Requests\Moderator\FactoryDevice\UpdateRequest;
 use App\Http\Resources\FactoryDevice\FactoryDeviceResource;
 use App\Models\FactoryDevice;
 use App\Services\DeviceService;
@@ -46,7 +47,7 @@ class FactoryDeviceController extends Controller
         );
     }
 
-    public function update(FactoryDevice $factory_device, StoreRequest $request): SuccessResponse
+    public function update(FactoryDevice $factory_device, UpdateRequest $request): SuccessResponse
     {
         $device = $this->factoryDeviceService->update($factory_device, $request->toDto());
 

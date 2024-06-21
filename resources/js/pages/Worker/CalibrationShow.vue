@@ -14,16 +14,7 @@
 				<strong>Hujjat</strong>
 			</a-col>
 			<a-col :span="16" class="text-lg">
-				<span
-					class="rounded border border-dashed border-gray-400 px-2 py-1"
-				>
-					<a target="_blank" :href="document?.url">
-						{{ document?.name }}
-						<span class="ml-1 text-gray-500">
-							({{ document?.size }})
-						</span>
-					</a>
-				</span>
+				<DocumentPreview :document="document" />
 			</a-col>
 		</a-row>
 		<hr class="my-4" />
@@ -65,17 +56,7 @@
 				<strong>Natija hujjati</strong>
 			</a-col>
 			<a-col :span="16" class="text-lg">
-				<span
-					v-if="react_document && react_document.url"
-					class="rounded border border-dashed border-gray-400 px-2 py-1"
-				>
-					<a target="_blank" :href="react_document?.url">
-						{{ react_document?.name }}
-						<span class="ml-1 text-gray-500">
-							({{ react_document?.size }})
-						</span>
-					</a>
-				</span>
+				<DocumentPreview :document="react_document" />
 			</a-col>
 		</a-row>
 		<hr class="my-4" />
@@ -197,6 +178,7 @@ import type { IFactoryDevice } from '@/contracts/factory-device/IFactoryDevice';
 import formatDate from '@/utils/formatDate';
 import { countDay } from '@/utils/countDay';
 import { computed, ref, watch } from 'vue';
+import DocumentPreview from '@/components/DocumentPreview.vue';
 
 const props = defineProps<{
 	applicant: IUser;

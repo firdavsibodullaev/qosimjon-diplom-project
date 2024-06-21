@@ -5,12 +5,16 @@ namespace App\Models;
 use App\Enums\FactoryDevice\Position;
 use App\Enums\FactoryDevice\Status;
 use App\Filters\FactoryDevice\UserFilter;
+use App\Filters\FactoryDevice\WithCalibrationFilter;
+use App\Filters\FactoryDevice\WithSorterFilter;
 use App\Filters\Sorter;
 use App\Traits\InteractsWithFilters;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property-read int $id
@@ -35,7 +39,9 @@ class FactoryDevice extends Model
 
     public array $filters = [
         UserFilter::class => null,
-        Sorter::class => null
+        Sorter::class => null,
+        WithCalibrationFilter::class => null,
+        WithSorterFilter::class => null,
     ];
 
     protected $table = 'factory_device';
@@ -71,5 +77,15 @@ class FactoryDevice extends Model
     public function device(): BelongsTo
     {
         return $this->belongsTo(Device::class);
+    }
+
+    public function lastCalibration(): HasOne
+    {
+        return $this->hasOne(Calibration::class, 'factory_device_id')->latest();
+    }
+
+    public function calibrations(): HasMany
+    {
+        return $this->hasMany(Calibration::class, 'factory_device_id')->latest();
     }
 }

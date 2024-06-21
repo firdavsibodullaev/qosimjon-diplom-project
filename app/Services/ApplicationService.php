@@ -8,13 +8,12 @@ use App\DTOs\Application\RejectDTO;
 use App\Enums\Calibration\MediaCollection;
 use App\Enums\Calibration\Result;
 use App\Enums\Calibration\Status;
+use App\Enums\FactoryDevice\Status as FactoryDeviceStatus;
 use App\Models\Calibration;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 
 class ApplicationService
 {
@@ -73,7 +72,8 @@ class ApplicationService
             ]);
 
             $calibration->device->update([
-                'last_checked_at' => now()
+                'last_checked_at' => now(),
+                'status' => FactoryDeviceStatus::INACTIVE
             ]);
 
             $calibration->addMedia($payload->document)->toMediaCollection(MediaCollection::REACT_DOCUMENT->value);
@@ -86,20 +86,25 @@ class ApplicationService
      * @param Calibration $calibration
      * @param RejectDTO $payload
      * @return Calibration
-     * @throws FileDoesNotExist
-     * @throws FileIsTooBig
      */
     public function reject(Calibration $calibration, RejectDTO $payload): Calibration
     {
-        $calibration->update([
-            'comment' => $payload->comment,
-            'status' => Status::REVIEWED,
-            'result' => Result::REJECTED,
-            'checked_at' => now()
-        ]);
+        return DB::transaction(function () use ($calibration, $payload) {
+            $calibration->update([
+                'comment' => $payload->comment,
+                'status' => Status::REVIEWED,
+                'result' => Result::REJECTED,
+                'checked_at' => now()
+            ]);
 
-        $calibration->addMedia($payload->document)->toMediaCollection(MediaCollection::REACT_DOCUMENT->value);
+            $calibration->addMedia($payload->document)->toMediaCollection(MediaCollection::REACT_DOCUMENT->value);
 
-        return $calibration->load('media');
+            $calibration->device->update([
+                'last_checked_at' => now(),
+                'status' => FactoryDeviceStatus::INACTIVE
+            ]);
+
+            return $calibration->load('media');
+        });
     }
 }

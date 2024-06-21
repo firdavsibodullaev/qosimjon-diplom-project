@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\FactoryDevice;
 
+use App\Http\Resources\Application\CalibrationResource;
 use App\Http\Resources\Device\DeviceResource;
 use App\Http\Resources\Factory\FactoryResource;
 use App\Http\Resources\FactoryFloor\FactoryFloorResource;
@@ -31,7 +32,9 @@ class FactoryDeviceResource extends JsonResource
             'status' => $this->resource->status,
             'position' => $this->resource->position,
             'last_checked_at' => $this->resource->last_checked_at?->toDateTimeString(),
-            'check_every_time' => $this->resource->check_every_time
+            'check_every_time' => $this->resource->check_every_time,
+            'latest_calibration' => CalibrationResource::make($this->whenLoaded('lastCalibration')),
+            'calibrations' => CalibrationResource::collection($this->whenLoaded('calibrations')),
         ];
     }
 }

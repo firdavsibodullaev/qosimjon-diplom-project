@@ -8,11 +8,11 @@ use App\Models\User;
 class FilterDTO extends BaseFilterDTO
 {
     public function __construct(
-        public ?User  $user = null,
-        public string $sorter = 'id',
-        public ?int   $factory_id = null,
-        public bool   $list = false,
-        public bool   $with_trashed_factory = false
+        public ?User   $user = null,
+        public ?string $sorter = 'id',
+        public ?int    $factory_id = null,
+        public bool    $list = false,
+        public bool    $with_trashed_factory = false
     )
     {
         parent::__construct($this->sorter);
