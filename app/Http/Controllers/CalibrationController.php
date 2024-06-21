@@ -33,7 +33,7 @@ class CalibrationController extends Controller
     {
         $payload = $request->toDto();
 
-        if ($this->calibrationService->hasActiveDeviceStatus($payload->factory_device_id)) {
+        if (!$this->calibrationService->hasActiveDeviceStatus($payload->factory_device_id)) {
             return new ErrorResponse(
                 message: "Pribor tekshiruvda",
                 status: 400
