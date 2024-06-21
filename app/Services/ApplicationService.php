@@ -8,6 +8,7 @@ use App\DTOs\Application\RejectDTO;
 use App\Enums\Calibration\MediaCollection;
 use App\Enums\Calibration\Result;
 use App\Enums\Calibration\Status;
+use App\Enums\FactoryDevice\Position;
 use App\Enums\FactoryDevice\Status as FactoryDeviceStatus;
 use App\Models\Calibration;
 use App\Models\User;
@@ -73,7 +74,8 @@ class ApplicationService
 
             $calibration->device->update([
                 'last_checked_at' => now(),
-                'status' => FactoryDeviceStatus::INACTIVE
+                'status' => FactoryDeviceStatus::ACTIVE,
+                'position' => Position::WAREHOUSE
             ]);
 
             $calibration->addMedia($payload->document)->toMediaCollection(MediaCollection::REACT_DOCUMENT->value);
@@ -101,7 +103,8 @@ class ApplicationService
 
             $calibration->device->update([
                 'last_checked_at' => now(),
-                'status' => FactoryDeviceStatus::INACTIVE
+                'status' => FactoryDeviceStatus::INACTIVE,
+                'position' => Position::WAREHOUSE
             ]);
 
             return $calibration->load('media');

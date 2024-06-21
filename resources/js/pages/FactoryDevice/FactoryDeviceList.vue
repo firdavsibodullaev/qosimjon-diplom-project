@@ -82,9 +82,7 @@ export default defineComponent({
 											item.last_checked_at,
 											item.check_every_time,
 										),
-									) -
-										50 <=
-									0
+									) < 50
 								: false,
 						record: item,
 					}));
