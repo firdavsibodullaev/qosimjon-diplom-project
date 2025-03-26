@@ -53,7 +53,7 @@ class Device extends Model
             ->using(FactoryDevice::class);
     }
 
-    public function factory(): BelongsToMany
+    public function factoryRelation(): BelongsToMany
     {
         return $this->belongsToMany(
             related: Factory::class,

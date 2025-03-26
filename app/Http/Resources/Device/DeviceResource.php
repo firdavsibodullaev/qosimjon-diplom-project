@@ -30,7 +30,7 @@ class DeviceResource extends JsonResource
                 value: fn() => FactoryDeviceResource::make($this->resource->pivot)
             ),
             'factory' => $this->whenLoaded(
-                relationship: 'factory',
+                relationship: 'factoryRelation',
                 value: fn() => FactoryResource::collection($this->resource->factory)
             ),
             'factory_floor' => $this->whenLoaded(

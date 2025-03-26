@@ -9,14 +9,12 @@ use App\Http\Requests\Moderator\FactoryDevice\StoreRequest;
 use App\Http\Requests\Moderator\FactoryDevice\UpdateRequest;
 use App\Http\Resources\FactoryDevice\FactoryDeviceResource;
 use App\Models\FactoryDevice;
-use App\Services\DeviceService;
 use App\Services\FactoryDeviceService;
 use Firdavsi\Responses\Http\SuccessResponse;
 
 class FactoryDeviceController extends Controller
 {
     public function __construct(
-        protected DeviceService        $deviceService,
         protected FactoryDeviceService $factoryDeviceService,
     )
     {

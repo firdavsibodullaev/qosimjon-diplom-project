@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('attribute_devices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('device_id')->constrained('devices')->cascadeOnDelete();
-            $table->foreignId('attribute_id')->constrained('attributes')->nullOnDelete();
-            $table->foreignId('attribute_value_id')->constrained('attribute_values')->nullOnDelete();
+            $table->foreignId('attribute_id')->nullable()->constrained('attributes')->nullOnDelete();
+            $table->foreignId('attribute_value_id')->nullable()->constrained('attribute_values')->nullOnDelete();
             $table->string('measurement_unit');
         });
     }
